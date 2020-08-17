@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timefly/app_theme.dart';
+import 'package:timefly/blocs/habit/habit_bloc.dart';
+import 'package:timefly/blocs/habit/habit_event.dart';
+import 'package:timefly/blocs/habit/habit_state.dart';
+import 'package:timefly/models/habit.dart';
 import 'package:timefly/widget/title_view.dart';
 
 class OneDayScreen extends StatefulWidget {
@@ -80,25 +85,48 @@ class _OneDayScreenState extends State<OneDayScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppTheme.background,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Stack(
-          children: <Widget>[
-            getMainListViewUI(),
-            getAppBarUI(),
-            SizedBox(
-              height: MediaQuery.of(context).padding.bottom,
-            )
-          ],
+    return BlocProvider(
+      create: (context) => HabitsBloc()..add(HabitsLoad()),
+      child: Container(
+        color: AppTheme.background,
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Stack(
+            children: <Widget>[
+              getMainListViewUI(),
+              getAppBarUI(),
+              SizedBox(
+                height: MediaQuery.of(context).padding.bottom,
+              )
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget getMainListViewUI() {
-    return FutureBuilder<bool>(
+    return BlocBuilder<HabitsBloc, HabitsState>(
+      builder: (context, state) {
+        if (state is HabitsLoadInProgress) {
+          return CircularProgressIndicator();
+        }
+        List<Habit> habit = (state as HabitLoadSuccess).habits;
+        return ListView.builder(
+            itemBuilder: (context, index) {
+              widget.animationController.forward();
+              return Text(habit[index].name);
+            },
+            itemCount: habit.length,
+            padding: EdgeInsets.only(
+              top: AppBar().preferredSize.height +
+                  MediaQuery.of(context).padding.top +
+                  24,
+              bottom: 62 + MediaQuery.of(context).padding.bottom,
+            ));
+      },
+    );
+    /*return FutureBuilder<bool>(
       future: getData(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         if (!snapshot.hasData) {
@@ -121,7 +149,7 @@ class _OneDayScreenState extends State<OneDayScreen>
           );
         }
       },
-    );
+    );*/
   }
 
   Widget getAppBarUI() {
