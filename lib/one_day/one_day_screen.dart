@@ -34,7 +34,6 @@ class _OneDayScreenState extends State<OneDayScreen>
     topBarAnimation = Tween<double>(begin: 0.0, end: 1).animate(CurvedAnimation(
         parent: widget.animationController,
         curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn)));
-    addAllListData();
     scrollController.addListener(() {
       if (scrollController.offset >= 24) {
         if (topBarOpacity != 1.0) {
@@ -113,9 +112,19 @@ class _OneDayScreenState extends State<OneDayScreen>
         }
         List<Habit> habit = (state as HabitLoadSuccess).habits;
         return ListView.builder(
+            controller: scrollController,
             itemBuilder: (context, index) {
               widget.animationController.forward();
-              return Text(habit[index].name);
+              return TitleView(
+                titleTxt: habit[index].name,
+                subTxt: 'Details',
+                animation: Tween<double>(begin: 0.0, end: 1.0).animate(
+                    CurvedAnimation(
+                        parent: widget.animationController,
+                        curve: Interval((1 / habit.length) * index, 1.0,
+                            curve: Curves.fastOutSlowIn))),
+                animationController: widget.animationController,
+              );
             },
             itemCount: habit.length,
             padding: EdgeInsets.only(
@@ -126,33 +135,10 @@ class _OneDayScreenState extends State<OneDayScreen>
             ));
       },
     );
-    /*return FutureBuilder<bool>(
-      future: getData(),
-      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-        if (!snapshot.hasData) {
-          return const SizedBox();
-        } else {
-          return ListView.builder(
-            controller: scrollController,
-            padding: EdgeInsets.only(
-              top: AppBar().preferredSize.height +
-                  MediaQuery.of(context).padding.top +
-                  24,
-              bottom: 62 + MediaQuery.of(context).padding.bottom,
-            ),
-            itemCount: listViews.length,
-            scrollDirection: Axis.vertical,
-            itemBuilder: (BuildContext context, int index) {
-              widget.animationController.forward();
-              return listViews[index];
-            },
-          );
-        }
-      },
-    );*/
   }
 
   Widget getAppBarUI() {
+    int i = 0;
     return Column(
       children: <Widget>[
         AnimatedBuilder(
@@ -258,7 +244,12 @@ class _OneDayScreenState extends State<OneDayScreen>
                                 highlightColor: Colors.transparent,
                                 borderRadius: const BorderRadius.all(
                                     Radius.circular(32.0)),
-                                onTap: () {},
+                                onTap: () {
+                                  i++;
+                                  BlocProvider.of<HabitsBloc>(context).add(
+                                      HabitsAdd(Habit('id$i', 'name$i', '', 0,
+                                          '', '', i, 0, 0, false, 0, '')));
+                                },
                                 child: Center(
                                   child: Icon(
                                     Icons.keyboard_arrow_right,

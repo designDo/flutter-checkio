@@ -54,7 +54,20 @@ class Habit extends Equatable {
       this.records);
 
   @override
-  List<Object> get props => null;
+  List<Object> get props => [id];
+
+  static Habit forMap(Map<String, dynamic> map) {
+    return Habit(map['id'], map['name'], '', 0, '', '', map['period'], 0, 0,
+        true, 0, '');
+  }
+
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = Map();
+    map['id'] = id;
+    map['name'] = name;
+    map['period'] = period;
+    return map;
+  }
 }
 
 class Record {

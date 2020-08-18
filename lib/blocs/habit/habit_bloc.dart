@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:timefly/blocs/habit/habit_event.dart';
 import 'package:timefly/blocs/habit/habit_state.dart';
+import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/models/habit.dart';
 
 class HabitsBloc extends Bloc<HabitsEvent, HabitsState> {
@@ -12,20 +13,23 @@ class HabitsBloc extends Bloc<HabitsEvent, HabitsState> {
     if (event is HabitsLoad) {
       yield* _mapHabitsLoadToState();
     } else if (event is HabitsAdd) {
-      //TODO add
+      yield* _mapHabitsAddToState(event);
     }
   }
 
   Stream<HabitsState> _mapHabitsLoadToState() async* {
     try {
-      List<Habit> habits = [];
-      for (int i = 0; i < 10; i++) {
-        habits.add(Habit('id$i', 'name$i', 'iconPath$i', i, 'mark$i',
-            'remindTimes$i', i, i, i, false, i, 'records$i'));
-      }
+      List<Habit> habits = await DatabaseProvider.db.getHabits();
+      print(habits);
       yield HabitLoadSuccess(habits);
     } catch (_) {
       yield HabitsLodeFailure();
     }
+  }
+
+  Stream<HabitsState> _mapHabitsAddToState(HabitsAdd habitsAdd) async* {
+    await DatabaseProvider.db.insert(habitsAdd.habit);
+    List<Habit> habits = await DatabaseProvider.db.getHabits();
+    yield HabitLoadSuccess(habits);
   }
 }
