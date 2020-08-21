@@ -27,7 +27,7 @@ class _OneDayScreenState extends State<OneDayScreen>
   final ScrollController scrollController = ScrollController();
 
   //不透明度
-  double topBarOpacity = 0.0;
+  double topBarOpacity = 1.0;
 
   @override
   void initState() {
@@ -111,6 +111,7 @@ class _OneDayScreenState extends State<OneDayScreen>
           return CircularProgressIndicator();
         }
         List<Habit> habit = (state as HabitLoadSuccess).habits;
+        print('habits length : ${habit.length}');
         return ListView.builder(
             controller: scrollController,
             itemBuilder: (context, index) {
@@ -244,12 +245,7 @@ class _OneDayScreenState extends State<OneDayScreen>
                                 highlightColor: Colors.transparent,
                                 borderRadius: const BorderRadius.all(
                                     Radius.circular(32.0)),
-                                onTap: () {
-                                  i++;
-                                  BlocProvider.of<HabitsBloc>(context).add(
-                                      HabitsAdd(Habit('id$i', 'name$i', '', 0,
-                                          '', '', i, 0, 0, false, 0, '')));
-                                },
+                                onTap: () {},
                                 child: Center(
                                   child: Icon(
                                     Icons.keyboard_arrow_right,

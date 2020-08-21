@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class Habit extends Equatable {
-  ///唯一id
+  ///唯一id uuid v4
   final String id;
 
   ///喝水
@@ -40,7 +40,7 @@ class Habit extends Equatable {
   final String records;
 
   Habit(
-      this.id,
+      {this.id,
       this.name,
       this.iconPath,
       this.mainColor,
@@ -51,14 +51,26 @@ class Habit extends Equatable {
       this.modifyTime,
       this.completed,
       this.doNum,
-      this.records);
+      this.records});
 
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [
+        id,
+        name,
+        iconPath,
+        mainColor,
+        mark,
+        remindTimes,
+        period,
+        modifyTime,
+        completed,
+        doNum,
+        records
+      ];
 
   static Habit forMap(Map<String, dynamic> map) {
-    return Habit(map['id'], map['name'], '', 0, '', '', map['period'], 0, 0,
-        true, 0, '');
+    Habit habit = Habit(id: "");
+    return habit;
   }
 
   Map<String, dynamic> toMap() {

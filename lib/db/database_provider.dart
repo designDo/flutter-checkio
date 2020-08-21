@@ -32,7 +32,6 @@ class DatabaseProvider {
         print("Creating habit table");
         await database.execute(
           "CREATE TABLE habits ("
-          "mid PRIMARY KEY "
           "id TEXT,"
           "name TEXT,"
           "period INTEGER"
