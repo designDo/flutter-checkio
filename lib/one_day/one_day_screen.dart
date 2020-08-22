@@ -4,6 +4,7 @@ import 'package:timefly/app_theme.dart';
 import 'package:timefly/blocs/habit/habit_bloc.dart';
 import 'package:timefly/blocs/habit/habit_event.dart';
 import 'package:timefly/blocs/habit/habit_state.dart';
+import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/widget/title_view.dart';
 
@@ -23,17 +24,21 @@ class _OneDayScreenState extends State<OneDayScreen>
   Animation<double> topBarAnimation;
 
   //页面views
+  //note view
+  //habit为空是 提示页面
+  //habit页面
   List<Widget> listViews = [];
   final ScrollController scrollController = ScrollController();
 
   //不透明度
-  double topBarOpacity = 1.0;
+  double topBarOpacity = 0.0;
 
   @override
   void initState() {
-    topBarAnimation = Tween<double>(begin: 0.0, end: 1).animate(CurvedAnimation(
+    topBarAnimation = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
         parent: widget.animationController,
         curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn)));
+    addAllListData();
     scrollController.addListener(() {
       if (scrollController.offset >= 24) {
         if (topBarOpacity != 1.0) {
@@ -59,81 +64,68 @@ class _OneDayScreenState extends State<OneDayScreen>
     super.initState();
   }
 
-  void addAllListData() {
-    const int count = 19;
-    for (int i = 0; i < 19; i++) {
-      listViews.add(
-        TitleView(
-          titleTxt: 'Mediterranean diet$i',
-          subTxt: 'Details',
-          animation: Tween<double>(begin: 0.0, end: 1.0).animate(
-              CurvedAnimation(
-                  parent: widget.animationController,
-                  curve: Interval((1 / count) * i, 1.0,
-                      curve: Curves.fastOutSlowIn))),
-          animationController: widget.animationController,
-        ),
-      );
-    }
-  }
+  void addAllListData() async {
+    const int count = 20;
+    listViews.add(
+      TitleView(
+        titleTxt: 'It is Note widget',
+        subTxt: 'add note',
+        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+            parent: widget.animationController,
+            curve:
+                Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn))),
+        animationController: widget.animationController,
+      ),
+    );
 
-  Future<bool> getData() async {
-    await Future<dynamic>.delayed(const Duration(milliseconds: 3000));
-    return true;
+    List<Habit> habits = await DatabaseProvider.db.getHabits();
+
+    if (habits.length == 0) {
+      listViews.add(Container(
+        height: 100,
+        color: Colors.red,
+      ));
+    } else {
+      listViews.add(Container(
+        height: 100,
+        color: Colors.blue,
+      ));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => HabitsBloc()..add(HabitsLoad()),
-      child: Container(
-        color: AppTheme.background,
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Stack(
-            children: <Widget>[
-              getMainListViewUI(),
-              getAppBarUI(),
-              SizedBox(
-                height: MediaQuery.of(context).padding.bottom,
-              )
-            ],
-          ),
+    return Container(
+      color: AppTheme.background,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          children: <Widget>[
+            getMainListViewUI(),
+            getAppBarUI(),
+            SizedBox(
+              height: MediaQuery.of(context).padding.bottom,
+            )
+          ],
         ),
       ),
     );
   }
 
   Widget getMainListViewUI() {
-    return BlocBuilder<HabitsBloc, HabitsState>(
-      builder: (context, state) {
-        if (state is HabitsLoadInProgress) {
-          return CircularProgressIndicator();
-        }
-        List<Habit> habit = (state as HabitLoadSuccess).habits;
-        print('habits length : ${habit.length}');
-        return ListView.builder(
-            controller: scrollController,
-            itemBuilder: (context, index) {
-              widget.animationController.forward();
-              return TitleView(
-                titleTxt: habit[index].name,
-                subTxt: 'Details',
-                animation: Tween<double>(begin: 0.0, end: 1.0).animate(
-                    CurvedAnimation(
-                        parent: widget.animationController,
-                        curve: Interval((1 / habit.length) * index, 1.0,
-                            curve: Curves.fastOutSlowIn))),
-                animationController: widget.animationController,
-              );
-            },
-            itemCount: habit.length,
-            padding: EdgeInsets.only(
-              top: AppBar().preferredSize.height +
-                  MediaQuery.of(context).padding.top +
-                  24,
-              bottom: 62 + MediaQuery.of(context).padding.bottom,
-            ));
+    return ListView.builder(
+      controller: scrollController,
+      padding: EdgeInsets.only(
+        top: AppBar().preferredSize.height +
+            MediaQuery.of(context).padding.top +
+            24,
+        bottom: 62 + MediaQuery.of(context).padding.bottom,
+      ),
+      itemCount: listViews.length,
+      scrollDirection: Axis.vertical,
+      itemBuilder: (BuildContext context, int index) {
+        widget.animationController.forward();
+        return listViews[index];
       },
     );
   }
