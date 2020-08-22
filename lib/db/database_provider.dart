@@ -34,7 +34,16 @@ class DatabaseProvider {
           "CREATE TABLE habits ("
           "id TEXT,"
           "name TEXT,"
-          "period INTEGER"
+          "iconPath TEXT,"
+          "mainColor INTEGER,"
+          "mark TEXT,"
+          "remindTimes TEXT,"
+          "period INTEGER,"
+          "createTime INTEGER,"
+          "modifyTime INTEGER,"
+          "completed INTEGER,"
+          "doNum INTEGER,"
+          "records TEXT"
           ")",
         );
       },
@@ -46,7 +55,7 @@ class DatabaseProvider {
     var habits = await db.query('habits', columns: ['id', 'name', 'period']);
     List<Habit> habitList = [];
     habits.forEach((element) {
-      habitList.add(Habit.forMap(element));
+      habitList.add(Habit.fromJson(element));
     });
 
     return habitList;
@@ -54,7 +63,7 @@ class DatabaseProvider {
 
   Future<Habit> insert(Habit habit) async {
     final db = await database;
-    await db.insert('habits', habit.toMap());
+    await db.insert('habits', habit.toJson());
     return habit;
   }
 }
