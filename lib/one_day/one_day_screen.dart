@@ -27,7 +27,7 @@ class _OneDayScreenState extends State<OneDayScreen>
   //note view
   //habit为空是 提示页面
   //habit页面
-  List<Widget> listViews = [];
+
   final ScrollController scrollController = ScrollController();
 
   //不透明度
@@ -38,7 +38,7 @@ class _OneDayScreenState extends State<OneDayScreen>
     topBarAnimation = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
         parent: widget.animationController,
         curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn)));
-    addAllListData();
+
     scrollController.addListener(() {
       if (scrollController.offset >= 24) {
         if (topBarOpacity != 1.0) {
@@ -64,69 +64,71 @@ class _OneDayScreenState extends State<OneDayScreen>
     super.initState();
   }
 
-  void addAllListData() async {
-    const int count = 20;
-    listViews.add(
-      TitleView(
-        titleTxt: 'It is Note widget',
-        subTxt: 'add note',
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController,
-            curve:
-                Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: widget.animationController,
-      ),
-    );
-
-    List<Habit> habits = await DatabaseProvider.db.getHabits();
-
-    if (habits.length == 0) {
-      listViews.add(Container(
-        height: 100,
-        color: Colors.red,
-      ));
-    } else {
-      listViews.add(Container(
-        height: 100,
-        color: Colors.blue,
-      ));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppTheme.background,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Stack(
-          children: <Widget>[
-            getMainListViewUI(),
-            getAppBarUI(),
-            SizedBox(
-              height: MediaQuery.of(context).padding.bottom,
-            )
-          ],
+    return BlocProvider(
+      create: (context) {
+        return HabitsBloc()..add(HabitsLoad());
+      },
+      child: Container(
+        color: AppTheme.background,
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Stack(
+            children: <Widget>[
+              getMainListViewUI(),
+              getAppBarUI(),
+              SizedBox(
+                height: MediaQuery.of(context).padding.bottom,
+              )
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget getMainListViewUI() {
-    return ListView.builder(
-      controller: scrollController,
+    //之前动画不显示是主动画没开始，导致初始进度为0
+    widget.animationController.forward();
+    return Padding(
       padding: EdgeInsets.only(
         top: AppBar().preferredSize.height +
             MediaQuery.of(context).padding.top +
             24,
         bottom: 62 + MediaQuery.of(context).padding.bottom,
       ),
-      itemCount: listViews.length,
-      scrollDirection: Axis.vertical,
-      itemBuilder: (BuildContext context, int index) {
-        widget.animationController.forward();
-        return listViews[index];
-      },
+      child: Stack(
+        children: [
+          TitleView(
+            titleTxt: 'It is Note widget',
+            subTxt: 'add note',
+            animation: Tween<double>(begin: 0.0, end: 1.0).animate(
+                CurvedAnimation(
+                    parent: widget.animationController,
+                    curve: Interval((1 / 10) * 0, 1.0,
+                        curve: Curves.fastOutSlowIn))),
+            animationController: widget.animationController,
+          ),
+          BlocBuilder<HabitsBloc, HabitsState>(
+            builder: (context, state) {
+              if (state is HabitsLoadInProgress) {
+                return CircularProgressIndicator();
+              }
+              List<Habit> habits = (state as HabitLoadSuccess).habits;
+              return ListView.builder(
+                itemBuilder: (context, index) {
+                  return Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Text(habits[index].toString()));
+                },
+                controller: scrollController,
+                itemCount: habits.length,
+              );
+            },
+          )
+        ],
+      ),
     );
   }
 
@@ -188,59 +190,14 @@ class _OneDayScreenState extends State<OneDayScreen>
                             SizedBox(
                               height: 38,
                               width: 38,
-                              child: InkWell(
-                                highlightColor: Colors.transparent,
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(32.0)),
-                                onTap: () {},
+                              child: GestureDetector(
+                                onTap: () {
+                                  print('add habit');
+                                  BlocProvider.of<HabitsBloc>(context).add(HabitsLoad());
+                                },
                                 child: Center(
                                   child: Icon(
-                                    Icons.keyboard_arrow_left,
-                                    color: AppTheme.grey,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 8,
-                                right: 8,
-                              ),
-                              child: Row(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 8),
-                                    child: Icon(
-                                      Icons.calendar_today,
-                                      color: AppTheme.grey,
-                                      size: 18,
-                                    ),
-                                  ),
-                                  Text(
-                                    '15 May',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontFamily: AppTheme.fontName,
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 18,
-                                      letterSpacing: -0.2,
-                                      color: AppTheme.darkerText,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 38,
-                              width: 38,
-                              child: InkWell(
-                                highlightColor: Colors.transparent,
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(32.0)),
-                                onTap: () {},
-                                child: Center(
-                                  child: Icon(
-                                    Icons.keyboard_arrow_right,
+                                    Icons.add_alarm,
                                     color: AppTheme.grey,
                                   ),
                                 ),

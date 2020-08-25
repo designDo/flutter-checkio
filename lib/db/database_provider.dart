@@ -11,8 +11,6 @@ class DatabaseProvider {
   Database _database;
 
   Future<Database> get database async {
-    print("database getter called");
-
     if (_database != null) {
       return _database;
     }
