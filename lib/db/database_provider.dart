@@ -50,7 +50,7 @@ class DatabaseProvider {
 
   Future<List<Habit>> getHabits() async {
     final db = await database;
-    var habits = await db.query('habits', columns: ['id', 'name', 'period']);
+    var habits = await db.query('habits');
     List<Habit> habitList = [];
     habits.forEach((element) {
       habitList.add(Habit.fromJson(element));
@@ -59,8 +59,28 @@ class DatabaseProvider {
     return habitList;
   }
 
+  ///获取天数分类习惯个数，用于’我的一天‘页面分类
+  Future<int> getPeriodHabitsSize(int period) async {
+    final db = await database;
+    var habits =
+        await db.query('habits', where: 'period = ?', whereArgs: [period]);
+    return habits.length;
+  }
+
   Future<Habit> insert(Habit habit) async {
     final db = await database;
+    var queryHabits =
+        await db.query('habits', where: 'id = ?', whereArgs: [habit.id]);
+    bool exist = false;
+    queryHabits.forEach((element) {
+      if (element['id'] == habit.id) {
+        exist = true;
+      }
+    });
+    if (exist) {
+      print('habit has exits');
+      return null;
+    }
     await db.insert('habits', habit.toJson());
     return habit;
   }

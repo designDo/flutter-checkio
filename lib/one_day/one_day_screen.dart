@@ -6,6 +6,7 @@ import 'package:timefly/blocs/habit/habit_event.dart';
 import 'package:timefly/blocs/habit/habit_state.dart';
 import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/models/habit.dart';
+import 'package:timefly/widget/habits_list_view.dart';
 import 'package:timefly/widget/title_view.dart';
 
 class OneDayScreen extends StatefulWidget {
@@ -23,10 +24,7 @@ class _OneDayScreenState extends State<OneDayScreen>
   //顶部动画
   Animation<double> topBarAnimation;
 
-  //页面views
-  //note view
-  //habit为空是 提示页面
-  //habit页面
+  List<Widget> listViews = <Widget>[];
 
   final ScrollController scrollController = ScrollController();
 
@@ -38,7 +36,7 @@ class _OneDayScreenState extends State<OneDayScreen>
     topBarAnimation = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
         parent: widget.animationController,
         curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn)));
-
+    initListViews();
     scrollController.addListener(() {
       if (scrollController.offset >= 24) {
         if (topBarOpacity != 1.0) {
@@ -61,6 +59,7 @@ class _OneDayScreenState extends State<OneDayScreen>
         }
       }
     });
+    print('init state');
     super.initState();
   }
 
@@ -88,47 +87,61 @@ class _OneDayScreenState extends State<OneDayScreen>
     );
   }
 
+  ///初始化页面内容
+  ///note view
+  ///1天分类view
+  ///2天分类view
+  ///
+  void initListViews() async {
+    int count = 2;
+    /* int period1Size = await DatabaseProvider.db.getPeriodHabitsSize(1);
+    int period2Size = await DatabaseProvider.db.getPeriodHabitsSize(2);
+    if (period1Size > 0) {
+      count += 2;
+    }
+    if (period2Size > 0) {
+      count += 2;
+    }*/
+
+    listViews.add(
+      TitleView(
+        titleTxt: 'Meals today',
+        subTxt: 'Customize',
+        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+            parent: widget.animationController,
+            curve:
+                Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn))),
+        animationController: widget.animationController,
+      ),
+    );
+    listViews.add(
+      HabitsListView(
+        mainScreenAnimation: Tween<double>(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(
+                parent: widget.animationController,
+                curve: Interval((1 / count) * 1, 1.0,
+                    curve: Curves.fastOutSlowIn))),
+        mainScreenAnimationController: widget.animationController,
+      ),
+    );
+  }
+
   Widget getMainListViewUI() {
     //之前动画不显示是主动画没开始，导致初始进度为0
-    widget.animationController.forward();
-    return Padding(
+    return ListView.builder(
+      controller: scrollController,
       padding: EdgeInsets.only(
         top: AppBar().preferredSize.height +
             MediaQuery.of(context).padding.top +
             24,
         bottom: 62 + MediaQuery.of(context).padding.bottom,
       ),
-      child: Stack(
-        children: [
-          TitleView(
-            titleTxt: 'It is Note widget',
-            subTxt: 'add note',
-            animation: Tween<double>(begin: 0.0, end: 1.0).animate(
-                CurvedAnimation(
-                    parent: widget.animationController,
-                    curve: Interval((1 / 10) * 0, 1.0,
-                        curve: Curves.fastOutSlowIn))),
-            animationController: widget.animationController,
-          ),
-          BlocBuilder<HabitsBloc, HabitsState>(
-            builder: (context, state) {
-              if (state is HabitsLoadInProgress) {
-                return CircularProgressIndicator();
-              }
-              List<Habit> habits = (state as HabitLoadSuccess).habits;
-              return ListView.builder(
-                itemBuilder: (context, index) {
-                  return Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Text(habits[index].toString()));
-                },
-                controller: scrollController,
-                itemCount: habits.length,
-              );
-            },
-          )
-        ],
-      ),
+      itemCount: listViews.length,
+      scrollDirection: Axis.vertical,
+      itemBuilder: (BuildContext context, int index) {
+        widget.animationController.forward();
+        return listViews[index];
+      },
     );
   }
 
@@ -192,8 +205,12 @@ class _OneDayScreenState extends State<OneDayScreen>
                               width: 38,
                               child: GestureDetector(
                                 onTap: () {
+                                  i++;
                                   print('add habit');
-                                  BlocProvider.of<HabitsBloc>(context).add(HabitsLoad());
+                                  BlocProvider.of<HabitsBloc>(context)
+                                      .add(HabitsAdd(Habit.createHabit('$i')));
+                                  widget.animationController.forward();
+
                                 },
                                 child: Center(
                                   child: Icon(

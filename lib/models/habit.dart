@@ -174,4 +174,23 @@ class Habit {
     }
     return data;
   }
+
+  static Habit createHabit(String key) {
+    return Habit(
+        id: 'id__$key',
+        name: 'name__$key',
+        iconPath: 'assets/images/tab_1.png',
+        mainColor: 122,
+        mark: 'mark__$key',
+        remindTimes: ['time1', 'time2'],
+        period: 1,
+        createTime: 1111,
+        modifyTime: 0,
+        completed: false,
+        doNum: 0,
+        records: [
+          HabitRecords(time: 111, content: 'content1'),
+          HabitRecords(time: 112, content: 'content2')
+        ]);
+  }
 }
