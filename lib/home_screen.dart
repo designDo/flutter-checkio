@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:timefly/habit_progress/one_day_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:timefly/blocs/habit/habit_bloc.dart';
+import 'package:timefly/blocs/habit/habit_event.dart';
+import 'package:timefly/habit_progress/habit_progress_screen.dart';
 import 'package:timefly/one_day/one_day_screen.dart';
 
 import 'app_theme.dart';
@@ -32,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     tabIconsList[0].isSelected = true;
 
     animationController = AnimationController(
-      duration: const Duration(milliseconds: 600),vsync: this);
+        duration: const Duration(milliseconds: 600), vsync: this);
 
     tabBody = OneDayScreen(animationController: animationController);
     super.initState();
@@ -46,55 +49,59 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppTheme.background,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Stack(
-          children: [
-            tabBody,
-            bottomBar(),
-          ],
+    return BlocProvider(
+      create: (context) {
+        return HabitsBloc()..add(HabitsLoad());
+      },
+      child: Container(
+        color: AppTheme.background,
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Stack(
+            children: [
+              tabBody,
+              bottomBar(),
+            ],
+          ),
         ),
       ),
     );
   }
 
- Widget bottomBar() {
-   return Column(
-     children: <Widget>[
-       const Expanded(
-         child: SizedBox(),
-       ),
-       BottomBarView(
-         tabIconsList: tabIconsList,
-         addClick: () {},
-         changeIndex: (int index) {
-           if (index == 0 || index == 2) {
-             animationController.reverse().then<dynamic>((data) {
-               if (!mounted) {
-                 return;
-               }
-               setState(() {
-                 tabBody =
-                     OneDayScreen(animationController: animationController);
-               });
-             });
-           } else if (index == 1 || index == 3) {
-             animationController.reverse().then<dynamic>((data) {
-               if (!mounted) {
-                 return;
-               }
-               setState(() {
-                 tabBody =
-                     HabitProgressScreen(animationController: animationController);
-               });
-             });
-           }
-         },
-       ),
-     ],
-   );
-
- }
+  Widget bottomBar() {
+    return Column(
+      children: <Widget>[
+        const Expanded(
+          child: SizedBox(),
+        ),
+        BottomBarView(
+          tabIconsList: tabIconsList,
+          addClick: () {},
+          changeIndex: (int index) {
+            if (index == 0 || index == 2) {
+              animationController.reverse().then<dynamic>((data) {
+                if (!mounted) {
+                  return;
+                }
+                setState(() {
+                  tabBody =
+                      OneDayScreen(animationController: animationController);
+                });
+              });
+            } else if (index == 1 || index == 3) {
+              animationController.reverse().then<dynamic>((data) {
+                if (!mounted) {
+                  return;
+                }
+                setState(() {
+                  tabBody = HabitProgressScreen(
+                      animationController: animationController);
+                });
+              });
+            }
+          },
+        ),
+      ],
+    );
+  }
 }

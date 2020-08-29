@@ -41,7 +41,7 @@ class _HabitsListViewState extends State<HabitsListView>
     return BlocBuilder<HabitsBloc, HabitsState>(
       builder: (context, state) {
         if (state is HabitsLoadInProgress) {
-          return CircularProgressIndicator();
+          return SizedBox();
         } else {
           var habits = (state as HabitLoadSuccess).habits;
           return AnimatedBuilder(
