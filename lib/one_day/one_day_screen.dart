@@ -3,16 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/blocs/habit/habit_bloc.dart';
 import 'package:timefly/blocs/habit/habit_event.dart';
-import 'package:timefly/blocs/habit/habit_state.dart';
-import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/widget/habits_list_view.dart';
 import 'package:timefly/widget/title_view.dart';
 
 class OneDayScreen extends StatefulWidget {
-  const OneDayScreen({Key key, this.animationController}) : super(key: key);
-  final AnimationController animationController;
-
   @override
   State<StatefulWidget> createState() {
     return _OneDayScreenState();
@@ -21,6 +16,8 @@ class OneDayScreen extends StatefulWidget {
 
 class _OneDayScreenState extends State<OneDayScreen>
     with TickerProviderStateMixin {
+  AnimationController animationController;
+
   //顶部动画
   Animation<double> topBarAnimation;
 
@@ -33,8 +30,10 @@ class _OneDayScreenState extends State<OneDayScreen>
 
   @override
   void initState() {
+    animationController = AnimationController(
+        duration: const Duration(milliseconds: 600), vsync: this);
     topBarAnimation = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
-        parent: widget.animationController,
+        parent: animationController,
         curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn)));
     initListViews();
     scrollController.addListener(() {
@@ -103,20 +102,20 @@ class _OneDayScreenState extends State<OneDayScreen>
         titleTxt: 'Meals today',
         subTxt: 'Customize',
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController,
+            parent: animationController,
             curve:
                 Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: widget.animationController,
+        animationController: animationController,
       ),
     );
     listViews.add(
       HabitsListView(
         mainScreenAnimation: Tween<double>(begin: 0.0, end: 1.0).animate(
             CurvedAnimation(
-                parent: widget.animationController,
+                parent: animationController,
                 curve: Interval((1 / count) * 1, 1.0,
                     curve: Curves.fastOutSlowIn))),
-        mainScreenAnimationController: widget.animationController,
+        mainScreenAnimationController: animationController,
       ),
     );
   }
@@ -134,7 +133,7 @@ class _OneDayScreenState extends State<OneDayScreen>
       itemCount: listViews.length,
       scrollDirection: Axis.vertical,
       itemBuilder: (BuildContext context, int index) {
-        widget.animationController.forward();
+        animationController.forward();
         return listViews[index];
       },
     );
@@ -145,7 +144,7 @@ class _OneDayScreenState extends State<OneDayScreen>
     return Column(
       children: <Widget>[
         AnimatedBuilder(
-          animation: widget.animationController,
+          animation: animationController,
           builder: (BuildContext context, Widget child) {
             return FadeTransition(
               opacity: topBarAnimation,
@@ -204,7 +203,7 @@ class _OneDayScreenState extends State<OneDayScreen>
                                   print('add habit');
                                   BlocProvider.of<HabitsBloc>(context)
                                       .add(HabitsAdd(Habit.createHabit('$i')));
-                                  widget.animationController.forward();
+                                  animationController.forward();
                                 },
                                 child: Center(
                                   child: Icon(

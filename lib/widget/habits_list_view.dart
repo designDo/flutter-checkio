@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timefly/app_theme.dart';
-import 'package:timefly/blocs/habit/habit_bloc.dart';
-import 'package:timefly/blocs/habit/habit_state.dart';
+import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/utils/hex_color.dart';
 
@@ -29,7 +27,6 @@ class _HabitsListViewState extends State<HabitsListView>
     super.initState();
   }
 
-
   @override
   void dispose() {
     animationController.dispose();
@@ -38,51 +35,50 @@ class _HabitsListViewState extends State<HabitsListView>
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HabitsBloc, HabitsState>(
-      builder: (context, state) {
-        if (state is HabitsLoadInProgress) {
+    return FutureBuilder(
+      future: DatabaseProvider.db.getHabits(),
+      builder: (context, habitsSnapshot) {
+        var habits = habitsSnapshot.data;
+        if (habits == null) {
           return SizedBox();
-        } else {
-          var habits = (state as HabitLoadSuccess).habits;
-          return AnimatedBuilder(
-            animation: widget.mainScreenAnimationController,
-            builder: (BuildContext context, Widget child) {
-              return FadeTransition(
-                opacity: widget.mainScreenAnimation,
-                child: Transform(
-                  transform: Matrix4.translationValues(
-                      0.0, 30 * (1.0 - widget.mainScreenAnimation.value), 0.0),
-                  child: Container(
-                    height: 216,
-                    width: double.infinity,
-                    child: ListView.builder(
-                      padding: const EdgeInsets.only(
-                          top: 0, bottom: 0, right: 16, left: 16),
-                      itemCount: habits.length,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (BuildContext context, int index) {
-                        final int count =
-                            habits.length > 10 ? 10 : habits.length;
-                        final Animation<double> animation =
-                            Tween<double>(begin: 0.0, end: 1.0).animate(
-                                CurvedAnimation(
-                                    parent: animationController,
-                                    curve: Interval((1 / count) * index, 1.0,
-                                        curve: Curves.fastOutSlowIn)));
-                        animationController.forward();
-                        return HabitsView(
-                          habitsListData: habits[index],
-                          animation: animation,
-                          animationController: animationController,
-                        );
-                      },
-                    ),
+        }
+        return AnimatedBuilder(
+          animation: widget.mainScreenAnimationController,
+          builder: (BuildContext context, Widget child) {
+            return FadeTransition(
+              opacity: widget.mainScreenAnimation,
+              child: Transform(
+                transform: Matrix4.translationValues(
+                    0.0, 30 * (1.0 - widget.mainScreenAnimation.value), 0.0),
+                child: Container(
+                  height: 216,
+                  width: double.infinity,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.only(
+                        top: 0, bottom: 0, right: 16, left: 16),
+                    itemCount: habits.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (BuildContext context, int index) {
+                      final int count = habits.length > 10 ? 10 : habits.length;
+                      final Animation<double> animation =
+                          Tween<double>(begin: 0.0, end: 1.0).animate(
+                              CurvedAnimation(
+                                  parent: animationController,
+                                  curve: Interval((1 / count) * index, 1.0,
+                                      curve: Curves.fastOutSlowIn)));
+                      animationController.forward();
+                      return HabitsView(
+                        habitsListData: habits[index],
+                        animation: animation,
+                        animationController: animationController,
+                      );
+                    },
                   ),
                 ),
-              );
-            },
-          );
-        }
+              ),
+            );
+          },
+        );
       },
     );
   }

@@ -1,17 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timefly/app_theme.dart';
-import 'package:timefly/blocs/habit/habit_bloc.dart';
-import 'package:timefly/blocs/habit/habit_event.dart';
-import 'package:timefly/blocs/habit/habit_state.dart';
 import 'package:timefly/db/database_provider.dart';
-import 'package:timefly/models/habit.dart';
 
 class HabitProgressScreen extends StatefulWidget {
-  const HabitProgressScreen({Key key, this.animationController})
-      : super(key: key);
-  final AnimationController animationController;
-
   @override
   State<StatefulWidget> createState() {
     return _HabitProgressScreenState();
@@ -20,14 +11,18 @@ class HabitProgressScreen extends StatefulWidget {
 
 class _HabitProgressScreenState extends State<HabitProgressScreen>
     with TickerProviderStateMixin {
+  AnimationController animationController;
   Animation<double> topBarAnimation;
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
 
   @override
   void initState() {
+    animationController = AnimationController(
+        duration: const Duration(milliseconds: 600), vsync: this);
+
     topBarAnimation = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
-        parent: widget.animationController,
+        parent: animationController,
         curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn)));
     scrollController.addListener(() {
       if (scrollController.offset >= 24) {
@@ -51,7 +46,6 @@ class _HabitProgressScreenState extends State<HabitProgressScreen>
         }
       }
     });
-    print('init state');
     super.initState();
   }
 
@@ -76,12 +70,12 @@ class _HabitProgressScreenState extends State<HabitProgressScreen>
 
   Widget getMainListViewUI() {
     //之前动画不显示是主动画没开始，导致初始进度为0
-    widget.animationController.forward();
+    animationController.forward();
     return FutureBuilder(
         future: DatabaseProvider.db.getHabits(),
         builder: (context, data) {
           var habits = data.data;
-          if(habits == null) {
+          if (habits == null) {
             return SizedBox();
           }
           return ListView.builder(
@@ -111,7 +105,7 @@ class _HabitProgressScreenState extends State<HabitProgressScreen>
     return Column(
       children: <Widget>[
         AnimatedBuilder(
-          animation: widget.animationController,
+          animation: animationController,
           builder: (BuildContext context, Widget child) {
             return FadeTransition(
               opacity: topBarAnimation,
@@ -168,7 +162,6 @@ class _HabitProgressScreenState extends State<HabitProgressScreen>
                                 onTap: () {
                                   i++;
                                   print('add habit');
-
                                 },
                                 child: Center(
                                   child: Icon(

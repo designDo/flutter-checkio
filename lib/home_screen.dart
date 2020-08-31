@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:timefly/blocs/habit/habit_bloc.dart';
-import 'package:timefly/blocs/habit/habit_event.dart';
 import 'package:timefly/habit_progress/habit_progress_screen.dart';
 import 'package:timefly/one_day/one_day_screen.dart';
+import 'package:timefly/widget/appbar/fluid_nav_bar.dart';
 
 import 'app_theme.dart';
-import 'models/tabIcon_data.dart';
-import 'widget/bottom_bar_view.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -17,91 +13,53 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
-  //每个页面显示动画基础
-  AnimationController animationController;
-
-  // tab data
-  List<TabIconData> tabIconsList = TabIconData.tabIconsList;
-
-  Widget tabBody = Container(
-    color: AppTheme.background,
-  );
+  Widget _child;
 
   @override
   void initState() {
-    tabIconsList.forEach((tab) {
-      tab.isSelected = false;
-    });
-    tabIconsList[0].isSelected = true;
-
-    animationController = AnimationController(
-        duration: const Duration(milliseconds: 600), vsync: this);
-
-    tabBody = OneDayScreen(animationController: animationController);
+    _child = OneDayScreen();
     super.initState();
   }
 
   @override
   void dispose() {
-    animationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) {
-        return HabitsBloc()..add(HabitsLoad());
-      },
-      child: Container(
-        color: AppTheme.background,
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Stack(
-            children: [
-              tabBody,
-              bottomBar(),
-            ],
-          ),
-        ),
+    return Scaffold(
+      backgroundColor: AppTheme.background,
+      extendBody: true,
+      body: _child,
+      bottomNavigationBar: FluidNavBar(
+        onChange: _handleNavigationChange,
       ),
     );
   }
 
-  Widget bottomBar() {
-    return Column(
-      children: <Widget>[
-        const Expanded(
-          child: SizedBox(),
-        ),
-        BottomBarView(
-          tabIconsList: tabIconsList,
-          addClick: () {},
-          changeIndex: (int index) {
-            if (index == 0 || index == 2) {
-              animationController.reverse().then<dynamic>((data) {
-                if (!mounted) {
-                  return;
-                }
-                setState(() {
-                  tabBody =
-                      OneDayScreen(animationController: animationController);
-                });
-              });
-            } else if (index == 1 || index == 3) {
-              animationController.reverse().then<dynamic>((data) {
-                if (!mounted) {
-                  return;
-                }
-                setState(() {
-                  tabBody = HabitProgressScreen(
-                      animationController: animationController);
-                });
-              });
-            }
-          },
-        ),
-      ],
-    );
+  void _handleNavigationChange(int index) {
+    setState(() {
+      switch (index) {
+        case 0:
+          _child = OneDayScreen();
+          break;
+        case 1:
+          _child = HabitProgressScreen();
+          break;
+        case 2:
+          _child = OneDayScreen();
+          break;
+        case 3:
+          _child = HabitProgressScreen();
+          break;
+      }
+      _child = AnimatedSwitcher(
+        switchInCurve: Curves.easeOut,
+        switchOutCurve: Curves.easeIn,
+        duration: Duration(milliseconds: 500),
+        child: _child,
+      );
+    });
   }
 }
