@@ -12,8 +12,29 @@ class OneDayScreen extends StatefulWidget {
 
 class _OneDayScreenState extends State<OneDayScreen>
     with TickerProviderStateMixin {
+  AnimationController headerController;
+  Animation<Offset> headerAnimation;
+  AnimationController tipController;
+  Animation<Offset> tipAnimation;
+
   @override
   void initState() {
+    headerController =
+        AnimationController(duration: Duration(milliseconds: 600), vsync: this);
+    headerController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        tipController.forward();
+      }
+    });
+    headerAnimation = Tween<Offset>(begin: Offset(0, 0.5), end: Offset.zero)
+        .animate(CurvedAnimation(
+            parent: headerController, curve: Curves.decelerate));
+    tipController =
+        AnimationController(duration: Duration(milliseconds: 500), vsync: this);
+    tipAnimation = Tween<Offset>(begin: Offset(1, 0), end: Offset.zero).animate(
+        CurvedAnimation(parent: tipController, curve: Curves.decelerate));
+
+    headerController.forward();
     super.initState();
   }
 
@@ -71,53 +92,72 @@ class _OneDayScreenState extends State<OneDayScreen>
   }
 
   Widget getHeaderView() {
-    return Padding(
-      padding: EdgeInsets.only(left: 20, top: 40, bottom: 30),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Hello,Good Morning',
-            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+    return AnimatedBuilder(
+      animation: headerController,
+      builder: (context, child) {
+        return SlideTransition(
+          position: headerAnimation,
+          child: Padding(
+            padding: EdgeInsets.only(left: 20, top: 40, bottom: 30),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Hello,Good Morning',
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  'You have 7 habits last !!',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                )
+              ],
+            ),
           ),
-          Text(
-            'You have 7 habits last !!',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          )
-        ],
-      ),
+        );
+      },
     );
   }
 
   Widget getTipsView() {
-    return Padding(
-      padding: EdgeInsets.only(left: 50),
-      child: Container(
-        alignment: Alignment.center,
-        height: 100,
-        decoration: BoxDecoration(
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: HexColor('#738AE6').withOpacity(0.6),
-                  offset: const Offset(1.1, 4.0),
-                  blurRadius: 8.0),
-            ],
-            gradient: LinearGradient(
-              colors: <HexColor>[
-                HexColor('#5C5EDD'),
-                HexColor('#738AE6'),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+    return AnimatedBuilder(
+      animation: tipController,
+      builder: (context, child) {
+        return SlideTransition(
+          position: tipAnimation,
+          child: Padding(
+            padding: EdgeInsets.only(left: 50),
+            child: Container(
+              alignment: Alignment.center,
+              height: 100,
+              decoration: BoxDecoration(
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                        color: HexColor('#738AE6').withOpacity(0.6),
+                        offset: const Offset(1.1, 4.0),
+                        blurRadius: 8.0),
+                  ],
+                  gradient: LinearGradient(
+                    colors: <HexColor>[
+                      HexColor('#5C5EDD'),
+                      HexColor('#738AE6'),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      bottomLeft: Radius.circular(20))),
+              child: Text(
+                'You can add a habit Here!!!',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
+              ),
             ),
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20), bottomLeft: Radius.circular(20))),
-        child: Text(
-          'You can add a habit Here!!!',
-          style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
