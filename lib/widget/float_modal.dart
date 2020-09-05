@@ -43,7 +43,6 @@ class FloatingModal extends StatelessWidget {
                               color: Colors.black12,
                               spreadRadius: 5)
                         ]),
-                    width: double.infinity,
                     child: MediaQuery.removePadding(
                         context: context, removeTop: true, child: child)),
               ),
