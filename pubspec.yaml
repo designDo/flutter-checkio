@@ -29,6 +29,7 @@ dependencies:
   rxdart: ^0.24.1
   sqflite:
   path:
+  modal_bottom_sheet: ^0.2.0+1
 
 
   # The following adds the Cupertino Icons font to your application.

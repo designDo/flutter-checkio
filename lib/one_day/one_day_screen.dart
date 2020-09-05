@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:timefly/add_habit/habit_add_sheet.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/utils/hex_color.dart';
+import 'package:timefly/widget/float_modal.dart';
 
 class OneDayScreen extends StatefulWidget {
   @override
@@ -33,8 +36,6 @@ class _OneDayScreenState extends State<OneDayScreen>
         AnimationController(duration: Duration(milliseconds: 500), vsync: this);
     tipAnimation = Tween<Offset>(begin: Offset(1, 0), end: Offset.zero).animate(
         CurvedAnimation(parent: tipController, curve: Curves.decelerate));
-
-    headerController.forward();
     super.initState();
   }
 
@@ -49,6 +50,7 @@ class _OneDayScreenState extends State<OneDayScreen>
             return SizedBox();
           }
           List<ListData> listData = snapshot.data;
+          headerController.forward();
           return ListView.builder(
               itemCount: listData.length,
               itemBuilder: (context, index) {
@@ -124,35 +126,44 @@ class _OneDayScreenState extends State<OneDayScreen>
       builder: (context, child) {
         return SlideTransition(
           position: tipAnimation,
-          child: Padding(
-            padding: EdgeInsets.only(left: 50),
-            child: Container(
-              alignment: Alignment.center,
-              height: 100,
-              decoration: BoxDecoration(
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                        color: HexColor('#738AE6').withOpacity(0.6),
-                        offset: const Offset(1.1, 4.0),
-                        blurRadius: 8.0),
-                  ],
-                  gradient: LinearGradient(
-                    colors: <HexColor>[
-                      HexColor('#5C5EDD'),
-                      HexColor('#738AE6'),
+          child: GestureDetector(
+            onTap: () {
+              showFloatingModalBottomSheet(
+                  context: context,
+                  builder: (context, scrollController) {
+                    return HabitAddSheet();
+                  });
+            },
+            child: Padding(
+              padding: EdgeInsets.only(left: 50),
+              child: Container(
+                alignment: Alignment.center,
+                height: 100,
+                decoration: BoxDecoration(
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                          color: HexColor('#738AE6').withOpacity(0.6),
+                          offset: const Offset(1.1, 4.0),
+                          blurRadius: 8.0),
                     ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      bottomLeft: Radius.circular(20))),
-              child: Text(
-                'You can add a habit Here!!!',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
+                    gradient: LinearGradient(
+                      colors: <HexColor>[
+                        HexColor('#5C5EDD'),
+                        HexColor('#738AE6'),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        bottomLeft: Radius.circular(20))),
+                child: Text(
+                  'You can add a habit Here!!!',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
+                ),
               ),
             ),
           ),
