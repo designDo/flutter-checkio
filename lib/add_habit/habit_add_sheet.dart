@@ -17,8 +17,8 @@ class _HabitAddSheet extends State<HabitAddSheet> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: <HexColor>[
-              HexColor('#5C5EDD'),
-              HexColor('#738AE6'),
+              HexColor('#7971C4'),
+              HexColor('#8389E9'),
             ],
             begin: Alignment.bottomCenter,
             end: Alignment.topCenter,
