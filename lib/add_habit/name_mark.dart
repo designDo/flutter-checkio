@@ -2,13 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:timefly/utils/hex_color.dart';
 
 class NameAndMarkPage extends StatefulWidget {
+  final PageController pageController;
+  final Function onPageNext;
+
+  const NameAndMarkPage({Key key, this.pageController, this.onPageNext})
+      : super(key: key);
+
   @override
   _NameAndMarkPageState createState() => _NameAndMarkPageState();
 }
 
 class _NameAndMarkPageState extends State<NameAndMarkPage>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   AnimationController _animationController;
+
+  String _name = '';
 
   @override
   void initState() {
@@ -56,6 +64,11 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
               child: Padding(
                 padding: EdgeInsets.only(left: 32, right: 32),
                 child: TextField(
+                  onChanged: (value) async {
+                    setState(() {
+                      _name = value;
+                    });
+                  },
                   cursorColor: Colors.blueAccent,
                   style: TextStyle(
                       color: Colors.white,
@@ -133,7 +146,10 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
               ),
               child: GestureDetector(
                 onTap: () {
-                  print('next');
+                  if (_name.length == 0) {
+                    return;
+                  }
+                  widget.onPageNext();
                 },
                 child: Container(
                   alignment: Alignment.center,
@@ -142,11 +158,13 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                   decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.all(Radius.circular(32)),
-                      color: HexColor('#726DBD')),
+                      color: _name.length > 0
+                          ? Colors.white
+                          : HexColor('#726DBD')),
                   child: Text(
                     '下一步',
                     style: TextStyle(
-                        color: Colors.white70,
+                        color: HexColor('#625FAC'),
                         fontSize: 20,
                         fontWeight: FontWeight.bold),
                   ),
@@ -168,4 +186,7 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
     _animationController.dispose();
     super.dispose();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

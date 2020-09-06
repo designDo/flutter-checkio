@@ -1,27 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:timefly/add_habit/Icon_clolr.dart';
 import 'package:timefly/add_habit/name_mark.dart';
 
 class AddHabitPageView extends StatefulWidget {
+  final PageController pageController;
+  final ValueChanged<int> onPageChanged;
+  final Function onPageNext;
+
+  const AddHabitPageView(
+      {Key key, this.onPageNext, this.pageController, this.onPageChanged})
+      : super(key: key);
+
   @override
   _AddHabitPageViewState createState() => _AddHabitPageViewState();
 }
 
 class _AddHabitPageViewState extends State<AddHabitPageView> {
   List<Widget> widgets = [];
-  PageController _pageController;
 
   @override
   void initState() {
-    _pageController = PageController();
-    widgets.add(NameAndMarkPage());
+    widgets.add(NameAndMarkPage(
+      pageController: widget.pageController,
+      onPageNext: widget.onPageNext,
+    ));
+    widgets.add(IconAndColorPage());
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return PageView.builder(
+        onPageChanged: widget.onPageChanged,
         physics: NeverScrollableScrollPhysics(),
-        controller: _pageController,
+        controller: widget.pageController,
         itemCount: widgets.length,
         itemBuilder: (context, index) {
           return widgets[index];
