@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:timefly/utils/hex_color.dart';
 
 class NameAndMarkPage extends StatefulWidget {
-  final PageController pageController;
   final Function onPageNext;
 
-  const NameAndMarkPage({Key key, this.pageController, this.onPageNext})
-      : super(key: key);
+  const NameAndMarkPage({Key key, this.onPageNext}) : super(key: key);
 
   @override
   _NameAndMarkPageState createState() => _NameAndMarkPageState();
@@ -32,7 +30,7 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
     return Column(
       children: [
         SizedBox(
-          height: 32,
+          height: 18,
         ),
         AnimatedBuilder(
           animation: _animationController,

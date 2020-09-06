@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:timefly/add_habit/Icon_clolr.dart';
+import 'package:timefly/add_habit/Icon_color.dart';
 import 'package:timefly/add_habit/name_mark.dart';
 
 class AddHabitPageView extends StatefulWidget {
@@ -21,11 +21,9 @@ class _AddHabitPageViewState extends State<AddHabitPageView> {
   @override
   void initState() {
     widgets.add(NameAndMarkPage(
-      pageController: widget.pageController,
       onPageNext: widget.onPageNext,
     ));
     widgets.add(IconAndColorPage());
-
     super.initState();
   }
 
