@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:timefly/utils/hex_color.dart';
 
 class NameAndMarkPage extends StatefulWidget {
@@ -41,9 +42,11 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                   curve: Interval(0, 0.1, curve: Curves.decelerate)),
               child: Text(
                 '给习惯取一个好听的名字\n并编辑一句鼓励自己的话',
-                style: TextStyle(
+                strutStyle: StrutStyle(height: 2),
+                style: GoogleFonts.maShanZheng(
+                    letterSpacing: 3,
                     color: Colors.white,
-                    fontSize: 18,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold),
               ),
             );
