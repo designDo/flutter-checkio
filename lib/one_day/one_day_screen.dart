@@ -132,7 +132,8 @@ class _OneDayScreenState extends State<OneDayScreen>
                   context: context,
                   builder: (context, scrollController) {
                     return HabitAddSheet();
-                  });
+                  },
+                  barrierColor: HexColor("#435269"));
             },
             child: Padding(
               padding: EdgeInsets.only(left: 50),
