@@ -3,12 +3,13 @@ import 'package:timefly/add_habit/Icon_color.dart';
 import 'package:timefly/add_habit/name_mark.dart';
 
 class AddHabitPageView extends StatefulWidget {
+  final AnimationController editAnimationController;
   final PageController pageController;
   final ValueChanged<int> onPageChanged;
   final Function onPageNext;
 
   const AddHabitPageView(
-      {Key key, this.onPageNext, this.pageController, this.onPageChanged})
+      {Key key, this.onPageNext, this.pageController, this.onPageChanged, this.editAnimationController})
       : super(key: key);
 
   @override
@@ -22,6 +23,7 @@ class _AddHabitPageViewState extends State<AddHabitPageView> {
   void initState() {
     widgets.add(NameAndMarkPage(
       onPageNext: widget.onPageNext,
+
     ));
     widgets.add(IconAndColorPage());
     super.initState();
