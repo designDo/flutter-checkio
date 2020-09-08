@@ -5,11 +5,16 @@ import 'edit_name.dart';
 
 class NameAndMarkPage extends StatefulWidget {
   final Function onPageNext;
-  final Function onEdit;
-  final Animation<double> editAnimation;
+  final Function onStartEdit;
+  final Function onEndEdit;
+  final AnimationController editAnimationController;
 
   const NameAndMarkPage(
-      {Key key, this.onPageNext, this.onEdit, this.editAnimation})
+      {Key key,
+      this.onPageNext,
+      this.onStartEdit,
+      this.editAnimationController,
+      this.onEndEdit})
       : super(key: key);
 
   @override
@@ -19,7 +24,7 @@ class NameAndMarkPage extends StatefulWidget {
 class _NameAndMarkPageState extends State<NameAndMarkPage>
     with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   AnimationController _animationController;
-
+  Animation<double> editAnimation;
   String _name = '';
 
   @override
@@ -28,23 +33,28 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
         duration: Duration(milliseconds: 2000), vsync: this);
     Future.delayed(
         Duration(milliseconds: 400), () => _animationController.forward());
+
+    editAnimation = Tween<double>(begin: 1, end: 0).animate(CurvedAnimation(
+        parent: widget.editAnimationController,
+        curve:
+            Interval(0, 1, curve: Interval(0, 1, curve: Curves.easeInCubic))));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: widget.editAnimation,
+      animation: widget.editAnimationController,
       builder: (context, child) {
         return Transform(
-          transform: Matrix4.translationValues(
-              0, 200 * (1 - widget.editAnimation.value), 0),
+          transform:
+              Matrix4.translationValues(0, 20 * (1 - editAnimation.value), 0),
           child: FadeTransition(
-            opacity: widget.editAnimation,
+            opacity: editAnimation,
             child: Column(
               children: [
                 SizedBox(
-                  height: 18,
+                  height: 32,
                 ),
                 AnimatedBuilder(
                   animation: _animationController,
@@ -79,42 +89,27 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                       child: Padding(
                           padding: EdgeInsets.only(left: 32, right: 32),
                           child: GestureDetector(
-                            onTap: () {
-                              widget.onEdit();
-                              Navigator.of(context).push(PageRouteBuilder(
-                                  pageBuilder: (context, ani1, ani2) {
-                                return EditNameView(
-                                  animation: ani1,
-                                );
-                              }, transitionsBuilder: (context, animation,
-                                      secondaryAnimation, child) {
-                                var tween = Tween<double>(begin: 0, end: 1.0);
-                                var curvedAnimation = CurvedAnimation(
-                                  parent: animation,
-                                  curve: Curves.fastOutSlowIn,
-                                );
-
-                                return FadeTransition(
-                                  opacity: tween.animate(curvedAnimation),
-                                  child: child,
-                                );
-                              }));
+                            onTap: () async {
+                              widget.onStartEdit();
+                              gotoEditName(context);
                             },
                             child: Container(
-                                padding: EdgeInsets.only(left: 10, top: 10),
+                                padding: EdgeInsets.only(left: 16, top: 25),
                                 width: 400,
-                                height: 50,
+                                height: 80,
                                 decoration: BoxDecoration(
                                     shape: BoxShape.rectangle,
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(15)),
                                     color: HexColor('#7976CD')),
                                 child: Text(
-                                  '名字',
+                                  _name.length == 0 ? '名字 ...' : _name,
                                   style: TextStyle(
-                                      color: Colors.white70,
+                                      color: _name.length == 0
+                                          ? Colors.white70
+                                          : Colors.white,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 18),
+                                      fontSize: 20),
                                 )),
                           )),
                     );
@@ -133,6 +128,7 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                       child: Padding(
                         padding: EdgeInsets.only(left: 32, right: 32),
                         child: TextField(
+                          autofocus: false,
                           minLines: 2,
                           maxLines: 3,
                           cursorColor: Colors.blueAccent,
@@ -215,6 +211,40 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
         );
       },
     );
+  }
+
+  void gotoEditName(BuildContext context) async {
+    Future.delayed(Duration(milliseconds: 300), () async {
+      String value = await Navigator.of(context).push(PageRouteBuilder(
+          transitionDuration: Duration(milliseconds: 500),
+          opaque: false,
+          pageBuilder: (context, ani1, ani2) {
+            return EditNameView(
+              editValue: _name,
+            );
+          },
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            Animation<double> myAnimation =
+                Tween<double>(begin: 0, end: 1.0).animate(CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOutSine,
+            ));
+            return Transform(
+              transform:
+                  Matrix4.translationValues(0, 80 * (1 - myAnimation.value), 0),
+              child: FadeTransition(
+                opacity: myAnimation,
+                child: child,
+              ),
+            );
+          }));
+      setState(() {
+        _name = value;
+      });
+      Future.delayed(Duration(milliseconds: 400), () {
+        widget.onEndEdit();
+      });
+    });
   }
 
   @override

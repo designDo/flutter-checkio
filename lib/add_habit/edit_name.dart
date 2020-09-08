@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:timefly/utils/hex_color.dart';
 
 class EditNameView extends StatefulWidget {
-  final Animation<double> animation;
+  final String editValue;
 
   const EditNameView({
     Key key,
-    this.animation,
+    this.editValue,
   }) : super(key: key);
 
   @override
@@ -16,8 +16,11 @@ class EditNameView extends StatefulWidget {
 class _EditNameViewState extends State<EditNameView> {
   bool focus = false;
 
+  TextEditingController editingController;
+
   @override
   void initState() {
+    editingController = TextEditingController(text: widget.editValue);
     super.initState();
   }
 
@@ -26,16 +29,7 @@ class _EditNameViewState extends State<EditNameView> {
     return Material(
       color: Colors.transparent,
       child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: <HexColor>[
-                HexColor('#7971C4'),
-                HexColor('#8389E9'),
-              ],
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-            ),
-          ),
+          color: Colors.transparent,
           child: Column(
             children: [
               SizedBox(
@@ -55,13 +49,14 @@ class _EditNameViewState extends State<EditNameView> {
               Padding(
                 padding: EdgeInsets.only(left: 30, right: 30),
                 child: TextField(
+                  controller: editingController,
                   showCursor: true,
                   autofocus: true,
                   onChanged: (value) async {
                     print('value');
                   },
                   onSubmitted: (value) async {
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pop(value);
                   },
                   cursorColor: Colors.blueAccent,
                   style: TextStyle(
@@ -87,5 +82,11 @@ class _EditNameViewState extends State<EditNameView> {
             ],
           )),
     );
+  }
+
+  @override
+  void dispose() {
+    editingController.dispose();
+    super.dispose();
   }
 }

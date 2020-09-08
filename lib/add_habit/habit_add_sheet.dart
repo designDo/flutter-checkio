@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:timefly/add_habit/add_habit_page.dart';
 import 'package:timefly/add_habit/edit_name.dart';
 import 'package:timefly/utils/hex_color.dart';
 
@@ -27,18 +26,29 @@ class _HabitAddSheet extends State<HabitAddSheet>
   ///点击下一步
   Function onPageNext;
 
-  ///点击编辑
-  Function onEdit;
+  ///点击开始编辑
+  Function onStartEdit;
+
+  Function onEndEdit;
+
   int _index = 0;
+
+  bool isEditing = false;
 
   @override
   void initState() {
-    onEdit = () {
+    onStartEdit = () {
+      isEditing = true;
+      editPageAnimationController.forward();
+    };
 
+    onEndEdit = () {
+      isEditing = false;
+      editPageAnimationController.reverse();
     };
 
     editPageAnimationController =
-        AnimationController(duration: Duration(milliseconds: 800), vsync: this);
+        AnimationController(duration: Duration(milliseconds: 300), vsync: this);
 
     pageController = PageController();
     onPageChanged = (index) {
@@ -52,11 +62,9 @@ class _HabitAddSheet extends State<HabitAddSheet>
 
     widgets.add(NameAndMarkPage(
       onPageNext: onPageNext,
-      onEdit: onEdit,
-      editAnimation: Tween<double>(begin: 1, end: 0).animate(CurvedAnimation(
-          parent: editPageAnimationController,
-          curve: Interval(0, 0.5,
-              curve: Interval(0, 1, curve: Curves.fastOutSlowIn)))),
+      onStartEdit: onStartEdit,
+      onEndEdit: onEndEdit,
+      editAnimationController: editPageAnimationController,
     ));
     widgets.add(IconAndColorPage());
     super.initState();
@@ -66,8 +74,13 @@ class _HabitAddSheet extends State<HabitAddSheet>
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () async {
+          print('object');
           if (_index > 0) {
             backPage();
+            return false;
+          }
+          if (isEditing) {
+            //通知 editPage pop
             return false;
           }
           return true;
@@ -93,41 +106,7 @@ class _HabitAddSheet extends State<HabitAddSheet>
                       SizedBox(
                         height: 32,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: _index == 0
-                                ? SizedBox()
-                                : InkWell(
-                                    onTap: () {
-                                      backPage();
-                                    },
-                                    child: Icon(
-                                      Icons.keyboard_backspace,
-                                      color: Colors.white,
-                                      size: 36,
-                                    ),
-                                  ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: SizedBox(),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: InkWell(
-                              child: Icon(
-                                Icons.close,
-                                color: Colors.white,
-                                size: 36,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      getBarView(),
                       Expanded(
                         child: PageView.builder(
                             onPageChanged: onPageChanged,
@@ -150,6 +129,53 @@ class _HabitAddSheet extends State<HabitAddSheet>
     editPageAnimationController.dispose();
     pageController.dispose();
     super.dispose();
+  }
+
+  Widget getBarView() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          flex: 1,
+          child: _index == 0
+              ? SizedBox()
+              : InkWell(
+                  onTap: () {
+                    backPage();
+                  },
+                  child: Icon(
+                    Icons.keyboard_backspace,
+                    color: Colors.white,
+                    size: 36,
+                  ),
+                ),
+        ),
+        Expanded(
+          flex: 2,
+          child: SizedBox(),
+        ),
+        Expanded(
+          flex: 1,
+          child: AnimatedBuilder(
+            animation: editPageAnimationController,
+            builder: (context, child) {
+              return Transform(
+                transform: Matrix4.translationValues(
+                    80 * (editPageAnimationController.value), 0, 0),
+                child: InkWell(
+                  child: Icon(
+                    Icons.close,
+                    color: Colors.white,
+                    size: 36,
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
   }
 
   void backPage() {
