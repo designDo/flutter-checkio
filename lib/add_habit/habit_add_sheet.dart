@@ -43,7 +43,7 @@ class _HabitAddSheet extends State<HabitAddSheet>
     };
 
     onEndEdit = () {
-      editPageAnimationController.reverse();
+      editPageAnimationController.reverse(from: 0.2);
     };
 
     editPageAnimationController =

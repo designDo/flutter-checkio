@@ -36,8 +36,7 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
 
     editAnimation = Tween<double>(begin: 1, end: 0).animate(CurvedAnimation(
         parent: widget.editAnimationController,
-        curve:
-            Interval(0, 1, curve: Interval(0, 1, curve: Curves.easeInCubic))));
+        curve: Interval(0, 0.1, curve: Curves.easeInCubic)));
     super.initState();
   }
 
@@ -48,7 +47,7 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
       builder: (context, child) {
         return Transform(
           transform:
-              Matrix4.translationValues(0, 20 * (1 - editAnimation.value), 0),
+              Matrix4.translationValues(0, 80 * (1 - editAnimation.value), 0),
           child: FadeTransition(
             opacity: editAnimation,
             child: Column(
@@ -216,7 +215,6 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
   void gotoEditName(BuildContext context) async {
     Future.delayed(Duration(milliseconds: 300), () async {
       String value = await Navigator.of(context).push(PageRouteBuilder(
-          transitionDuration: Duration(milliseconds: 400),
           opaque: false,
           pageBuilder: (context, ani1, ani2) {
             return EditNameView(
@@ -230,8 +228,8 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
               curve: Curves.easeOutSine,
             ));
             return Transform(
-              transform:
-                  Matrix4.translationValues(0, 180 * (1 - myAnimation.value), 0),
+              transform: Matrix4.translationValues(
+                  0, 180 * (1 - myAnimation.value), 0),
               child: FadeTransition(
                 opacity: myAnimation,
                 child: child,
@@ -241,7 +239,7 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
       setState(() {
         _name = value;
       });
-      Future.delayed(Duration(milliseconds: 400), () {
+      Future.delayed(Duration(milliseconds: 300), () {
         widget.onEndEdit();
       });
     });
