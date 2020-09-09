@@ -18,6 +18,7 @@ class _HabitAddSheet extends State<HabitAddSheet>
 
   ///编辑页面动画， X 向右平移，姓名编辑页面向下平移淡出，编辑页面向上平移淡出
   AnimationController editPageAnimationController;
+  ///控制PageView
   PageController pageController;
 
   ///页面切换
@@ -26,24 +27,22 @@ class _HabitAddSheet extends State<HabitAddSheet>
   ///点击下一步
   Function onPageNext;
 
-  ///点击开始编辑
+  ///点击开始编辑事件
   Function onStartEdit;
 
+  ///完成编辑事件
   Function onEndEdit;
 
   int _index = 0;
 
-  bool isEditing = false;
 
   @override
   void initState() {
     onStartEdit = () {
-      isEditing = true;
       editPageAnimationController.forward();
     };
 
     onEndEdit = () {
-      isEditing = false;
       editPageAnimationController.reverse();
     };
 
@@ -74,13 +73,8 @@ class _HabitAddSheet extends State<HabitAddSheet>
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () async {
-          print('object');
           if (_index > 0) {
             backPage();
-            return false;
-          }
-          if (isEditing) {
-            //通知 editPage pop
             return false;
           }
           return true;

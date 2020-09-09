@@ -13,13 +13,32 @@ class EditNameView extends StatefulWidget {
   _EditNameViewState createState() => _EditNameViewState();
 }
 
-class _EditNameViewState extends State<EditNameView> {
-  bool focus = false;
-
+class _EditNameViewState extends State<EditNameView>
+    with WidgetsBindingObserver {
+  ///文本内容
+  String _value = '';
   TextEditingController editingController;
 
   @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        if (MediaQuery.of(context).viewInsets.bottom == 0) {
+          //关闭键盘
+          print('close');
+          Navigator.of(context).pop(_value);
+        } else {
+          //显示键盘
+          print('open');
+        }
+      });
+    });
+  }
+
+  @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
     editingController = TextEditingController(text: widget.editValue);
     super.initState();
   }
@@ -53,10 +72,10 @@ class _EditNameViewState extends State<EditNameView> {
                   showCursor: true,
                   autofocus: true,
                   onChanged: (value) async {
-                    print('value');
+                    _value = value;
                   },
                   onSubmitted: (value) async {
-                    Navigator.of(context).pop(value);
+                    // Navigator.of(context).pop(value);
                   },
                   cursorColor: Colors.blueAccent,
                   style: TextStyle(
@@ -86,6 +105,7 @@ class _EditNameViewState extends State<EditNameView> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     editingController.dispose();
     super.dispose();
   }
