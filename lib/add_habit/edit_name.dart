@@ -16,7 +16,7 @@ class EditNameView extends StatefulWidget {
 }
 
 class _EditNameViewState extends State<EditNameView>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, TickerProviderStateMixin {
   ///文本内容
   String _value = '';
   TextEditingController editingController;
@@ -27,6 +27,9 @@ class _EditNameViewState extends State<EditNameView>
   ///initState之后延迟1s设置为false
   bool init = true;
   bool hasClose = true;
+
+  AnimationController numAnimationController;
+  Animation<double> numAnimation;
 
   @override
   void didChangeMetrics() {
@@ -53,6 +56,14 @@ class _EditNameViewState extends State<EditNameView>
     Future.delayed(Duration(milliseconds: 1000), () {
       init = false;
     });
+    numAnimationController =
+        AnimationController(duration: Duration(milliseconds: 500), vsync: this);
+    numAnimation = CurvedAnimation(
+        parent: numAnimationController, curve: Curves.easeOutBack);
+    if (widget.editValue.length > 0) {
+      numAnimationController.forward(from: 0.3);
+    }
+    _value = widget.editValue;
     super.initState();
   }
 
@@ -78,36 +89,81 @@ class _EditNameViewState extends State<EditNameView>
               SizedBox(
                 height: 62,
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 30, right: 30),
-                child: TextField(
-                  controller: editingController,
-                  showCursor: true,
-                  autofocus: true,
-                  onChanged: (value) async {
-                    _value = value;
-                  },
-                  onSubmitted: (value) async {},
-                  cursorColor: Colors.blueAccent,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18),
-                  decoration: InputDecoration(
-                      hintText: '名字 ...',
-                      hintStyle: TextStyle(
-                          color: Colors.white70,
+              Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, left: 32, right: 32),
+                    child: TextField(
+                      inputFormatters: [],
+                      maxLength: 10,
+                      controller: editingController,
+                      showCursor: true,
+                      autofocus: true,
+                      onChanged: (value) async {
+                        setState(() {
+                          _value = value;
+                        });
+                        if (value.length == 1) {
+                          numAnimationController.forward(from: 0.3);
+                        } else if (value.length > 1) {
+                          numAnimationController.forward(from: 0.3);
+                        } else {
+                          numAnimationController.reverse(from: 0.3);
+                        }
+                      },
+                      onSubmitted: (value) async {},
+                      cursorColor: Colors.blueAccent,
+                      style: TextStyle(
+                          color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 18),
-                      fillColor: HexColor('#7976CD'),
-                      filled: true,
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: HexColor('#7976CD')),
-                          borderRadius: BorderRadius.all(Radius.circular(15))),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: HexColor('#7976CD')),
-                          borderRadius: BorderRadius.all(Radius.circular(15)))),
-                ),
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(
+                              left: 16, top: 30, bottom: 30, right: 16),
+                          hintText: '名字 ...',
+                          hintStyle: TextStyle(
+                              color: Colors.white70,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18),
+                          fillColor: HexColor('#7976CD'),
+                          counterText: '',
+                          filled: true,
+                          enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: HexColor('#7976CD')),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15))),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: HexColor('#7976CD')),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)))),
+                    ),
+                  ),
+                  ScaleTransition(
+                    scale: numAnimation,
+                    child: Padding(
+                        padding: EdgeInsets.only(right: 25),
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15))),
+                          width: 50,
+                          height: 35,
+                          child: Text(
+                            '${_value.length}/10',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15),
+                          ),
+                        )),
+                  ),
+                ],
               )
             ],
           )),
@@ -118,6 +174,7 @@ class _EditNameViewState extends State<EditNameView>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     editingController.dispose();
+    numAnimationController.dispose();
     super.dispose();
   }
 }

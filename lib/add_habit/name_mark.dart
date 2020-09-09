@@ -216,7 +216,7 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
   void gotoEditName(BuildContext context) async {
     Future.delayed(Duration(milliseconds: 300), () async {
       String value = await Navigator.of(context).push(PageRouteBuilder(
-          transitionDuration: Duration(milliseconds: 500),
+          transitionDuration: Duration(milliseconds: 400),
           opaque: false,
           pageBuilder: (context, ani1, ani2) {
             return EditNameView(
@@ -231,7 +231,7 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
             ));
             return Transform(
               transform:
-                  Matrix4.translationValues(0, 80 * (1 - myAnimation.value), 0),
+                  Matrix4.translationValues(0, 180 * (1 - myAnimation.value), 0),
               child: FadeTransition(
                 opacity: myAnimation,
                 child: child,
