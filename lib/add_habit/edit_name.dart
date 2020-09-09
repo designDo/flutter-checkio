@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:timefly/utils/hex_color.dart';
 
@@ -19,6 +21,13 @@ class _EditNameViewState extends State<EditNameView>
   String _value = '';
   TextEditingController editingController;
 
+  ///这两个字段为了解决Android手机导航键隐藏时，键盘回调
+  ///打开页面 close close open
+  ///关闭页面 close close
+  ///initState之后延迟1s设置为false
+  bool init = true;
+  bool hasClose = true;
+
   @override
   void didChangeMetrics() {
     super.didChangeMetrics();
@@ -26,11 +35,12 @@ class _EditNameViewState extends State<EditNameView>
       setState(() {
         if (MediaQuery.of(context).viewInsets.bottom == 0) {
           //关闭键盘
-          print('close');
-          Navigator.of(context).pop(_value);
+          if (!init && hasClose) {
+            Navigator.of(context).pop(_value);
+          }
+          hasClose = !hasClose;
         } else {
           //显示键盘
-          print('open');
         }
       });
     });
@@ -40,6 +50,9 @@ class _EditNameViewState extends State<EditNameView>
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     editingController = TextEditingController(text: widget.editValue);
+    Future.delayed(Duration(milliseconds: 1000), () {
+      init = false;
+    });
     super.initState();
   }
 
@@ -74,9 +87,7 @@ class _EditNameViewState extends State<EditNameView>
                   onChanged: (value) async {
                     _value = value;
                   },
-                  onSubmitted: (value) async {
-                    // Navigator.of(context).pop(value);
-                  },
+                  onSubmitted: (value) async {},
                   cursorColor: Colors.blueAccent,
                   style: TextStyle(
                       color: Colors.white,

@@ -18,6 +18,7 @@ class _HabitAddSheet extends State<HabitAddSheet>
 
   ///编辑页面动画， X 向右平移，姓名编辑页面向下平移淡出，编辑页面向上平移淡出
   AnimationController editPageAnimationController;
+
   ///控制PageView
   PageController pageController;
 
@@ -34,7 +35,6 @@ class _HabitAddSheet extends State<HabitAddSheet>
   Function onEndEdit;
 
   int _index = 0;
-
 
   @override
   void initState() {
