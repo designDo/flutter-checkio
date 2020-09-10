@@ -5,10 +5,12 @@ import 'package:timefly/utils/hex_color.dart';
 
 class EditNameView extends StatefulWidget {
   final String editValue;
+  final int editType;
 
   const EditNameView({
     Key key,
     this.editValue,
+    this.editType,
   }) : super(key: key);
 
   @override
@@ -78,13 +80,12 @@ class _EditNameViewState extends State<EditNameView>
               SizedBox(
                 height: 40,
               ),
-              Text('习惯名字',
+              Text(widget.editType == 1 ? '习惯名字' : '标志',
                   style: TextStyle(
-                    fontFamily: 'MaShanZheng',
                     letterSpacing: 3,
                     color: Colors.white,
                     fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                   )),
               SizedBox(
                 height: 62,
@@ -95,8 +96,10 @@ class _EditNameViewState extends State<EditNameView>
                   Padding(
                     padding: EdgeInsets.only(top: 10, left: 32, right: 32),
                     child: TextField(
-                      inputFormatters: [],
-                      maxLength: 10,
+                      strutStyle: StrutStyle(height: 1.5),
+                      maxLength: widget.editType == 1 ? 10 : 40,
+                      maxLines: widget.editType == 1 ? 1 : 5,
+                      minLines: widget.editType == 1 ? 1 : 4,
                       controller: editingController,
                       showCursor: true,
                       autofocus: true,
@@ -116,15 +119,15 @@ class _EditNameViewState extends State<EditNameView>
                       cursorColor: Colors.blueAccent,
                       style: TextStyle(
                           color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                           fontSize: 18),
                       decoration: InputDecoration(
                           contentPadding: EdgeInsets.only(
                               left: 16, top: 30, bottom: 30, right: 16),
-                          hintText: '名字 ...',
+                          hintText: widget.editType == 1 ? '名字 ...' : '标记 ...',
                           hintStyle: TextStyle(
                               color: Colors.white70,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               fontSize: 18),
                           fillColor: HexColor('#7976CD'),
                           counterText: '',
@@ -155,7 +158,7 @@ class _EditNameViewState extends State<EditNameView>
                           width: 50,
                           height: 35,
                           child: Text(
-                            '${_value.length}/10',
+                            '${_value.length}/${widget.editType == 1 ? 10 : 50}',
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
@@ -164,6 +167,28 @@ class _EditNameViewState extends State<EditNameView>
                         )),
                   ),
                 ],
+              ),
+              Container(
+                alignment: Alignment.topRight,
+                margin: EdgeInsets.only(right: 30, top: 16),
+                child: GestureDetector(
+                  onTap: () {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    width: 50,
+                    height: 50,
+                    child: Icon(
+                      Icons.done,
+                      color: Colors.black87,
+                      size: 30,
+                    ),
+                  ),
+                ),
               )
             ],
           )),

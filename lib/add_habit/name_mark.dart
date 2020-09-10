@@ -26,6 +26,12 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
   AnimationController _animationController;
   Animation<double> editAnimation;
   String _name = '';
+  String _mark = '';
+
+  static int type_name = 1;
+  static int type_mark = 2;
+
+  int edit_type;
 
   @override
   void initState() {
@@ -36,7 +42,8 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
 
     editAnimation = Tween<double>(begin: 1, end: 0).animate(CurvedAnimation(
         parent: widget.editAnimationController,
-         curve: Curves.easeInCubic,reverseCurve: Curves.easeOutCubic));
+        curve: Curves.easeInCubic,
+        reverseCurve: Curves.easeOutCubic));
     super.initState();
   }
 
@@ -90,10 +97,11 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                           child: GestureDetector(
                             onTap: () async {
                               widget.onStartEdit();
+                              edit_type = type_name;
                               gotoEditName(context);
                             },
                             child: Container(
-                                padding: EdgeInsets.only(left: 16, top: 25),
+                                padding: EdgeInsets.only(left: 16, top: 28),
                                 width: 400,
                                 height: 80,
                                 decoration: BoxDecoration(
@@ -107,7 +115,7 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                                       color: _name.length == 0
                                           ? Colors.white70
                                           : Colors.white,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w600,
                                       fontSize: 20),
                                 )),
                           )),
@@ -125,36 +133,33 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                           parent: _animationController,
                           curve: Interval(0.3, 0.5, curve: Curves.decelerate)),
                       child: Padding(
-                        padding: EdgeInsets.only(left: 32, right: 32),
-                        child: TextField(
-                          autofocus: false,
-                          minLines: 2,
-                          maxLines: 3,
-                          cursorColor: Colors.blueAccent,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
-                          decoration: InputDecoration(
-                              hintText: '坚持就是胜利 ...',
-                              hintStyle: TextStyle(
-                                  color: Colors.white70,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16),
-                              fillColor: HexColor('#7976CD'),
-                              filled: true,
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: HexColor('#7976CD')),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15))),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: HexColor('#7976CD')),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15)))),
-                        ),
-                      ),
+                          padding: EdgeInsets.only(left: 32, right: 32),
+                          child: GestureDetector(
+                            onTap: () {
+                              widget.onStartEdit();
+                              edit_type = type_mark;
+                              gotoEditName(context);
+                            },
+                            child: Container(
+                                padding: EdgeInsets.only(left: 16, top: 16),
+                                width: 400,
+                                height: 150,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                    color: HexColor('#7976CD')),
+                                child: Text(
+                                  _mark.length == 0 ? 'mark ...' : _mark,
+                                  strutStyle: StrutStyle(height: 1.5),
+                                  style: TextStyle(
+                                      color: _mark.length == 0
+                                          ? Colors.white70
+                                          : Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18),
+                                )),
+                          )),
                     );
                   },
                 ),
@@ -218,7 +223,8 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
           opaque: false,
           pageBuilder: (context, ani1, ani2) {
             return EditNameView(
-              editValue: _name,
+              editValue: edit_type == type_name ? _name : _mark,
+              editType: edit_type,
             );
           },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -237,7 +243,11 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
             );
           }));
       setState(() {
-        _name = value;
+        if (edit_type == type_name) {
+          _name = value;
+        } else if (edit_type == type_mark) {
+          _mark = value;
+        }
       });
       Future.delayed(Duration(milliseconds: 300), () {
         widget.onEndEdit();
