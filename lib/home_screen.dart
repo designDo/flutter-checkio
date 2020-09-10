@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:timefly/habit_progress/habit_progress_screen.dart';
+import 'package:timefly/mine/mine_screen.dart';
 import 'package:timefly/one_day/one_day_screen.dart';
 import 'package:timefly/widget/appbar/fluid_nav_bar.dart';
 
@@ -51,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           _child = OneDayScreen();
           break;
         case 3:
-          _child = HabitProgressScreen();
+          _child = MineScreen();
           break;
       }
       _child = AnimatedSwitcher(

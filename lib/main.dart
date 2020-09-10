@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:timefly/blocs/theme/theme_bloc.dart';
+import 'package:timefly/blocs/theme/theme_state.dart';
 import 'package:timefly/home_screen.dart';
 
 void main() async {
@@ -26,14 +29,18 @@ class MyApp extends StatelessWidget {
       systemNavigationBarDividerColor: Colors.grey,
       systemNavigationBarIconBrightness: Brightness.dark,
     ));
-    return MaterialApp(
-      title: 'Flutter',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          platform: TargetPlatform.iOS),
-      home: HomeScreen(),
+    return BlocProvider(
+      create: (context) => ThemeBloc(),
+      child: BlocBuilder<ThemeBloc, ThemeState>(
+        builder: (context, themeState) {
+          return MaterialApp(
+            title: 'Flutter',
+            debugShowCheckedModeBanner: false,
+            theme: themeState.themeData.copyWith(platform: TargetPlatform.iOS),
+            home: HomeScreen(),
+          );
+        },
+      ),
     );
   }
 }

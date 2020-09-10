@@ -1,7 +1,84 @@
 import 'package:flutter/material.dart';
+
 /// app theme
+///
+
+enum AppThemes {
+  ///蓝色
+  Blue,
+
+  ///紫色
+  Purple,
+}
+
+enum Fonts {
+  ///默认字体
+  Roboto,
+
+  ///三方字体
+  MaShanZheng,
+}
+
 class AppTheme {
-  AppTheme._();
+  ThemeData createTheme(AppThemes targetTheme, Fonts targetFont) {
+    return ThemeData.light().copyWith(
+        primaryColor: primaryColor(targetTheme),
+        primaryColorLight: primaryColorLight(targetTheme),
+        primaryColorDark: primaryColorDark(targetTheme),
+        textTheme: TextTheme(
+            headline5: TextStyle(
+                color: primaryColor(targetTheme),
+                fontFamily: fontFamily(targetFont),
+                fontSize: 23,
+                fontWeight: FontWeight.w600)));
+  }
+
+  Color primaryColor(AppThemes theme) {
+    switch (theme) {
+      case AppThemes.Blue:
+        return dark_blue;
+      case AppThemes.Purple:
+        return dark_purple;
+    }
+    return Colors.white;
+  }
+
+  Color primaryColorLight(AppThemes theme) {
+    switch (theme) {
+      case AppThemes.Blue:
+        return light_blue;
+      case AppThemes.Purple:
+        return light_purple;
+    }
+    return Colors.white;
+  }
+
+  Color primaryColorDark(AppThemes theme) {
+    switch (theme) {
+      case AppThemes.Blue:
+        return dark_blue;
+      case AppThemes.Purple:
+        return dark_purple;
+    }
+    return Colors.white;
+  }
+
+  String fontFamily(Fonts fonts) {
+    switch (fonts) {
+      case Fonts.MaShanZheng:
+        return 'MaShanZheng';
+    }
+    return 'Roboto';
+  }
+
+  static const Color dark_blue = Colors.blue;
+  static const Color light_blue = Colors.lightBlue;
+  static const Color deep_blue = Colors.blueAccent;
+
+  static const Color dark_purple = Colors.purple;
+  static const Color light_purple = Colors.purpleAccent;
+  static const Color deep_purple = Colors.deepPurple;
+
   static const Color nearlyWhite = Color(0xFFFAFAFA);
   static const Color white = Color(0xFFFFFFFF);
   static const Color background = Color(0xFFF2F3F8);
@@ -36,7 +113,7 @@ class AppTheme {
     fontSize: 36,
     letterSpacing: 0.4,
     height: 0.9,
-    color: darkerText,
+    color: Colors.deepPurple,
   );
 
   static const TextStyle headline = TextStyle(

@@ -106,11 +106,11 @@ class _OneDayScreenState extends State<OneDayScreen>
               children: [
                 Text(
                   'Hello,Good Morning',
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.headline5,
                 ),
                 Text(
                   'You have 7 habits last !!',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.headline5,
                 )
               ],
             ),
