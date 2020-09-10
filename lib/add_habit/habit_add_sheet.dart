@@ -19,6 +19,8 @@ class _HabitAddSheet extends State<HabitAddSheet>
   ///编辑页面动画， X 向右平移，姓名编辑页面向下平移淡出，编辑页面向上平移淡出
   AnimationController editPageAnimationController;
 
+  Animation<double> closeIconAnimation;
+
   ///控制PageView
   PageController pageController;
 
@@ -43,11 +45,16 @@ class _HabitAddSheet extends State<HabitAddSheet>
     };
 
     onEndEdit = () {
-      editPageAnimationController.reverse(from: 0.2);
+      editPageAnimationController.reverse();
     };
 
     editPageAnimationController =
         AnimationController(duration: Duration(milliseconds: 300), vsync: this);
+
+    closeIconAnimation = Tween<double>(begin: 1, end: 0).animate(
+        CurvedAnimation(
+            parent: editPageAnimationController,
+             curve: Curves.decelerate,reverseCurve: Curves.decelerate));
 
     pageController = PageController();
     onPageChanged = (index) {
@@ -140,8 +147,8 @@ class _HabitAddSheet extends State<HabitAddSheet>
                   },
                   child: Icon(
                     Icons.keyboard_backspace,
-                    color: Colors.white,
-                    size: 36,
+                    color: Colors.white70,
+                    size: 32,
                   ),
                 ),
         ),
@@ -152,16 +159,19 @@ class _HabitAddSheet extends State<HabitAddSheet>
         Expanded(
           flex: 1,
           child: AnimatedBuilder(
-            animation: editPageAnimationController,
+            animation: closeIconAnimation,
             builder: (context, child) {
               return Transform(
                 transform: Matrix4.translationValues(
-                    80 * (editPageAnimationController.value), 0, 0),
-                child: InkWell(
-                  child: Icon(
-                    Icons.close,
-                    color: Colors.white,
-                    size: 36,
+                    40 * (1 - closeIconAnimation.value), 0, 0),
+                child: FadeTransition(
+                  opacity: closeIconAnimation,
+                  child: InkWell(
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.white70,
+                      size: 32,
+                    ),
                   ),
                 ),
               );

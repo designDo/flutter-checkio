@@ -36,7 +36,7 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
 
     editAnimation = Tween<double>(begin: 1, end: 0).animate(CurvedAnimation(
         parent: widget.editAnimationController,
-        curve: Interval(0, 0.1, curve: Curves.easeInCubic)));
+         curve: Curves.easeInCubic,reverseCurve: Curves.easeOutCubic));
     super.initState();
   }
 
@@ -222,11 +222,11 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
             );
           },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            Animation<double> myAnimation =
-                Tween<double>(begin: 0, end: 1.0).animate(CurvedAnimation(
-              parent: animation,
-              curve: Curves.easeOutSine,
-            ));
+            Animation<double> myAnimation = Tween<double>(begin: 0, end: 1.0)
+                .animate(CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.easeOutSine,
+                    reverseCurve: Interval(0, 0.6, curve: Curves.decelerate)));
             return Transform(
               transform: Matrix4.translationValues(
                   0, 180 * (1 - myAnimation.value), 0),
