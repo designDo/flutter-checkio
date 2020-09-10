@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:timefly/utils/hex_color.dart';
 
 import 'Icon_color.dart';
@@ -76,8 +77,12 @@ class _HabitAddSheet extends State<HabitAddSheet>
     super.initState();
   }
 
+  ///top context close the sheet
+  BuildContext _context;
+
   @override
   Widget build(BuildContext context) {
+    _context = context;
     return WillPopScope(
         onWillPop: () async {
           if (_index > 0) {
@@ -145,10 +150,11 @@ class _HabitAddSheet extends State<HabitAddSheet>
                   onTap: () {
                     backPage();
                   },
-                  child: Icon(
-                    Icons.keyboard_backspace,
+                  child: SvgPicture.asset(
+                    'assets/images/fanhui.svg',
                     color: Colors.white70,
-                    size: 32,
+                    width: 30,
+                    height: 30,
                   ),
                 ),
         ),
@@ -167,10 +173,14 @@ class _HabitAddSheet extends State<HabitAddSheet>
                 child: FadeTransition(
                   opacity: closeIconAnimation,
                   child: InkWell(
-                    child: Icon(
-                      Icons.close,
+                    onTap: () {
+                      Navigator.of(_context).pop();
+                    },
+                    child: SvgPicture.asset(
+                      'assets/images/guanbi.svg',
                       color: Colors.white70,
-                      size: 32,
+                      width: 30,
+                      height: 30,
                     ),
                   ),
                 ),

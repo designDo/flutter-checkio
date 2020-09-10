@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:timefly/utils/hex_color.dart';
 
 class EditNameView extends StatefulWidget {
@@ -176,16 +177,18 @@ class _EditNameViewState extends State<EditNameView>
                     FocusScope.of(context).requestFocus(FocusNode());
                   },
                   child: Container(
+                    alignment: Alignment.center,
                     decoration: BoxDecoration(
                         shape: BoxShape.rectangle,
                         color: Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(15))),
                     width: 50,
                     height: 50,
-                    child: Icon(
-                      Icons.done,
+                    child: SvgPicture.asset(
+                      'assets/images/duigou.svg',
                       color: Colors.black87,
-                      size: 30,
+                      width: 30,
+                      height: 30,
                     ),
                   ),
                 ),
