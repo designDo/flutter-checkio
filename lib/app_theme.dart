@@ -25,20 +25,30 @@ class AppTheme {
         primaryColor: primaryColor(targetTheme),
         primaryColorLight: primaryColorLight(targetTheme),
         primaryColorDark: primaryColorDark(targetTheme),
+        accentColor: accentColor(targetTheme),
         textTheme: TextTheme(
-            headline5: TextStyle(
-                color: primaryColor(targetTheme),
-                fontFamily: fontFamily(targetFont),
-                fontSize: 23,
-                fontWeight: FontWeight.w600)));
+            headline5:
+                TextStyle(fontFamily: fontFamily(targetFont), fontSize: 23),
+            headline6: TextStyle(
+              fontFamily: fontFamily(targetFont),
+              fontSize: 20,
+            ),
+            subtitle1: TextStyle(
+              fontFamily: fontFamily(targetFont),
+              fontSize: 18,
+            ),
+            subtitle2: TextStyle(
+              fontFamily: fontFamily(targetFont),
+              fontSize: 16,
+            )));
   }
 
   Color primaryColor(AppThemes theme) {
     switch (theme) {
       case AppThemes.Blue:
-        return dark_blue;
+        return normal_blue;
       case AppThemes.Purple:
-        return dark_purple;
+        return normal_purple;
     }
     return Colors.white;
   }
@@ -63,6 +73,16 @@ class AppTheme {
     return Colors.white;
   }
 
+  Color accentColor(AppThemes theme) {
+    switch (theme) {
+      case AppThemes.Blue:
+        return accent_blue;
+      case AppThemes.Purple:
+        return accent_purple;
+    }
+    return Colors.white;
+  }
+
   String fontFamily(Fonts fonts) {
     switch (fonts) {
       case Fonts.MaShanZheng:
@@ -71,13 +91,28 @@ class AppTheme {
     return 'Roboto';
   }
 
-  static const Color dark_blue = Colors.blue;
-  static const Color light_blue = Colors.lightBlue;
-  static const Color deep_blue = Colors.blueAccent;
+  static const Color normal_blue = Color(0xff3f9bad);
+  static const Color light_blue = Color(0xff7599f6);
+  static const Color dark_blue = Color(0xff4392b2);
+  static const Color accent_blue = Color(0xff7599f6);
 
-  static const Color dark_purple = Colors.purple;
-  static const Color light_purple = Colors.purpleAccent;
-  static const Color deep_purple = Colors.deepPurple;
+  ///渐变色深
+  static const Color normal_purple = Color(0xFF7a70c5);
+
+  ///渐变色浅
+  static const Color light_purple = Color(0xFF8389ea);
+
+  ///深色button
+  static const Color dark_purple = Color(0xFF7b7ad1);
+
+  ///浅色颜色
+  static const Color accent_purple = Color(0xff5696c9);
+
+  ///不可用字体颜色
+  static const Color text_unable = Color(0xFFbcbaea);
+
+  ///可用字体颜色
+  static const Color text_enable = Color(0xffe7e7fa);
 
   static const Color nearlyWhite = Color(0xFFFAFAFA);
   static const Color white = Color(0xFFFFFFFF);

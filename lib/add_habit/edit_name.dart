@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:timefly/utils/hex_color.dart';
+import 'package:timefly/app_theme.dart';
 
 class EditNameView extends StatefulWidget {
   final String editValue;
@@ -72,6 +72,7 @@ class _EditNameViewState extends State<EditNameView>
 
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
     return Material(
       color: Colors.transparent,
       child: Container(
@@ -82,11 +83,9 @@ class _EditNameViewState extends State<EditNameView>
                 height: 40,
               ),
               Text(widget.editType == 1 ? '习惯名字' : '标志',
-                  style: TextStyle(
-                    letterSpacing: 3,
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
+                  style: themeData.textTheme.headline5.copyWith(
+                    color: AppTheme.text_enable,
+                    fontWeight: FontWeight.bold,
                   )),
               SizedBox(
                 height: 62,
@@ -98,7 +97,7 @@ class _EditNameViewState extends State<EditNameView>
                     padding: EdgeInsets.only(top: 10, left: 32, right: 32),
                     child: TextField(
                       strutStyle: StrutStyle(height: 1.5),
-                      maxLength: widget.editType == 1 ? 10 : 40,
+                      maxLength: widget.editType == 1 ? 10 : 50,
                       maxLines: widget.editType == 1 ? 1 : 5,
                       minLines: widget.editType == 1 ? 1 : 4,
                       controller: editingController,
@@ -117,30 +116,42 @@ class _EditNameViewState extends State<EditNameView>
                         }
                       },
                       onSubmitted: (value) async {},
-                      cursorColor: Colors.blueAccent,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18),
+                      cursorColor: themeData.accentColor,
+                      style: themeData.textTheme.headline6.copyWith(
+                        color: AppTheme.text_enable,
+                        fontWeight: widget.editType == 1
+                            ? FontWeight.bold
+                            : FontWeight.w500,
+                      ),
                       decoration: InputDecoration(
                           contentPadding: EdgeInsets.only(
-                              left: 16, top: 30, bottom: 30, right: 16),
+                              left: 16,
+                              top: widget.editType == 1 ? 30 : 15,
+                              bottom: widget.editType == 1 ? 30 : 15,
+                              right: 16),
                           hintText: widget.editType == 1 ? '名字 ...' : '标记 ...',
-                          hintStyle: TextStyle(
-                              color: Colors.white70,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18),
-                          fillColor: HexColor('#7976CD'),
+                          hintStyle: themeData.textTheme.headline6.copyWith(
+                            color: AppTheme.text_unable,
+                            fontWeight: widget.editType == 1
+                                ? FontWeight.bold
+                                : FontWeight.w500,
+                          ),
+                          fillColor:
+                              themeData.primaryColorDark.withOpacity(0.3),
                           counterText: '',
                           filled: true,
                           enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: HexColor('#7976CD')),
+                              borderSide: BorderSide(
+                                  width: 0,
+                                  color: themeData.primaryColorDark
+                                      .withOpacity(0.3)),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(15))),
                           focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: HexColor('#7976CD')),
+                              borderSide: BorderSide(
+                                  width: 0,
+                                  color: themeData.primaryColorDark
+                                      .withOpacity(0.3)),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(15)))),
                     ),
@@ -186,7 +197,7 @@ class _EditNameViewState extends State<EditNameView>
                     height: 50,
                     child: SvgPicture.asset(
                       'assets/images/duigou.svg',
-                      color: Colors.black87,
+                      color: themeData.accentColor,
                       width: 30,
                       height: 30,
                     ),

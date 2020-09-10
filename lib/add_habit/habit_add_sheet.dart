@@ -83,6 +83,7 @@ class _HabitAddSheet extends State<HabitAddSheet>
   @override
   Widget build(BuildContext context) {
     _context = context;
+    ThemeData themeData = Theme.of(context);
     return WillPopScope(
         onWillPop: () async {
           if (_index > 0) {
@@ -98,12 +99,12 @@ class _HabitAddSheet extends State<HabitAddSheet>
               return Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: <HexColor>[
-                      HexColor('#7971C4'),
-                      HexColor('#8389E9'),
+                    colors: <Color>[
+                      themeData.primaryColor,
+                      themeData.primaryColorLight,
                     ],
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
+                    begin: Alignment.bottomLeft,
+                    end: Alignment.topRight,
                   ),
                 ),
                 child: Column(

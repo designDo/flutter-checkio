@@ -106,11 +106,17 @@ class _OneDayScreenState extends State<OneDayScreen>
               children: [
                 Text(
                   'Hello,Good Morning',
-                  style: Theme.of(context).textTheme.headline5,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .copyWith(color: Theme.of(context).primaryColor),
                 ),
                 Text(
                   'You have 7 habits last !!',
-                  style: Theme.of(context).textTheme.headline5,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6
+                      .copyWith(color: Theme.of(context).primaryColor),
                 )
               ],
             ),

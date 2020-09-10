@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:timefly/app_theme.dart';
 import 'package:timefly/utils/hex_color.dart';
 
 import 'edit_name.dart';
@@ -49,6 +50,7 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
 
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
     return AnimatedBuilder(
       animation: widget.editAnimationController,
       builder: (context, child) {
@@ -69,16 +71,11 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                       opacity: CurvedAnimation(
                           parent: _animationController,
                           curve: Interval(0, 0.1, curve: Curves.decelerate)),
-                      child: Text(
-                        '给习惯取一个好听的名字\n并编辑一句鼓励自己的话',
-                        strutStyle: StrutStyle(height: 2),
-                        style: TextStyle(
-                            fontFamily: 'MaShanZheng',
-                            letterSpacing: 3,
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
-                      ),
+                      child: Text('给习惯取一个好听的名字\n并编辑一句鼓励自己的话',
+                          strutStyle: StrutStyle(height: 2),
+                          style: Theme.of(context).textTheme.headline5.copyWith(
+                              color: AppTheme.text_enable,
+                              fontWeight: FontWeight.w600)),
                     );
                   },
                 ),
@@ -108,15 +105,14 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                                     shape: BoxShape.rectangle,
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(15)),
-                                    color: HexColor('#7976CD')),
+                                    color: themeData.primaryColorDark.withOpacity(0.3)),
                                 child: Text(
                                   _name.length == 0 ? '名字 ...' : _name,
-                                  style: TextStyle(
+                                  style: themeData.textTheme.headline6.copyWith(
+                                    fontWeight: FontWeight.bold,
                                       color: _name.length == 0
-                                          ? Colors.white70
-                                          : Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 20),
+                                          ? AppTheme.text_unable
+                                          : AppTheme.text_enable),
                                 )),
                           )),
                     );
@@ -148,16 +144,16 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                                     shape: BoxShape.rectangle,
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(15)),
-                                    color: HexColor('#7976CD')),
+                                    color: themeData.primaryColorDark.withOpacity(0.3)),
                                 child: Text(
                                   _mark.length == 0 ? 'mark ...' : _mark,
                                   strutStyle: StrutStyle(height: 1.5),
-                                  style: TextStyle(
-                                      color: _mark.length == 0
-                                          ? Colors.white70
-                                          : Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18),
+                                  style: themeData.textTheme.subtitle1.copyWith(
+                                    color: _mark.length == 0
+                                        ? AppTheme.text_unable
+                                        : AppTheme.text_enable,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 )),
                           )),
                     );
@@ -192,12 +188,11 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                                   BorderRadius.all(Radius.circular(32)),
                               color: _name.length > 0
                                   ? Colors.white
-                                  : HexColor('#726DBD')),
+                                  : themeData.primaryColorDark.withOpacity(0.6)),
                           child: Text(
                             '下一步',
-                            style: TextStyle(
-                                color: HexColor('#625FAC'),
-                                fontSize: 20,
+                            style: themeData.textTheme.headline6.copyWith(
+                                color: themeData.accentColor,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
