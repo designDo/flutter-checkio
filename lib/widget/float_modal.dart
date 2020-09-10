@@ -59,7 +59,8 @@ Future<T> showFloatingModalBottomSheet<T>({
       containerWidget: (_, animation, child) => FloatingModal(
             child: child,
           ),
-      expand: true);
+      expand: true,
+      enableDrag: false);
 
   return result;
 }

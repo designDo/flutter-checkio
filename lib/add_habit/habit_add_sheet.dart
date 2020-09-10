@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:timefly/add_habit/edit_name.dart';
 import 'package:timefly/utils/hex_color.dart';
 
 import 'Icon_color.dart';
@@ -54,7 +53,8 @@ class _HabitAddSheet extends State<HabitAddSheet>
     closeIconAnimation = Tween<double>(begin: 1, end: 0).animate(
         CurvedAnimation(
             parent: editPageAnimationController,
-             curve: Curves.decelerate,reverseCurve: Curves.decelerate));
+            curve: Curves.decelerate,
+            reverseCurve: Curves.decelerate));
 
     pageController = PageController();
     onPageChanged = (index) {
