@@ -227,7 +227,7 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                 .animate(CurvedAnimation(
                     parent: animation,
                     curve: Curves.easeOutSine,
-                    reverseCurve: Interval(0, 0.6, curve: Curves.decelerate)));
+                    reverseCurve: Interval(0, 0.5, curve: Curves.easeInSine)));
             return Transform(
               transform: Matrix4.translationValues(
                   0, 180 * (1 - myAnimation.value), 0),
@@ -244,7 +244,7 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
           _mark = value;
         }
       });
-      Future.delayed(Duration(milliseconds: 300), () {
+      Future.delayed(Duration(milliseconds: 200), () {
         widget.onEndEdit();
       });
     });

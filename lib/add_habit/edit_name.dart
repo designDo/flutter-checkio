@@ -34,6 +34,8 @@ class _EditNameViewState extends State<EditNameView>
   AnimationController numAnimationController;
   Animation<double> numAnimation;
 
+  double keyboardHeight = 10;
+
   @override
   void didChangeMetrics() {
     super.didChangeMetrics();
@@ -47,6 +49,9 @@ class _EditNameViewState extends State<EditNameView>
           hasClose = !hasClose;
         } else {
           //显示键盘
+          setState(() {
+            keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+          });
         }
       });
     });
@@ -80,15 +85,16 @@ class _EditNameViewState extends State<EditNameView>
           child: Column(
             children: [
               SizedBox(
-                height: 40,
+                height:  32,
               ),
               Text(widget.editType == 1 ? '习惯名字' : '标志',
                   style: themeData.textTheme.headline5.copyWith(
                     color: AppTheme.text_enable,
                     fontWeight: FontWeight.bold,
                   )),
-              SizedBox(
-                height: 62,
+              Expanded(
+                flex: widget.editType == 1 ? 80 : 40,
+                child: SizedBox(),
               ),
               Stack(
                 alignment: Alignment.topRight,
@@ -203,6 +209,10 @@ class _EditNameViewState extends State<EditNameView>
                     ),
                   ),
                 ),
+              ),
+              Expanded(
+                flex: (keyboardHeight + 100).floor(),
+                child: SizedBox(),
               )
             ],
           )),
