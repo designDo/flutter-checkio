@@ -85,7 +85,7 @@ class _EditNameViewState extends State<EditNameView>
           child: Column(
             children: [
               SizedBox(
-                height:  32,
+                height: 32,
               ),
               Text(widget.editType == 1 ? '习惯名字' : '标志',
                   style: themeData.textTheme.headline5.copyWith(
@@ -121,7 +121,9 @@ class _EditNameViewState extends State<EditNameView>
                           numAnimationController.reverse(from: 0.3);
                         }
                       },
-                      onSubmitted: (value) async {},
+                      onSubmitted: (value) async {
+                        Navigator.of(context).pop(_value);
+                      },
                       cursorColor: themeData.accentColor,
                       style: themeData.textTheme.headline6.copyWith(
                         color: AppTheme.text_enable,
