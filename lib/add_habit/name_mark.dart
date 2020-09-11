@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:timefly/app_theme.dart';
-import 'package:timefly/utils/hex_color.dart';
 
 import 'edit_name.dart';
 
@@ -105,11 +104,12 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                                     shape: BoxShape.rectangle,
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(15)),
-                                    color: themeData.primaryColorDark.withOpacity(0.3)),
+                                    color: themeData.primaryColorDark
+                                        .withOpacity(0.3)),
                                 child: Text(
                                   _name.length == 0 ? '名字 ...' : _name,
                                   style: themeData.textTheme.headline6.copyWith(
-                                    fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.bold,
                                       color: _name.length == 0
                                           ? AppTheme.text_unable
                                           : AppTheme.text_enable),
@@ -144,7 +144,8 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                                     shape: BoxShape.rectangle,
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(15)),
-                                    color: themeData.primaryColorDark.withOpacity(0.3)),
+                                    color: themeData.primaryColorDark
+                                        .withOpacity(0.3)),
                                 child: Text(
                                   _mark.length == 0 ? 'mark ...' : _mark,
                                   strutStyle: StrutStyle(height: 1.5),
@@ -188,7 +189,8 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                                   BorderRadius.all(Radius.circular(32)),
                               color: _name.length > 0
                                   ? Colors.white
-                                  : themeData.primaryColorDark.withOpacity(0.6)),
+                                  : themeData.primaryColorDark
+                                      .withOpacity(0.6)),
                           child: Text(
                             '下一步',
                             style: themeData.textTheme.headline6.copyWith(
@@ -229,8 +231,8 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                     curve: Curves.easeOutSine,
                     reverseCurve: Interval(0, 0.5, curve: Curves.easeInSine)));
             return Transform(
-              transform: Matrix4.translationValues(
-                  0, 180 * (1 - myAnimation.value), 0),
+              transform:
+                  Matrix4.translationValues(0, 90 * (1 - myAnimation.value), 0),
               child: FadeTransition(
                 opacity: myAnimation,
                 child: child,
