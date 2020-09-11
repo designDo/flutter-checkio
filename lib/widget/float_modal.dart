@@ -60,7 +60,7 @@ Future<T> showFloatingModalBottomSheet<T>({
             child: child,
           ),
       expand: true,
-      enableDrag: false);
+      enableDrag: true);
 
   return result;
 }

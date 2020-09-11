@@ -1,6 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:timefly/utils/hex_color.dart';
 
 import 'Icon_color.dart';
 import 'name_mark.dart';
@@ -84,51 +84,75 @@ class _HabitAddSheet extends State<HabitAddSheet>
   Widget build(BuildContext context) {
     _context = context;
     ThemeData themeData = Theme.of(context);
-    return WillPopScope(
-        onWillPop: () async {
-          if (_index > 0) {
-            backPage();
-            return false;
-          }
-          return true;
-        },
-        child: Material(
-          color: Colors.transparent,
-          child: Navigator(
-            onGenerateRoute: (_) => MaterialPageRoute(builder: (context) {
-              return Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: <Color>[
-                      themeData.primaryColor,
-                      themeData.primaryColorLight,
-                    ],
-                    begin: Alignment.bottomLeft,
-                    end: Alignment.topRight,
+    return Material(
+      child: WillPopScope(
+          onWillPop: () async {
+            bool shouldClose = true;
+            if (_index > 0) {
+              backPage();
+              return false;
+            }
+            await showCupertinoDialog(
+                context: context,
+                builder: (context) => CupertinoAlertDialog(
+                      title: Text('Should Close?'),
+                      actions: <Widget>[
+                        CupertinoButton(
+                          child: Text('Yes'),
+                          onPressed: () {
+                            shouldClose = true;
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        CupertinoButton(
+                          child: Text('No'),
+                          onPressed: () {
+                            shouldClose = false;
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ));
+            return shouldClose;
+          },
+          child: Material(
+            color: Colors.transparent,
+            child: Navigator(
+              onGenerateRoute: (_) => MaterialPageRoute(builder: (context) {
+                return Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: <Color>[
+                        themeData.primaryColor,
+                        themeData.primaryColorLight,
+                      ],
+                      begin: Alignment.bottomLeft,
+                      end: Alignment.topRight,
+                    ),
                   ),
-                ),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 32,
-                      ),
-                      getBarView(),
-                      Expanded(
-                        child: PageView.builder(
-                            onPageChanged: onPageChanged,
-                            physics: NeverScrollableScrollPhysics(),
-                            controller: pageController,
-                            itemCount: widgets.length,
-                            itemBuilder: (context, index) {
-                              return widgets[index];
-                            }),
-                      ),
-                    ]),
-              );
-            }),
-          ),
-        ));
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 32,
+                        ),
+                        getBarView(),
+                        Expanded(
+                          child: PageView.builder(
+                              onPageChanged: onPageChanged,
+                              physics: NeverScrollableScrollPhysics(),
+                              controller: pageController,
+                              itemCount: widgets.length,
+                              itemBuilder: (context, index) {
+                                return widgets[index];
+                              }),
+                        ),
+                      ]),
+                );
+              }),
+            ),
+          )),
+    );
   }
 
   @override
