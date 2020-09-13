@@ -10,6 +10,7 @@ class IconAndColorPage extends StatefulWidget {
 class _IconAndColorPageState extends State<IconAndColorPage> {
   List<Icon> icons = [];
   Icon _selectIcon;
+  double _sliderValue = 0;
 
   @override
   void initState() {
@@ -66,6 +67,7 @@ class _IconAndColorPageState extends State<IconAndColorPage> {
                         element.isSelect = false;
                       });
                       icons[index].isSelect = true;
+                      _selectIcon = icons[index];
                     });
                   },
                   child: Container(
@@ -86,7 +88,7 @@ class _IconAndColorPageState extends State<IconAndColorPage> {
               },
               scrollDirection: Axis.horizontal,
             ),
-          )
+          ),
         ],
       ),
     );
@@ -114,6 +116,17 @@ class Icon {
     icons.add(Icon('assets/images/parrot-鹦鹉.png'));
     icons.add(Icon('assets/images/swan-天鹅.png'));
 
+    icons.add(Icon('assets/images/badminton-player-羽毛球.png'));
+    icons.add(Icon('assets/images/basketball-篮球.png'));
+    icons.add(Icon('assets/images/cycling-自行车.png'));
+    icons.add(Icon('assets/images/exercise-运动.png'));
+    icons.add(Icon('assets/images/fishing-钓鱼.png'));
+    icons.add(Icon('assets/images/jump-rope-跳绳.png'));
+    icons.add(Icon('assets/images/pilates-普拉提.png'));
+    icons.add(Icon('assets/images/ping-pong-乒乓球.png'));
+    icons.add(Icon('assets/images/skateboard-滑板.png'));
+    icons.add(Icon('assets/images/tennis-racquet-网球.png'));
+    icons.add(Icon('assets/images/treadmill-跑步机.png'));
 
     return icons;
   }
