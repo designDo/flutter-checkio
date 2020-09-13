@@ -204,7 +204,7 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                             '下一步',
                             style: AppTheme.appTheme.textStyle(
                                 textColor: _name.length > 0
-                                    ? AppTheme.appTheme.gradientColorLight()
+                                    ? AppTheme.appTheme.gradientColorDark()
                                     : Colors.black.withOpacity(0.2),
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold),
