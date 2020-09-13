@@ -20,22 +20,20 @@ class _MineScreenState extends State<MineScreen> {
             height: 100,
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: AppThemes.values.length,
+                itemCount: AppThemeMode.values.length,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: EdgeInsets.all(10),
                     child: GestureDetector(
                       onTap: () {
                         BlocProvider.of<ThemeBloc>(context).add(
-                            ThemeChangeEvent(
-                                AppThemes.values[index], Fonts.Roboto));
+                            ThemeChangeEvent(AppThemeMode.values[index],
+                                AppThemeColorMode.Blue, AppFontMode.Roboto));
                       },
                       child: Container(
                         width: 50,
                         height: 50,
-                        color: AppTheme()
-                            .createTheme(AppThemes.values[index], Fonts.Roboto)
-                            .primaryColor,
+                        color: AppTheme.appTheme.containerBackgroundColor(),
                       ),
                     ),
                   );

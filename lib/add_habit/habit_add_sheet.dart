@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:timefly/app_theme.dart';
 
 import 'Icon_color.dart';
 import 'name_mark.dart';
@@ -83,7 +84,6 @@ class _HabitAddSheet extends State<HabitAddSheet>
   @override
   Widget build(BuildContext context) {
     _context = context;
-    ThemeData themeData = Theme.of(context);
     return Material(
       child: WillPopScope(
           onWillPop: () async {
@@ -123,8 +123,8 @@ class _HabitAddSheet extends State<HabitAddSheet>
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: <Color>[
-                        themeData.primaryColor,
-                        themeData.primaryColorLight,
+                        AppTheme.appTheme.addHabitSheetBgLight(),
+                        AppTheme.appTheme.addHabitSheetBgDark()
                       ],
                       begin: Alignment.bottomLeft,
                       end: Alignment.topRight,

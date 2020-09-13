@@ -77,7 +77,6 @@ class _EditNameViewState extends State<EditNameView>
 
   @override
   Widget build(BuildContext context) {
-    ThemeData themeData = Theme.of(context);
     return Material(
       color: Colors.transparent,
       child: Container(
@@ -88,8 +87,8 @@ class _EditNameViewState extends State<EditNameView>
                 height: 32,
               ),
               Text(widget.editType == 1 ? '习惯名字' : '标志',
-                  style: themeData.textTheme.headline5.copyWith(
-                    color: AppTheme.text_enable,
+                  style: AppTheme.appTheme.textStyle(
+                    textColor: Colors.white,
                     fontWeight: FontWeight.bold,
                   )),
               Expanded(
@@ -121,16 +120,14 @@ class _EditNameViewState extends State<EditNameView>
                           numAnimationController.reverse(from: 0.3);
                         }
                       },
-                      onSubmitted: (value) async {
-                        Navigator.of(context).pop(_value);
-                      },
-                      cursorColor: themeData.accentColor,
-                      style: themeData.textTheme.headline6.copyWith(
-                        color: AppTheme.text_enable,
-                        fontWeight: widget.editType == 1
-                            ? FontWeight.bold
-                            : FontWeight.w500,
-                      ),
+                      onSubmitted: (value) async {},
+                      cursorColor: AppTheme.appTheme.gradientColorDark(),
+                      style: AppTheme.appTheme.textStyle(
+                          textColor: Colors.white,
+                          fontWeight: widget.editType == 1
+                              ? FontWeight.bold
+                              : FontWeight.w500,
+                          fontSize: 18),
                       decoration: InputDecoration(
                           contentPadding: EdgeInsets.only(
                               left: 16,
@@ -138,28 +135,31 @@ class _EditNameViewState extends State<EditNameView>
                               bottom: widget.editType == 1 ? 30 : 15,
                               right: 16),
                           hintText: widget.editType == 1 ? '名字 ...' : '标记 ...',
-                          hintStyle: themeData.textTheme.headline6.copyWith(
-                            color: AppTheme.text_unable,
-                            fontWeight: widget.editType == 1
-                                ? FontWeight.bold
-                                : FontWeight.w500,
-                          ),
-                          fillColor:
-                              themeData.primaryColorDark.withOpacity(0.3),
+                          hintStyle: AppTheme.appTheme.textStyle(
+                              textColor: Colors.white.withOpacity(0.5),
+                              fontWeight: widget.editType == 1
+                                  ? FontWeight.bold
+                                  : FontWeight.w500,
+                              fontSize: 18),
+                          fillColor: Theme.of(context)
+                              .primaryColorDark
+                              .withOpacity(0.08),
                           counterText: '',
                           filled: true,
                           enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                   width: 0,
-                                  color: themeData.primaryColorDark
-                                      .withOpacity(0.3)),
+                                  color: Theme.of(context)
+                                      .primaryColorDark
+                                      .withOpacity(0.08)),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(15))),
                           focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                   width: 0,
-                                  color: themeData.primaryColorDark
-                                      .withOpacity(0.3)),
+                                  color: Theme.of(context)
+                                      .primaryColorDark
+                                      .withOpacity(0.08)),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(15)))),
                     ),
@@ -180,7 +180,7 @@ class _EditNameViewState extends State<EditNameView>
                           child: Text(
                             '${_value.length}/${widget.editType == 1 ? 10 : 50}',
                             style: TextStyle(
-                                color: Colors.black,
+                                color: AppTheme.appTheme.gradientColorDark(),
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15),
                           ),
@@ -195,6 +195,7 @@ class _EditNameViewState extends State<EditNameView>
                   onTap: () {
                     FocusScope.of(context).requestFocus(FocusNode());
                   },
+                  onDoubleTap: () {},
                   child: Container(
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
@@ -205,7 +206,7 @@ class _EditNameViewState extends State<EditNameView>
                     height: 50,
                     child: SvgPicture.asset(
                       'assets/images/duigou.svg',
-                      color: themeData.accentColor,
+                      color: AppTheme.appTheme.gradientColorDark(),
                       width: 30,
                       height: 30,
                     ),

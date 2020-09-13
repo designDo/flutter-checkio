@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:timefly/app_theme.dart';
 import 'package:timefly/habit_progress/habit_progress_screen.dart';
 import 'package:timefly/mine/mine_screen.dart';
 import 'package:timefly/one_day/one_day_screen.dart';
 import 'package:timefly/widget/appbar/fluid_nav_bar.dart';
-
-import 'app_theme.dart';
-
 class HomeScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -30,8 +28,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
       extendBody: true,
+      backgroundColor: AppTheme.appTheme.containerBackgroundColor(),
       body: _child,
       bottomNavigationBar: FluidNavBar(
         onChange: _handleNavigationChange,

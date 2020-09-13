@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 
-/// app theme
-///
-
-enum AppThemes {
-  ///蓝色
-  Blue,
-
-  ///紫色
-  Purple,
+///  theme mode
+enum AppThemeMode {
+  Light,
+  Dark,
 }
 
-enum Fonts {
+///字体模式
+enum AppFontMode {
   ///默认字体
   Roboto,
 
@@ -19,100 +15,112 @@ enum Fonts {
   MaShanZheng,
 }
 
+///颜色模式，特定view背景颜色
+enum AppThemeColorMode { Blue, Purple }
+
 class AppTheme {
-  ThemeData createTheme(AppThemes targetTheme, Fonts targetFont) {
+  AppTheme._();
+
+  static final AppTheme appTheme = AppTheme._();
+
+  AppThemeMode currentThemeMode;
+  AppThemeColorMode currentColorMode;
+  AppFontMode currentFontMode;
+
+  ThemeData createTheme(AppThemeMode themeMode,
+      AppThemeColorMode themeColorMode, AppFontMode fontMode) {
+    currentThemeMode = themeMode;
+    currentColorMode = themeColorMode;
+    currentFontMode = fontMode;
+    if (themeMode == AppThemeMode.Dark) {
+      return darkTheme();
+    } else {
+      return lightTheme();
+    }
+  }
+
+  bool isDark() {
+    return currentThemeMode == AppThemeMode.Dark;
+  }
+
+  TextStyle textStyle(
+      {Color textColor, FontWeight fontWeight, double fontSize}) {
+    return TextStyle(
+        fontFamily: fontFamily(currentFontMode),
+        fontSize: fontSize ?? 20,
+        fontWeight: fontWeight ?? FontWeight.normal,
+        color: textColor ?? (isDark() ? Colors.white70 : Colors.black));
+  }
+
+  Color containerBackgroundColor() {
+    return isDark() ? Color(0xFF233355) : Color(0xFFF2F7FB);
+  }
+
+  Color cardBackgroundColor() {
+    return isDark() ? Color(0xFF294261) : Colors.white;
+  }
+
+  Color selectColor() {
+    return isDark() ? Colors.white : Colors.black;
+  }
+
+  Color addHabitSheetBgDark() {
+    if (isDark()) {
+      return Color(0xFF233355);
+    }
+    return gradientColorDark();
+  }
+
+  Color addHabitSheetBgLight() {
+    if (isDark()) {
+      return Color(0xFF294261);
+    }
+    return gradientColorLight();
+  }
+
+  Color gradientColorDark() {
+    switch (currentColorMode) {
+      case AppThemeColorMode.Blue:
+        return Color(0xFF779BF6);
+      case AppThemeColorMode.Purple:
+        return Colors.deepPurple;
+    }
+    return Colors.white70;
+  }
+
+  Color gradientColorLight() {
+    switch (currentColorMode) {
+      case AppThemeColorMode.Blue:
+        return Color(0xFF3F9CAD);
+      case AppThemeColorMode.Purple:
+        return Colors.purple;
+    }
+    return Colors.white70;
+  }
+
+  static const Color iconColor = Colors.grey;
+
+  ThemeData lightTheme() {
     return ThemeData.light().copyWith(
-        primaryColor: primaryColor(targetTheme),
-        primaryColorLight: primaryColorLight(targetTheme),
-        primaryColorDark: primaryColorDark(targetTheme),
-        accentColor: accentColor(targetTheme),
-        textTheme: TextTheme(
-            headline5:
-                TextStyle(fontFamily: fontFamily(targetFont), fontSize: 23),
-            headline6: TextStyle(
-              fontFamily: fontFamily(targetFont),
-              fontSize: 20,
-            ),
-            subtitle1: TextStyle(
-              fontFamily: fontFamily(targetFont),
-              fontSize: 18,
-            ),
-            subtitle2: TextStyle(
-              fontFamily: fontFamily(targetFont),
-              fontSize: 16,
-            )));
+        primaryColor: Color(0xFFF2F7FB),
+        primaryColorDark: Color(0xFF6B6B6B),
+        primaryColorLight: Colors.blueAccent);
   }
 
-  Color primaryColor(AppThemes theme) {
-    switch (theme) {
-      case AppThemes.Blue:
-        return normal_blue;
-      case AppThemes.Purple:
-        return normal_purple;
-    }
-    return Colors.white;
+  ThemeData darkTheme() {
+    return ThemeData.dark().copyWith(
+      primaryColor: Color(0xFF17262A),
+      primaryColorDark: Color(0xFF6B6B6B),
+    );
   }
 
-  Color primaryColorLight(AppThemes theme) {
-    switch (theme) {
-      case AppThemes.Blue:
-        return light_blue;
-      case AppThemes.Purple:
-        return light_purple;
-    }
-    return Colors.white;
-  }
-
-  Color primaryColorDark(AppThemes theme) {
-    switch (theme) {
-      case AppThemes.Blue:
-        return dark_blue;
-      case AppThemes.Purple:
-        return dark_purple;
-    }
-    return Colors.white;
-  }
-
-  Color accentColor(AppThemes theme) {
-    switch (theme) {
-      case AppThemes.Blue:
-        return accent_blue;
-      case AppThemes.Purple:
-        return accent_purple;
-    }
-    return Colors.white;
-  }
-
-  String fontFamily(Fonts fonts) {
-    switch (fonts) {
-      case Fonts.MaShanZheng:
+  String fontFamily(AppFontMode fontMode) {
+    switch (fontMode) {
+      case AppFontMode.MaShanZheng:
         return 'MaShanZheng';
     }
     return 'Roboto';
   }
-
-  static const Color normal_blue = Color(0xff3f9bad);
-  static const Color light_blue = Color(0xff7599f6);
-  static const Color dark_blue = Color(0xff4392b2);
-  static const Color accent_blue = Color(0xff7599f6);
-
-  ///渐变色深
-  static const Color normal_purple = Color(0xFF7a70c5);
-
-  ///渐变色浅
-  static const Color light_purple = Color(0xFF8389ea);
-
-  ///深色button
-  static const Color dark_purple = Color(0xFF7b7ad1);
-
-  ///浅色颜色
-  static const Color accent_purple = Color(0xff5696c9);
-
-  ///不可用字体颜色
-  static const Color text_unable = Color(0xFFbcbaea);
-
-  ///可用字体颜色
-  static const Color text_enable = Color(0xffe7e7fa);
 
   static const Color nearlyWhite = Color(0xFFFAFAFA);
   static const Color white = Color(0xFFFFFFFF);

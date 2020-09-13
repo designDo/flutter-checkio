@@ -42,7 +42,6 @@ class _OneDayScreenState extends State<OneDayScreen>
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppTheme.background,
       child: FutureBuilder(
         future: getListData(),
         builder: (context, snapshot) {
@@ -106,10 +105,7 @@ class _OneDayScreenState extends State<OneDayScreen>
               children: [
                 Text(
                   'Hello,Good Morning',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline5
-                      .copyWith(color: Theme.of(context).primaryColor),
+                  style: AppTheme.appTheme.textStyle(),
                 ),
                 Text(
                   'You have 7 habits last !!',
@@ -149,17 +145,17 @@ class _OneDayScreenState extends State<OneDayScreen>
                 decoration: BoxDecoration(
                     boxShadow: <BoxShadow>[
                       BoxShadow(
-                          color: HexColor('#738AE6').withOpacity(0.6),
-                          offset: const Offset(1.1, 4.0),
-                          blurRadius: 8.0),
+                          color:AppTheme.appTheme.gradientColorLight().withOpacity(0.8),
+                          offset: const Offset(13.1, 4.0),
+                          blurRadius: 16.0),
                     ],
                     gradient: LinearGradient(
-                      colors: <HexColor>[
-                        HexColor('#5C5EDD'),
-                        HexColor('#738AE6'),
+                      colors: <Color>[
+                        AppTheme.appTheme.gradientColorLight(),
+                        AppTheme.appTheme.gradientColorDark(),
                       ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
                     ),
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20),

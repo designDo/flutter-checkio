@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
+import 'package:timefly/app_theme.dart';
 
 import './fluid_icon.dart';
 import './curves.dart';
@@ -90,7 +91,7 @@ class _FluidNavBarButtonState extends State<FluidNavBarButton> with SingleTicker
           margin: EdgeInsets.all(ne.width / 2 - _radius),
           constraints: BoxConstraints.tight(Size.square(_radius * 2)),
           decoration: ShapeDecoration(
-            color: Colors.white,
+            color: AppTheme.appTheme.cardBackgroundColor(),
             shape: CircleBorder(),
           ),
           transform: Matrix4.translationValues(0, -offset, 0),

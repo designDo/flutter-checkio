@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:timefly/app_theme.dart';
 
 import './fluid_icon.dart';
 import './fluid_button.dart';
@@ -9,7 +10,7 @@ typedef void FluidNavBarChangeCallback(int selectedIndex);
 
 class FluidNavBar extends StatefulWidget {
 
-  static const double nominalHeight = 56.0;
+  static const double nominalHeight = 60.0;
 
   final FluidNavBarChangeCallback onChange;
 
@@ -103,7 +104,7 @@ class _FluidNavBarState extends State<FluidNavBar> with TickerProviderStateMixin
           begin: Curves.easeInExpo.transform(_yController.value),
           end: inCurve.transform(_yController.value),
         ).transform(_yController.velocity.sign * 0.5 + 0.5),
-        Colors.white,
+       AppTheme.appTheme.cardBackgroundColor(),
       ),
     );
   }

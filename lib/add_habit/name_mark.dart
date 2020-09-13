@@ -49,7 +49,6 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
 
   @override
   Widget build(BuildContext context) {
-    ThemeData themeData = Theme.of(context);
     return AnimatedBuilder(
       animation: widget.editAnimationController,
       builder: (context, child) {
@@ -72,9 +71,10 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                           curve: Interval(0, 0.1, curve: Curves.decelerate)),
                       child: Text('给习惯取一个好听的名字\n并编辑一句鼓励自己的话',
                           strutStyle: StrutStyle(height: 2),
-                          style: Theme.of(context).textTheme.headline5.copyWith(
-                              color: AppTheme.text_enable,
-                              fontWeight: FontWeight.w600)),
+                          style: AppTheme.appTheme.textStyle(
+                              textColor: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20)),
                     );
                   },
                 ),
@@ -96,23 +96,27 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                               edit_type = type_name;
                               gotoEditName(context);
                             },
+                            onDoubleTap: () {},
                             child: Container(
-                                padding: EdgeInsets.only(left: 16, top: 28),
+                                padding: EdgeInsets.only(left: 16, right: 16),
+                                alignment: Alignment.centerLeft,
                                 width: 400,
                                 height: 80,
                                 decoration: BoxDecoration(
                                     shape: BoxShape.rectangle,
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(15)),
-                                    color: themeData.primaryColorDark
-                                        .withOpacity(0.3)),
+                                    color: Theme.of(context)
+                                        .primaryColorDark
+                                        .withOpacity(0.08)),
                                 child: Text(
                                   _name.length == 0 ? '名字 ...' : _name,
-                                  style: themeData.textTheme.headline6.copyWith(
+                                  style: AppTheme.appTheme.textStyle(
+                                      fontSize: 18,
                                       fontWeight: FontWeight.bold,
-                                      color: _name.length == 0
-                                          ? AppTheme.text_unable
-                                          : AppTheme.text_enable),
+                                      textColor: _name.length == 0
+                                          ? Colors.white.withOpacity(0.5)
+                                          : Colors.white),
                                 )),
                           )),
                     );
@@ -136,23 +140,26 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                               edit_type = type_mark;
                               gotoEditName(context);
                             },
+                            onDoubleTap: () {},
                             child: Container(
                                 padding: EdgeInsets.only(left: 16, top: 16),
                                 width: 400,
-                                height: 150,
+                                height: 130,
                                 decoration: BoxDecoration(
                                     shape: BoxShape.rectangle,
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(15)),
-                                    color: themeData.primaryColorDark
-                                        .withOpacity(0.3)),
+                                    color: Theme.of(context)
+                                        .primaryColorDark
+                                        .withOpacity(0.08)),
                                 child: Text(
                                   _mark.length == 0 ? 'mark ...' : _mark,
                                   strutStyle: StrutStyle(height: 1.5),
-                                  style: themeData.textTheme.subtitle1.copyWith(
-                                    color: _mark.length == 0
-                                        ? AppTheme.text_unable
-                                        : AppTheme.text_enable,
+                                  style: AppTheme.appTheme.textStyle(
+                                    fontSize: 16,
+                                    textColor: _mark.length == 0
+                                        ? Colors.white.withOpacity(0.5)
+                                        : Colors.white,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 )),
@@ -179,6 +186,7 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                           }
                           widget.onPageNext();
                         },
+                        onDoubleTap: () {},
                         child: Container(
                           alignment: Alignment.center,
                           width: 250,
@@ -189,12 +197,16 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                                   BorderRadius.all(Radius.circular(32)),
                               color: _name.length > 0
                                   ? Colors.white
-                                  : themeData.primaryColorDark
-                                      .withOpacity(0.6)),
+                                  : Theme.of(context)
+                                      .primaryColorDark
+                                      .withOpacity(0.25)),
                           child: Text(
                             '下一步',
-                            style: themeData.textTheme.headline6.copyWith(
-                                color: themeData.accentColor,
+                            style: AppTheme.appTheme.textStyle(
+                                textColor: _name.length > 0
+                                    ? AppTheme.appTheme.gradientColorLight()
+                                    : Colors.black.withOpacity(0.2),
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),

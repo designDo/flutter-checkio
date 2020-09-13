@@ -6,11 +6,12 @@ abstract class ThemeEvent extends Equatable {
 }
 
 class ThemeChangeEvent extends ThemeEvent {
-  ThemeChangeEvent(this.themes, this.fonts);
+  ThemeChangeEvent(this.themeMode, this.themeColorMode, this.fontMode);
 
   @override
-  List<Object> get props => [themes, fonts];
+  List<Object> get props => [themeMode, themeColorMode, fontMode];
 
-  final AppThemes themes;
-  final Fonts fonts;
+  final AppThemeMode themeMode;
+  final AppThemeColorMode themeColorMode;
+  final AppFontMode fontMode;
 }

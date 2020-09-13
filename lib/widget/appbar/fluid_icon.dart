@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:timefly/app_theme.dart';
 import 'package:timefly/utils/path_util.dart';
 
 // Users of this class shouldn't have to explicitly import fluid_icon_data
@@ -45,14 +46,14 @@ class _FluidFillIconPainter extends CustomPainter {
         ..strokeWidth = 2.4
         ..strokeCap = StrokeCap.round
         ..strokeJoin = StrokeJoin.round
-        ..color = Colors.grey;
+        ..color = AppTheme.iconColor;
 
     final paintForeground = Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2.4
         ..strokeCap = StrokeCap.round
         ..strokeJoin = StrokeJoin.round
-        ..color = Colors.black;
+        ..color = AppTheme.appTheme.selectColor();
 
     // Scale around (0, height / 2)
     canvas.translate(0.0, size.height / 2);
