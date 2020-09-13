@@ -6,7 +6,7 @@ import 'package:timefly/blocs/theme/theme_state.dart';
 class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
   ThemeBloc()
       : super(ThemeState(AppTheme.appTheme.createTheme(AppThemeMode.Light,
-            AppThemeColorMode.Blue, AppFontMode.MaShanZheng)));
+            AppThemeColorMode.Blue, AppFontMode.Roboto)));
 
   @override
   Stream<ThemeState> mapEventToState(ThemeEvent event) async* {

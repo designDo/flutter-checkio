@@ -219,11 +219,11 @@ class _HabitAddSheet extends State<HabitAddSheet>
 
   void backPage() {
     pageController.animateToPage(_index - 1,
-        duration: Duration(milliseconds: 300), curve: Curves.decelerate);
+        duration: Duration(milliseconds: 500), curve: Curves.easeOutSine);
   }
 
   void nextPage() {
     pageController.animateToPage(_index + 1,
-        duration: Duration(milliseconds: 300), curve: Curves.decelerate);
+        duration: Duration(milliseconds: 500), curve: Curves.easeOutSine);
   }
 }
