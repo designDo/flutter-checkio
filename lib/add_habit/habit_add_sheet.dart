@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:timefly/app_theme.dart';
@@ -92,27 +91,6 @@ class _HabitAddSheet extends State<HabitAddSheet>
               backPage();
               return false;
             }
-            await showCupertinoDialog(
-                context: context,
-                builder: (context) => CupertinoAlertDialog(
-                      title: Text('Should Close?'),
-                      actions: <Widget>[
-                        CupertinoButton(
-                          child: Text('Yes'),
-                          onPressed: () {
-                            shouldClose = true;
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        CupertinoButton(
-                          child: Text('No'),
-                          onPressed: () {
-                            shouldClose = false;
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    ));
             return shouldClose;
           },
           child: Material(
