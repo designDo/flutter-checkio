@@ -130,24 +130,20 @@ class _HabitAddSheet extends State<HabitAddSheet>
                       end: Alignment.topRight,
                     ),
                   ),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 32,
-                        ),
-                        getBarView(),
-                        Expanded(
-                          child: PageView.builder(
-                              onPageChanged: onPageChanged,
-                              physics: NeverScrollableScrollPhysics(),
-                              controller: pageController,
-                              itemCount: widgets.length,
-                              itemBuilder: (context, index) {
-                                return widgets[index];
-                              }),
-                        ),
-                      ]),
+                  child: Stack(children: [
+                    PageView.builder(
+                        onPageChanged: onPageChanged,
+                        physics: NeverScrollableScrollPhysics(),
+                        controller: pageController,
+                        itemCount: widgets.length,
+                        itemBuilder: (context, index) {
+                          return widgets[index];
+                        }),
+                    Padding(
+                      padding: EdgeInsets.only(top: 32),
+                      child: getBarView(),
+                    )
+                  ]),
                 );
               }),
             ),

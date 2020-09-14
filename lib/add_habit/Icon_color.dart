@@ -7,10 +7,9 @@ class IconAndColorPage extends StatefulWidget {
   _IconAndColorPageState createState() => _IconAndColorPageState();
 }
 
-class _IconAndColorPageState extends State<IconAndColorPage> {
+class _IconAndColorPageState extends State<IconAndColorPage> with AutomaticKeepAliveClientMixin {
   List<Icon> icons = [];
   Icon _selectIcon;
-  double _sliderValue = 0;
 
   @override
   void initState() {
@@ -21,78 +20,112 @@ class _IconAndColorPageState extends State<IconAndColorPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.transparent,
-      child: Column(
-        children: [
-          SizedBox(
-            height: 18,
-          ),
-          Text('请挑选一个图标和颜色吧',
-              style: AppTheme.appTheme.textStyle(
-                  textColor: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20)),
-          SizedBox(
-            height: 10,
-          ),
-          Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Theme.of(context).primaryColorDark.withOpacity(0.08),
-                border: Border.all(color: Colors.white, width: 2)),
-            width: 80,
-            height: 80,
-            child: Image.asset(
-              _selectIcon.icon,
-              fit: BoxFit.contain,
-              width: 50,
-              height: 50,
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        ListView(
+          children: [
+            SizedBox(
+              height: 68,
             ),
-          ),
-          Container(
-            padding: EdgeInsets.only(top: 16, bottom: 16),
-            height: 220,
-            child: GridView.builder(
-              padding: EdgeInsets.only(left: 18),
-              itemCount: icons.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3, mainAxisSpacing: 10, crossAxisSpacing: 10),
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      icons.forEach((element) {
-                        element.isSelect = false;
+            Container(
+              alignment: Alignment.center,
+              child: Text('请挑选一个图标和颜色吧',
+                  style: AppTheme.appTheme.textStyle(
+                      textColor: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20)),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Theme.of(context).primaryColorDark.withOpacity(0.08),
+                  border: Border.all(color: Colors.white, width: 2)),
+              width: 80,
+              height: 80,
+              child: Image.asset(
+                _selectIcon.icon,
+                fit: BoxFit.contain,
+                width: 50,
+                height: 50,
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 16, bottom: 16),
+              height: 220,
+              child: GridView.builder(
+                padding: EdgeInsets.only(left: 18),
+                itemCount: icons.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10),
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        icons.forEach((element) {
+                          element.isSelect = false;
+                        });
+                        icons[index].isSelect = true;
+                        _selectIcon = icons[index];
                       });
-                      icons[index].isSelect = true;
-                      _selectIcon = icons[index];
-                    });
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        shape: BoxShape.rectangle,
-                        color: (icons[index].isSelect
-                            ? Colors.white
-                            : Colors.transparent)),
-                    alignment: Alignment.center,
-                    child: Image.asset(
-                      icons[index].icon,
-                      width: 40,
-                      height: 40,
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          shape: BoxShape.rectangle,
+                          color: (icons[index].isSelect
+                              ? Colors.white
+                              : Colors.transparent)),
+                      alignment: Alignment.center,
+                      child: Image.asset(
+                        icons[index].icon,
+                        width: 40,
+                        height: 40,
+                      ),
                     ),
-                  ),
-                );
-              },
-              scrollDirection: Axis.horizontal,
+                  );
+                },
+                scrollDirection: Axis.horizontal,
+              ),
             ),
+            Container(
+              height: 150,
+              color: Colors.transparent,
+            ),
+            SizedBox(
+              height: 200,
+            )
+          ],
+        ),
+        Container(
+          margin: EdgeInsets.only(bottom: 42),
+          alignment: Alignment.center,
+          width: 250,
+          height: 60,
+          decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(32)),
+              color: Theme.of(context).primaryColorDark.withOpacity(0.25)),
+          child: Text(
+            '下一步',
+            style: AppTheme.appTheme.textStyle(
+                textColor: Colors.black.withOpacity(0.2),
+                fontSize: 18,
+                fontWeight: FontWeight.bold),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class Icon {

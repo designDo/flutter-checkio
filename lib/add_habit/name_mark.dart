@@ -60,7 +60,7 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
             child: Column(
               children: [
                 SizedBox(
-                  height: 18,
+                  height: 68,
                 ),
                 AnimatedBuilder(
                   animation: _animationController,
