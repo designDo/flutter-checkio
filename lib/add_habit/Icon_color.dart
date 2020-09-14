@@ -7,14 +7,20 @@ class IconAndColorPage extends StatefulWidget {
   _IconAndColorPageState createState() => _IconAndColorPageState();
 }
 
-class _IconAndColorPageState extends State<IconAndColorPage> with AutomaticKeepAliveClientMixin {
+class _IconAndColorPageState extends State<IconAndColorPage>
+    with AutomaticKeepAliveClientMixin {
   List<Icon> icons = [];
   Icon _selectIcon;
+
+  List<BackgroundColor> backgroundColors = [];
+  BackgroundColor _selectBackgroundColor;
 
   @override
   void initState() {
     icons = Icon.getIcons();
     _selectIcon = icons[0];
+    backgroundColors = BackgroundColor.getBackgroundColors();
+    _selectBackgroundColor = backgroundColors[0];
     super.initState();
   }
 
@@ -43,7 +49,7 @@ class _IconAndColorPageState extends State<IconAndColorPage> with AutomaticKeepA
               alignment: Alignment.center,
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Theme.of(context).primaryColorDark.withOpacity(0.08),
+                  color: _selectBackgroundColor.color,
                   border: Border.all(color: Colors.white, width: 2)),
               width: 80,
               height: 80,
@@ -95,11 +101,44 @@ class _IconAndColorPageState extends State<IconAndColorPage> with AutomaticKeepA
               ),
             ),
             Container(
-              height: 150,
-              color: Colors.transparent,
+              height: 200,
+              padding: EdgeInsets.only(top: 16, bottom: 16),
+              child: GridView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.only(left: 18),
+                  itemCount: backgroundColors.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      mainAxisSpacing: 20,
+                      crossAxisSpacing: 20),
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          backgroundColors.forEach((element) {
+                            element.isSelect = false;
+                          });
+                          backgroundColors[index].isSelect = true;
+                          _selectBackgroundColor = backgroundColors[index];
+                        });
+                      },
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                color: backgroundColors[index].isSelect
+                                    ? Colors.white
+                                    : Colors.transparent,
+                                width: 2),
+                            color: backgroundColors[index].color),
+                      ),
+                    );
+                  }),
             ),
             SizedBox(
-              height: 200,
+              height: 100,
             )
           ],
         ),
@@ -111,11 +150,11 @@ class _IconAndColorPageState extends State<IconAndColorPage> with AutomaticKeepA
           decoration: BoxDecoration(
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.all(Radius.circular(32)),
-              color: Theme.of(context).primaryColorDark.withOpacity(0.25)),
+              color: Colors.white),
           child: Text(
             '下一步',
             style: AppTheme.appTheme.textStyle(
-                textColor: Colors.black.withOpacity(0.2),
+                textColor: AppTheme.appTheme.gradientColorDark(),
                 fontSize: 18,
                 fontWeight: FontWeight.bold),
           ),
@@ -162,5 +201,27 @@ class Icon {
     icons.add(Icon('assets/images/treadmill-跑步机.png'));
 
     return icons;
+  }
+}
+
+class BackgroundColor {
+  final Color color;
+  bool isSelect = false;
+
+  BackgroundColor(this.color, {this.isSelect = false});
+
+  static List<BackgroundColor> getBackgroundColors() {
+    List<BackgroundColor> backgroundColors = [];
+
+    backgroundColors
+        .add(BackgroundColor(Colors.deepPurpleAccent, isSelect: true));
+    backgroundColors.add(BackgroundColor(Colors.purple));
+    backgroundColors.add(BackgroundColor(Colors.white));
+    backgroundColors.add(BackgroundColor(Colors.lightBlue));
+    backgroundColors.add(BackgroundColor(Colors.red));
+    backgroundColors.add(BackgroundColor(Colors.blueAccent));
+    backgroundColors.add(BackgroundColor(Colors.pink));
+    backgroundColors.add(BackgroundColor(Colors.deepOrange));
+    return backgroundColors;
   }
 }
