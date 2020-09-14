@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import '../app_theme.dart';
 
 class IconAndColorPage extends StatefulWidget {
+  final Function onNext;
+
+  const IconAndColorPage({Key key, this.onNext}) : super(key: key);
+
   @override
   _IconAndColorPageState createState() => _IconAndColorPageState();
 }
@@ -45,7 +49,7 @@ class _IconAndColorPageState extends State<IconAndColorPage>
             SizedBox(
               height: 10,
             ),
-            Container(
+            AnimatedContainer(
               alignment: Alignment.center,
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -59,6 +63,7 @@ class _IconAndColorPageState extends State<IconAndColorPage>
                 width: 50,
                 height: 50,
               ),
+              duration: Duration(milliseconds: 500),
             ),
             Container(
               padding: EdgeInsets.only(top: 16, bottom: 16),
@@ -142,23 +147,28 @@ class _IconAndColorPageState extends State<IconAndColorPage>
             )
           ],
         ),
-        Container(
-          margin: EdgeInsets.only(bottom: 42),
-          alignment: Alignment.center,
-          width: 250,
-          height: 60,
-          decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(32)),
-              color: Colors.white),
-          child: Text(
-            '下一步',
-            style: AppTheme.appTheme.textStyle(
-                textColor: AppTheme.appTheme.gradientColorDark(),
-                fontSize: 18,
-                fontWeight: FontWeight.bold),
+        GestureDetector(
+          onTap: () {
+            widget.onNext();
+          },
+          child: Container(
+            margin: EdgeInsets.only(bottom: 42),
+            alignment: Alignment.center,
+            width: 250,
+            height: 60,
+            decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.all(Radius.circular(32)),
+                color: Colors.white),
+            child: Text(
+              '下一步',
+              style: AppTheme.appTheme.textStyle(
+                  textColor: AppTheme.appTheme.gradientColorDark(),
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
+            ),
           ),
-        ),
+        )
       ],
     );
   }

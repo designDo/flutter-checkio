@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:timefly/add_habit/time_peroid.dart';
 import 'package:timefly/app_theme.dart';
 
 import 'Icon_color.dart';
@@ -73,7 +74,10 @@ class _HabitAddSheet extends State<HabitAddSheet>
       onEndEdit: onEndEdit,
       editAnimationController: editPageAnimationController,
     ));
-    widgets.add(IconAndColorPage());
+    widgets.add(IconAndColorPage(
+      onNext: onPageNext,
+    ));
+    widgets.add(TimePeroidPage());
     super.initState();
   }
 

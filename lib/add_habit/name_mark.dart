@@ -153,7 +153,7 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                                         .primaryColorDark
                                         .withOpacity(0.08)),
                                 child: Text(
-                                  _mark.length == 0 ? 'mark ...' : _mark,
+                                  _mark.length == 0 ? '千里之行，始于足下 ...' : _mark,
                                   strutStyle: StrutStyle(height: 1.5),
                                   style: AppTheme.appTheme.textStyle(
                                     fontSize: 16,
