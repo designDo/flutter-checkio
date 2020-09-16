@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../app_theme.dart';
 
@@ -13,6 +14,11 @@ class _TimePeroidPageState extends State<TimePeroidPage> {
 
   List<CompleteDay> completeDays = [];
   List<CompleteTime> completeTimes = [];
+
+  String selectDayString = '每天';
+  int completeNun = 7;
+
+  bool isAllUnSelect = false;
 
   @override
   void initState() {
@@ -38,10 +44,33 @@ class _TimePeroidPageState extends State<TimePeroidPage> {
             height: 16,
           ),
           Container(
+              margin: EdgeInsets.only(left: 32),
+              alignment: Alignment.centerLeft,
+              child: Row(
+                children: [
+                  SvgPicture.asset(
+                    'assets/images/time.svg',
+                    color: Colors.white70,
+                    width: 30,
+                    height: 30,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    '时间',
+                    style: AppTheme.appTheme.textStyle(
+                        textColor: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),
+                  ),
+                ],
+              )),
+          Container(
             margin: EdgeInsets.only(top: 16),
             height: 50,
             child: ListView.builder(
-              padding: EdgeInsets.only(left: 16),
+              padding: EdgeInsets.only(left: 32),
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
@@ -81,141 +110,238 @@ class _TimePeroidPageState extends State<TimePeroidPage> {
             ),
           ),
           SizedBox(
-            height: 16,
+            height: 32,
           ),
-          Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 32),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '每天',
-                      style: AppTheme.appTheme.textStyle(
-                          textColor: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18),
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    Text(
-                      '每天完成一次',
-                      style: AppTheme.appTheme.textStyle(
-                          textColor: Colors.white70,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 32),
-                child: Switch(
-                  value: isEveryDay,
-                  onChanged: (value) {
-                    setState(() {
-                      isEveryDay = value;
-                      isCustom = !value;
-                    });
-                  },
-                ),
-              ),
-            ],
-          ),
+          Container(
+              margin: EdgeInsets.only(left: 32),
+              alignment: Alignment.centerLeft,
+              child: Row(
+                children: [
+                  SvgPicture.asset(
+                    'assets/images/zhouqi.svg',
+                    color: Colors.white70,
+                    width: 28,
+                    height: 28,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    '周期 7 天',
+                    style: AppTheme.appTheme.textStyle(
+                        textColor: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),
+                  ),
+                ],
+              )),
           SizedBox(
             height: 16,
           ),
-          Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 32),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '自定义时间',
+          Container(
+            alignment: Alignment.centerLeft,
+            margin: EdgeInsets.only(left: 50),
+            child: Text(
+              selectDayString,
+              style: AppTheme.appTheme.textStyle(
+                  textColor: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 16),
+            height: 50,
+            child: ListView.builder(
+              padding: EdgeInsets.only(left: 32),
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      completeDays[index].isSelect =
+                          !completeDays[index].isSelect;
+                      selectDayString = getSelectDayString();
+                    });
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.only(left: 16),
+                    width: 60,
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: completeDays[index].isSelect
+                                ? Colors.white
+                                : Colors.transparent,
+                            width: 2),
+                        shape: BoxShape.circle,
+                        color: Theme.of(context)
+                            .primaryColorDark
+                            .withOpacity(0.08)),
+                    child: Text(
+                      CompleteDay.getDay(completeDays[index].day),
+                      style: AppTheme.appTheme.textStyle(
+                          textColor: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16),
+                    ),
+                  ),
+                );
+              },
+              itemCount: completeDays.length,
+              scrollDirection: Axis.horizontal,
+            ),
+          ),
+          SizedBox(
+            height: 30,
+          ),
+          Container(
+              margin: EdgeInsets.only(left: 32),
+              alignment: Alignment.centerLeft,
+              child: Row(
+                children: [
+                  SvgPicture.asset(
+                    'assets/images/duigou.svg',
+                    color: Colors.white70,
+                    width: 30,
+                    height: 30,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    '完成次数',
+                    style: AppTheme.appTheme.textStyle(
+                        textColor: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Container(
+                    width: 55,
+                    height: 55,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2),
+                        color: AppTheme.appTheme
+                            .gradientColorDark()
+                            .withOpacity(0.08)),
+                    child: Text(
+                      '$completeNun',
                       style: AppTheme.appTheme.textStyle(
                           textColor: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 18),
+                          fontSize: 20),
                     ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    Text(
-                      '选择在周一和周三完成\n并且要完成3次',
-                      style: AppTheme.appTheme.textStyle(
-                          textColor: Colors.white70,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 32),
-                child: Switch(
-                  value: isCustom,
-                  onChanged: (value) {
-                    setState(() {
-                      isCustom = value;
-                      isEveryDay = !value;
-                    });
-                  },
-                ),
-              ),
-            ],
-          ),
-          !isCustom
-              ? SizedBox()
-              : Container(
-                  margin: EdgeInsets.only(top: 32),
-                  height: 50,
-                  child: ListView.builder(
-                    padding: EdgeInsets.only(left: 16),
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
+                  ),
+                  SizedBox(
+                    width: 16,
+                  ),
+                  Column(
+                    children: [
+                      GestureDetector(
                         onTap: () {
                           setState(() {
-                            completeDays[index].isSelect =
-                                !completeDays[index].isSelect;
+                            completeNun += 1;
                           });
                         },
-                        child: Container(
-                          alignment: Alignment.center,
-                          margin: EdgeInsets.only(left: 16),
-                          width: 60,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: completeDays[index].isSelect
-                                      ? Colors.white
-                                      : Colors.transparent,
-                                  width: 2),
-                              shape: BoxShape.circle,
-                              color: Theme.of(context)
-                                  .primaryColorDark
-                                  .withOpacity(0.08)),
-                          child: Text(
-                            CompleteDay.getDay(completeDays[index].day),
-                            style: AppTheme.appTheme.textStyle(
-                                textColor: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16),
-                          ),
+                        child: SvgPicture.asset(
+                          'assets/images/jia.svg',
+                          color: Colors.white,
+                          width: 30,
+                          height: 30,
                         ),
-                      );
-                    },
-                    itemCount: completeDays.length,
-                    scrollDirection: Axis.horizontal,
-                  ),
-                )
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          if (completeNun == 1) {
+                            return;
+                          }
+                          setState(() {
+                            completeNun -= 1;
+                          });
+                        },
+                        child: SvgPicture.asset(
+                          'assets/images/jian.svg',
+                          color: Colors.white,
+                          width: 30,
+                          height: 30,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              )),
+          SizedBox(
+            height: 32,
+          ),
+          GestureDetector(
+            onTap: () {
+              if (isAllUnSelect) {
+                return;
+              }
+              print('complete!!!');
+            },
+            child: Container(
+              margin: EdgeInsets.only(bottom: 42),
+              alignment: Alignment.center,
+              width: 250,
+              height: 60,
+              decoration: BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.all(Radius.circular(32)),
+                  color: isAllUnSelect
+                      ? Theme.of(context).primaryColorDark.withOpacity(0.25)
+                      : Colors.white),
+              child: Text(
+                '完成',
+                style: AppTheme.appTheme.textStyle(
+                    textColor: !isAllUnSelect
+                        ? AppTheme.appTheme.gradientColorDark()
+                        : Colors.black.withOpacity(0.2),
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          )
         ],
       ),
     );
+  }
+
+  String getSelectDayString() {
+    bool isAllSelect = true;
+    bool isAllUnSelect = true;
+    for (var completeDay in completeDays) {
+      if (!completeDay.isSelect) {
+        isAllSelect = false;
+      }
+      if (completeDay.isSelect) {
+        isAllUnSelect = false;
+      }
+    }
+    if (isAllSelect) {
+      return '每天';
+    }
+    setState(() {
+      this.isAllUnSelect = isAllUnSelect;
+    });
+    if (isAllUnSelect) {
+      return '请选择周期';
+    }
+
+    String dayString = '';
+    for (var completeDay in completeDays) {
+      if (completeDay.isSelect) {
+        dayString += CompleteDay.getDay(completeDay.day) + '  ';
+      }
+    }
+    return dayString;
   }
 }
 
@@ -271,7 +397,7 @@ class CompleteDay {
   static List<CompleteDay> getCompleteDays() {
     List<CompleteDay> days = [];
     for (int i = 1; i <= 7; i++) {
-      days.add(CompleteDay(i, isSelect: i == 0));
+      days.add(CompleteDay(i, isSelect: true));
     }
 
     return days;
