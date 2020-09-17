@@ -8,9 +8,12 @@ class TimePeroidPage extends StatefulWidget {
   _TimePeroidPageState createState() => _TimePeroidPageState();
 }
 
-class _TimePeroidPageState extends State<TimePeroidPage> {
+class _TimePeroidPageState extends State<TimePeroidPage>
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   bool isEveryDay = true;
   bool isCustom = false;
+
+  AnimationController fontAnimationController;
 
   List<CompleteDay> completeDays = [];
   List<CompleteTime> completeTimes = [];
@@ -24,6 +27,9 @@ class _TimePeroidPageState extends State<TimePeroidPage> {
   void initState() {
     completeDays = CompleteDay.getCompleteDays();
     completeTimes = CompleteTime.getCompleteTimes();
+    fontAnimationController =
+        AnimationController(duration: Duration(milliseconds: 300), vsync: this);
+    fontAnimationController.forward(from: 0.5);
     super.initState();
   }
 
@@ -228,12 +234,19 @@ class _TimePeroidPageState extends State<TimePeroidPage> {
                         color: AppTheme.appTheme
                             .gradientColorDark()
                             .withOpacity(0.08)),
-                    child: Text(
-                      '$completeNun',
-                      style: AppTheme.appTheme.textStyle(
-                          textColor: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20),
+                    child: AnimatedBuilder(
+                      builder: (context, child) {
+                        return Text(
+                          '$completeNun',
+                          style: AppTheme.appTheme.textStyle(
+                              textColor: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20 * fontAnimationController.value),
+                        );
+                      },
+                      animation: CurvedAnimation(
+                          parent: fontAnimationController,
+                          curve: Curves.elasticInOut),
                     ),
                   ),
                   SizedBox(
@@ -245,6 +258,7 @@ class _TimePeroidPageState extends State<TimePeroidPage> {
                         onTap: () {
                           setState(() {
                             completeNun += 1;
+                            fontAnimationController.forward(from: 0.5);
                           });
                         },
                         child: SvgPicture.asset(
@@ -264,6 +278,7 @@ class _TimePeroidPageState extends State<TimePeroidPage> {
                           }
                           setState(() {
                             completeNun -= 1;
+                            fontAnimationController.forward(from: 0.5);
                           });
                         },
                         child: SvgPicture.asset(
@@ -342,6 +357,15 @@ class _TimePeroidPageState extends State<TimePeroidPage> {
       }
     }
     return dayString;
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void dispose() {
+    fontAnimationController.dispose();
+    super.dispose();
   }
 }
 
