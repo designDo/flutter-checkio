@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:timefly/add_habit/habit_add_sheet.dart';
+import 'package:timefly/add_habit/habit_edit_page.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/utils/hex_color.dart';
@@ -130,12 +132,9 @@ class _OneDayScreenState extends State<OneDayScreen>
           position: tipAnimation,
           child: GestureDetector(
             onTap: () {
-              showFloatingModalBottomSheet(
-                  context: context,
-                  builder: (context, scrollController) {
-                    return HabitAddSheet();
-                  },
-                  barrierColor: HexColor("#435269"));
+              Navigator.of(context).push(CupertinoPageRoute(builder: (context) {
+                return HabitEditPage();
+              }));
             },
             child: Padding(
               padding: EdgeInsets.only(left: 50),
@@ -145,7 +144,9 @@ class _OneDayScreenState extends State<OneDayScreen>
                 decoration: BoxDecoration(
                     boxShadow: <BoxShadow>[
                       BoxShadow(
-                          color:AppTheme.appTheme.gradientColorLight().withOpacity(0.8),
+                          color: AppTheme.appTheme
+                              .gradientColorLight()
+                              .withOpacity(0.8),
                           offset: const Offset(13.1, 4.0),
                           blurRadius: 16.0),
                     ],
