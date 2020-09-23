@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:timefly/add_habit/edit_field_container.dart';
 import 'package:timefly/app_theme.dart';
+import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/models/complete_time.dart';
+import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_color.dart';
 import 'package:timefly/models/habit_icon.dart';
+import 'package:timefly/utils/uuid.dart';
 
 class HabitEditPage extends StatefulWidget {
   @override
@@ -19,6 +22,9 @@ class _HabitEditPageState extends State<HabitEditPage> {
   HabitColor _selectColor;
 
   List<CompleteTime> completeTimes = [];
+
+  String _name = '';
+  String _mark = '';
 
   @override
   void initState() {
@@ -41,6 +47,7 @@ class _HabitEditPageState extends State<HabitEditPage> {
             child: Stack(
               children: [
                 ListView(
+                  padding: EdgeInsets.only(bottom: 20),
                   children: [
                     Container(
                       alignment: Alignment.centerLeft,
@@ -55,7 +62,10 @@ class _HabitEditPageState extends State<HabitEditPage> {
                     ),
                     EditFiledContainer(
                       editType: 1,
-                      initValue: 'AAA',
+                      initValue: '',
+                      onValueChanged: (value) {
+                        _name = value;
+                      },
                     ),
                     SizedBox(
                       height: 16,
@@ -129,9 +139,53 @@ class _HabitEditPageState extends State<HabitEditPage> {
                     EditFiledContainer(
                       editType: 2,
                       initValue: '',
+                      onValueChanged: (value) {
+                        _mark = value;
+                      },
                     ),
                     SizedBox(
-                      height: 80,
+                      height: 60,
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        if (_name.length == 0) {
+                          return;
+                        }
+                        if (timeOfDay == null) {
+                          return;
+                        }
+                        await DatabaseProvider.db.insert(Habit(
+                          id: Uuid().generateV4(),
+                          name: _name,
+                          iconPath: _selectIcon.icon,
+                          mainColor: _selectColor.color.value,
+                          mark: _mark,
+                          remindTimes: [
+                            '${timeOfDay.hour}:${timeOfDay.minute}'
+                          ],
+                          createTime: DateTime.now().millisecondsSinceEpoch,
+                          completed: false
+                        ));
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        margin:
+                            EdgeInsets.only(left: 32, right: 32, bottom: 32),
+                        alignment: Alignment.center,
+                        width: 250,
+                        height: 60,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.all(Radius.circular(32)),
+                            color: AppTheme.appTheme.gradientColorLight()),
+                        child: Text(
+                          '完成',
+                          style: AppTheme.appTheme.textStyle(
+                              textColor: Colors.black87,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     )
                   ],
                 ),
@@ -154,7 +208,9 @@ class _HabitEditPageState extends State<HabitEditPage> {
             alignment: Alignment.centerLeft,
             margin: EdgeInsets.only(left: 16),
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).pop();
+              },
               child: SvgPicture.asset(
                 'assets/images/fanhui.svg',
                 color: Colors.black,
@@ -167,7 +223,7 @@ class _HabitEditPageState extends State<HabitEditPage> {
             child: Container(
               alignment: Alignment.center,
               child: Text(
-                'AAAAA',
+                '新建习惯',
                 style: AppTheme.appTheme.textStyle(
                     textColor: Colors.black,
                     fontWeight: FontWeight.bold,
@@ -364,7 +420,7 @@ class _HabitEditPageState extends State<HabitEditPage> {
                   height: 30,
                 )
               : Text(
-                  timeOfDay.format(context),
+                  '${timeOfDay.hour}:${timeOfDay.minute}',
                   style: AppTheme.appTheme.textStyle(
                       textColor: Colors.black,
                       fontSize: 16,

@@ -4,8 +4,9 @@ import 'package:timefly/app_theme.dart';
 class EditFiledContainer extends StatefulWidget {
   final int editType;
   final String initValue;
+  final ValueChanged<String> onValueChanged;
 
-  const EditFiledContainer({Key key, this.editType, this.initValue})
+  const EditFiledContainer({Key key, this.editType, this.initValue, this.onValueChanged})
       : super(key: key);
 
   @override
@@ -54,6 +55,7 @@ class _EditFiledContainerState extends State<EditFiledContainer>
               onChanged: (value) async {
                 setState(() {
                   _value = value;
+                  widget.onValueChanged(value);
                 });
                 if (value.length == 1) {
                   numAnimationController.forward(from: 0.3);
