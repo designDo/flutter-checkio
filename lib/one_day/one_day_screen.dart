@@ -5,6 +5,7 @@ import 'package:timefly/add_habit/habit_add_sheet.dart';
 import 'package:timefly/add_habit/habit_edit_page.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/db/database_provider.dart';
+import 'package:timefly/one_day/habit_item_view.dart';
 import 'package:timefly/utils/hex_color.dart';
 import 'package:timefly/widget/float_modal.dart';
 
@@ -68,7 +69,7 @@ class _OneDayScreenState extends State<OneDayScreen>
                     widget = Text('title');
                     break;
                   case ListData.typeHabit:
-                    widget = Text('habit');
+                    widget = HabitItemView(habit: data.value,);
                     break;
                 }
                 return widget;
