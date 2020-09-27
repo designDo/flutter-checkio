@@ -16,7 +16,7 @@ class _HabitItemViewState extends State<HabitItemView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 16, top: 32, right: 16),
+      margin: EdgeInsets.only(left: 16, top: 16, right: 16, bottom: 16),
       decoration: BoxDecoration(
           boxShadow: <BoxShadow>[
             BoxShadow(
@@ -41,7 +41,7 @@ class _HabitItemViewState extends State<HabitItemView> {
           ),
           Expanded(
             child: Container(
-              margin: EdgeInsets.only(left: 10),
+              margin: EdgeInsets.only(left: 16),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,17 +49,17 @@ class _HabitItemViewState extends State<HabitItemView> {
                   Text(
                     widget.habit.name,
                     style: AppTheme.appTheme.textStyle(
-                        textColor: Colors.black,
+                        textColor: AppTheme.appTheme.textColorMain(),
                         fontSize: 20,
                         fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 16,
                   ),
                   Text(
                     widget.habit.remindTimes[0],
                     style: AppTheme.appTheme.textStyle(
-                        textColor: Colors.black54,
+                        textColor: AppTheme.appTheme.textColorSecond(),
                         fontSize: 16,
                         fontWeight: FontWeight.w500),
                   ),
@@ -80,7 +80,7 @@ class _HabitItemViewState extends State<HabitItemView> {
                   child: Text(
                     '${value.floor()}/7',
                     style: AppTheme.appTheme.textStyle(
-                        textColor: Colors.black,
+                        textColor: AppTheme.appTheme.textColorMain(),
                         fontWeight: FontWeight.bold,
                         fontSize: 20),
                   ),
@@ -88,11 +88,16 @@ class _HabitItemViewState extends State<HabitItemView> {
               },
               appearance: CircularSliderAppearance(
                   customWidths: CustomSliderWidths(
-                      trackWidth: 2, progressBarWidth: 5, handlerSize: 0,shadowWidth: 0),
-              customColors: CustomSliderColors(
-                trackColor: Color(widget.habit.mainColor),
-                progressBarColors: [AppTheme.appTheme.gradientColorLight(),AppTheme.appTheme.gradientColorDark()]
-              )),
+                      trackWidth: 2,
+                      progressBarWidth: 5,
+                      handlerSize: 0,
+                      shadowWidth: 0),
+                  customColors: CustomSliderColors(
+                      trackColor: Color(widget.habit.mainColor),
+                      progressBarColors: [
+                        AppTheme.appTheme.gradientColorLight(),
+                        AppTheme.appTheme.gradientColorDark()
+                      ])),
             ),
           ),
           SizedBox(

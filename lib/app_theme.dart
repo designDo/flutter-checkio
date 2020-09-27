@@ -52,6 +52,14 @@ class AppTheme {
         color: textColor ?? (isDark() ? Colors.white70 : Colors.black));
   }
 
+  Color textColorMain() {
+    return isDark() ? Color(0xFFF2F7FB) : Color(0xFF294261);
+  }
+
+  Color textColorSecond() {
+    return isDark() ? Colors.white30 : Colors.black54;
+  }
+
   Color containerBackgroundColor() {
     return isDark() ? Color(0xFF233355) : Color(0xFFF2F7FB);
   }
