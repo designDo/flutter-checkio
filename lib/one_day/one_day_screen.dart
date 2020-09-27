@@ -69,7 +69,9 @@ class _OneDayScreenState extends State<OneDayScreen>
                     widget = Text('title');
                     break;
                   case ListData.typeHabit:
-                    widget = HabitItemView(habit: data.value,);
+                    widget = HabitItemView(
+                      habit: data.value,
+                    );
                     break;
                 }
                 return widget;
@@ -85,6 +87,7 @@ class _OneDayScreenState extends State<OneDayScreen>
     datas.add(ListData(type: ListData.typeHeader, value: null));
     var habits = await DatabaseProvider.db.getHabits();
     if (habits.length > 0) {
+      habits.sort((a, b) => b.createTime.compareTo(a.createTime));
       datas.add(ListData(type: ListData.typeTip, value: habits.length));
       for (var habit in habits) {
         datas.add(ListData(type: ListData.typeHabit, value: habit));
@@ -132,10 +135,16 @@ class _OneDayScreenState extends State<OneDayScreen>
         return SlideTransition(
           position: tipAnimation,
           child: GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(CupertinoPageRoute(builder: (context) {
+            onTap: () async {
+              /* Navigator.of(context).push(CupertinoPageRoute(builder: (context) {
                 return HabitEditPage();
-              }));
+              }));*/
+              await showFloatingModalBottomSheet(
+                  context: context,
+                  builder: (context, scroller) {
+                    return HabitAddSheet();
+                  });
+              setState(() {});
             },
             child: Padding(
               padding: EdgeInsets.only(left: 50),

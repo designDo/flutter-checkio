@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:timefly/models/habit.dart';
+import 'package:timefly/models/habit_color.dart';
 
 import '../app_theme.dart';
 
 class IconAndColorPage extends StatefulWidget {
+  final Habit habit;
   final Function onNext;
 
-  const IconAndColorPage({Key key, this.onNext}) : super(key: key);
+  const IconAndColorPage({Key key, this.onNext, this.habit}) : super(key: key);
 
   @override
   _IconAndColorPageState createState() => _IconAndColorPageState();
@@ -16,14 +19,14 @@ class _IconAndColorPageState extends State<IconAndColorPage>
   List<Icon> icons = [];
   Icon _selectIcon;
 
-  List<BackgroundColor> backgroundColors = [];
-  BackgroundColor _selectBackgroundColor;
+  List<HabitColor> backgroundColors = [];
+  HabitColor _selectBackgroundColor;
 
   @override
   void initState() {
     icons = Icon.getIcons();
     _selectIcon = icons[0];
-    backgroundColors = BackgroundColor.getBackgroundColors();
+    backgroundColors = HabitColor.getBackgroundColors();
     _selectBackgroundColor = backgroundColors[0];
     super.initState();
   }
@@ -106,17 +109,18 @@ class _IconAndColorPageState extends State<IconAndColorPage>
               ),
             ),
             Container(
-              height: 200,
+              height: 140,
               padding: EdgeInsets.only(top: 16, bottom: 16),
               child: GridView.builder(
                   scrollDirection: Axis.horizontal,
                   padding: EdgeInsets.only(left: 18),
                   itemCount: backgroundColors.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      mainAxisSpacing: 20,
-                      crossAxisSpacing: 20),
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16),
                   itemBuilder: (context, index) {
+                    HabitColor habitColor = backgroundColors[index];
                     return GestureDetector(
                       onTap: () {
                         setState(() {
@@ -127,17 +131,27 @@ class _IconAndColorPageState extends State<IconAndColorPage>
                           _selectBackgroundColor = backgroundColors[index];
                         });
                       },
-                      child: Container(
+                      child: AnimatedContainer(
+                        alignment: Alignment.center,
                         width: 50,
                         height: 50,
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                                color: backgroundColors[index].isSelect
-                                    ? Colors.white
-                                    : Colors.transparent,
-                                width: 2),
-                            color: backgroundColors[index].color),
+                                color: habitColor.isSelect
+                                    ? habitColor.color
+                                    : Colors.white.withOpacity(0.3),
+                                width: habitColor.isSelect ? 6 : 1.5),
+                            color: Colors.transparent),
+                        child: habitColor.isSelect
+                            ? SizedBox()
+                            : Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: habitColor.color),
+                                width: 32,
+                                height: 32),
+                        duration: Duration(milliseconds: 300),
                       ),
                     );
                   }),
@@ -149,6 +163,8 @@ class _IconAndColorPageState extends State<IconAndColorPage>
         ),
         GestureDetector(
           onTap: () {
+            widget.habit.iconPath = _selectIcon.icon;
+            widget.habit.mainColor = _selectBackgroundColor.color.value;
             widget.onNext();
           },
           child: Container(
@@ -211,27 +227,5 @@ class Icon {
     icons.add(Icon('assets/images/treadmill-跑步机.png'));
 
     return icons;
-  }
-}
-
-class BackgroundColor {
-  final Color color;
-  bool isSelect = false;
-
-  BackgroundColor(this.color, {this.isSelect = false});
-
-  static List<BackgroundColor> getBackgroundColors() {
-    List<BackgroundColor> backgroundColors = [];
-
-    backgroundColors
-        .add(BackgroundColor(Colors.deepPurpleAccent, isSelect: true));
-    backgroundColors.add(BackgroundColor(Colors.purple));
-    backgroundColors.add(BackgroundColor(Colors.white));
-    backgroundColors.add(BackgroundColor(Colors.lightBlue));
-    backgroundColors.add(BackgroundColor(Colors.red));
-    backgroundColors.add(BackgroundColor(Colors.blueAccent));
-    backgroundColors.add(BackgroundColor(Colors.pink));
-    backgroundColors.add(BackgroundColor(Colors.deepOrange));
-    return backgroundColors;
   }
 }

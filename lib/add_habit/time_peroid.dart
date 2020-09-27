@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:timefly/db/database_provider.dart';
+import 'package:timefly/models/complete_time.dart';
+import 'package:timefly/models/habit.dart';
+import 'package:timefly/utils/uuid.dart';
 
 import '../app_theme.dart';
 
 class TimePeroidPage extends StatefulWidget {
+  final Function onComplete;
+  final Habit habit;
+
+  const TimePeroidPage({Key key, this.habit, this.onComplete}) : super(key: key);
+
   @override
   _TimePeroidPageState createState() => _TimePeroidPageState();
 }
@@ -50,33 +59,21 @@ class _TimePeroidPageState extends State<TimePeroidPage>
             height: 16,
           ),
           Container(
-              margin: EdgeInsets.only(left: 32),
-              alignment: Alignment.centerLeft,
-              child: Row(
-                children: [
-                  SvgPicture.asset(
-                    'assets/images/time.svg',
-                    color: Colors.white70,
-                    width: 30,
-                    height: 30,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    '时间',
-                    style: AppTheme.appTheme.textStyle(
-                        textColor: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
-                  ),
-                ],
-              )),
+            margin: EdgeInsets.only(left: 32),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              '时间',
+              style: AppTheme.appTheme.textStyle(
+                  textColor: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20),
+            ),
+          ),
           Container(
             margin: EdgeInsets.only(top: 16),
-            height: 50,
+            height: 80,
             child: ListView.builder(
-              padding: EdgeInsets.only(left: 32),
+              padding: EdgeInsets.only(left: 32, right: 32),
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
@@ -87,7 +84,8 @@ class _TimePeroidPageState extends State<TimePeroidPage>
                       completeTimes[index].isSelect = true;
                     });
                   },
-                  child: Container(
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 300),
                     alignment: Alignment.center,
                     margin: EdgeInsets.only(left: 16),
                     width: 60,
@@ -100,13 +98,13 @@ class _TimePeroidPageState extends State<TimePeroidPage>
                         shape: BoxShape.circle,
                         color: Theme.of(context)
                             .primaryColorDark
-                            .withOpacity(0.08)),
+                            .withOpacity(0.2)),
                     child: Text(
                       CompleteTime.getTime(completeTimes[index].time),
                       style: AppTheme.appTheme.textStyle(
                           textColor: Colors.white,
                           fontWeight: FontWeight.w500,
-                          fontSize: 16),
+                          fontSize: 18),
                     ),
                   ),
                 );
@@ -115,192 +113,36 @@ class _TimePeroidPageState extends State<TimePeroidPage>
               scrollDirection: Axis.horizontal,
             ),
           ),
-          SizedBox(
-            height: 32,
-          ),
-          Container(
-              margin: EdgeInsets.only(left: 32),
-              alignment: Alignment.centerLeft,
-              child: Row(
-                children: [
-                  SvgPicture.asset(
-                    'assets/images/zhouqi.svg',
-                    color: Colors.white70,
-                    width: 28,
-                    height: 28,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    '周期 7 天',
-                    style: AppTheme.appTheme.textStyle(
-                        textColor: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
-                  ),
-                ],
-              )),
-          SizedBox(
-            height: 16,
-          ),
           Container(
             alignment: Alignment.centerLeft,
-            margin: EdgeInsets.only(left: 50),
+            margin: EdgeInsets.only(left: 32, top: 16),
             child: Text(
-              selectDayString,
+              'Reminder',
               style: AppTheme.appTheme.textStyle(
                   textColor: Colors.white,
                   fontWeight: FontWeight.w600,
-                  fontSize: 18),
+                  fontSize: 20),
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 16),
-            height: 50,
-            child: ListView.builder(
-              padding: EdgeInsets.only(left: 32),
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      completeDays[index].isSelect =
-                          !completeDays[index].isSelect;
-                      selectDayString = getSelectDayString();
-                    });
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.only(left: 16),
-                    width: 60,
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                            color: completeDays[index].isSelect
-                                ? Colors.white
-                                : Colors.transparent,
-                            width: 2),
-                        shape: BoxShape.circle,
-                        color: Theme.of(context)
-                            .primaryColorDark
-                            .withOpacity(0.08)),
-                    child: Text(
-                      CompleteDay.getDay(completeDays[index].day),
-                      style: AppTheme.appTheme.textStyle(
-                          textColor: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16),
-                    ),
-                  ),
-                );
-              },
-              itemCount: completeDays.length,
-              scrollDirection: Axis.horizontal,
-            ),
+            alignment: Alignment.centerLeft,
+            child: timeReminderView(),
           ),
-          SizedBox(
-            height: 30,
-          ),
-          Container(
-              margin: EdgeInsets.only(left: 32),
-              alignment: Alignment.centerLeft,
-              child: Row(
-                children: [
-                  SvgPicture.asset(
-                    'assets/images/duigou.svg',
-                    color: Colors.white70,
-                    width: 30,
-                    height: 30,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    '完成次数',
-                    style: AppTheme.appTheme.textStyle(
-                        textColor: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Container(
-                    width: 55,
-                    height: 55,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 2),
-                        color: AppTheme.appTheme
-                            .gradientColorDark()
-                            .withOpacity(0.08)),
-                    child: AnimatedBuilder(
-                      builder: (context, child) {
-                        return Text(
-                          '$completeNun',
-                          style: AppTheme.appTheme.textStyle(
-                              textColor: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20 * fontAnimationController.value),
-                        );
-                      },
-                      animation: CurvedAnimation(
-                          parent: fontAnimationController,
-                          curve: Curves.elasticInOut),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 16,
-                  ),
-                  Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            completeNun += 1;
-                            fontAnimationController.forward(from: 0.5);
-                          });
-                        },
-                        child: SvgPicture.asset(
-                          'assets/images/jia.svg',
-                          color: Colors.white,
-                          width: 30,
-                          height: 30,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          if (completeNun == 1) {
-                            return;
-                          }
-                          setState(() {
-                            completeNun -= 1;
-                            fontAnimationController.forward(from: 0.5);
-                          });
-                        },
-                        child: SvgPicture.asset(
-                          'assets/images/jian.svg',
-                          color: Colors.white,
-                          width: 30,
-                          height: 30,
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              )),
-          SizedBox(
-            height: 32,
+          Expanded(
+            child: SizedBox(),
           ),
           GestureDetector(
-            onTap: () {
-              if (isAllUnSelect) {
-                return;
+            onTap: () async {
+              if (timeOfDay != null) {
+                widget.habit.remindTimes = [
+                  '${timeOfDay.hour}:${timeOfDay.minute}'
+                ];
               }
-              print('complete!!!');
+              widget.habit.id = Uuid().generateV4();
+              widget.habit.completed = false;
+              widget.habit.createTime = DateTime.now().millisecondsSinceEpoch;
+              await DatabaseProvider.db.insert(widget.habit);
+              widget.onComplete();
             },
             child: Container(
               margin: EdgeInsets.only(bottom: 42),
@@ -325,6 +167,54 @@ class _TimePeroidPageState extends State<TimePeroidPage>
             ),
           )
         ],
+      ),
+    );
+  }
+
+  TimeOfDay timeOfDay;
+
+  Widget timeReminderView() {
+    return Container(
+      alignment: Alignment.centerLeft,
+      margin: EdgeInsets.only(left: 55, top: 16),
+      width: 60,
+      height: 60,
+      child: GestureDetector(
+        onTap: () async {
+          TimeOfDay result = await showTimePicker(
+              context: context,
+              initialTime: timeOfDay == null ? TimeOfDay.now() : timeOfDay,
+              cancelText: '取消',
+              confirmText: '确定',
+              helpText: '选择时间');
+          setState(() {
+            timeOfDay = result;
+          });
+        },
+        child: Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.white, width: 2),
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              color: Theme.of(context).primaryColorDark.withOpacity(0.08)),
+          width: 60,
+          height: 60,
+          child: timeOfDay == null
+              ? SvgPicture.asset(
+                  'assets/images/jia.svg',
+                  color: Colors.white,
+                  width: 30,
+                  height: 30,
+                )
+              : Text(
+                  '${timeOfDay.hour}:${timeOfDay.minute}',
+                  style: AppTheme.appTheme.textStyle(
+                      textColor: Colors.white70,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500),
+                ),
+        ),
       ),
     );
   }
@@ -366,49 +256,6 @@ class _TimePeroidPageState extends State<TimePeroidPage>
   void dispose() {
     fontAnimationController.dispose();
     super.dispose();
-  }
-}
-
-class CompleteTime {
-  ///0 任意
-  ///1 早上
-  ///2 上午
-  ///3 中午
-  ///4 下午
-  ///5 晚上
-  final int time;
-  bool isSelect = false;
-
-  CompleteTime(this.time, {this.isSelect = false});
-
-  static List<CompleteTime> getCompleteTimes() {
-    List<CompleteTime> completeTimes = [];
-    for (int i = 0; i <= 5; i++) {
-      completeTimes.add(CompleteTime(i, isSelect: i == 0));
-    }
-    return completeTimes;
-  }
-
-  static String getTime(int time) {
-    String timeString = '任意';
-    switch (time) {
-      case 1:
-        timeString = '早上';
-        break;
-      case 2:
-        timeString = '上午';
-        break;
-      case 3:
-        timeString = '中午';
-        break;
-      case 4:
-        timeString = '下午';
-        break;
-      case 5:
-        timeString = '晚上';
-        break;
-    }
-    return timeString;
   }
 }
 
@@ -455,3 +302,153 @@ class CompleteDay {
     return dayString;
   }
 }
+/**
+ *  Container(
+    alignment: Alignment.centerLeft,
+    margin: EdgeInsets.only(left: 50),
+    child: Text(
+    selectDayString,
+    style: AppTheme.appTheme.textStyle(
+    textColor: Colors.white,
+    fontWeight: FontWeight.w600,
+    fontSize: 18),
+    ),
+    ),
+    Container(
+    margin: EdgeInsets.only(top: 16),
+    height: 50,
+    child: ListView.builder(
+    padding: EdgeInsets.only(left: 32),
+    itemBuilder: (context, index) {
+    return GestureDetector(
+    onTap: () {
+    setState(() {
+    completeDays[index].isSelect =
+    !completeDays[index].isSelect;
+    selectDayString = getSelectDayString();
+    });
+    },
+    child: Container(
+    alignment: Alignment.center,
+    margin: EdgeInsets.only(left: 16),
+    width: 60,
+    decoration: BoxDecoration(
+    border: Border.all(
+    color: completeDays[index].isSelect
+    ? Colors.white
+    : Colors.transparent,
+    width: 2),
+    shape: BoxShape.circle,
+    color: Theme.of(context)
+    .primaryColorDark
+    .withOpacity(0.08)),
+    child: Text(
+    CompleteDay.getDay(completeDays[index].day),
+    style: AppTheme.appTheme.textStyle(
+    textColor: Colors.white,
+    fontWeight: FontWeight.w500,
+    fontSize: 16),
+    ),
+    ),
+    );
+    },
+    itemCount: completeDays.length,
+    scrollDirection: Axis.horizontal,
+    ),
+    ),
+    SizedBox(
+    height: 30,
+    ),
+    Container(
+    margin: EdgeInsets.only(left: 32),
+    alignment: Alignment.centerLeft,
+    child: Row(
+    children: [
+    SvgPicture.asset(
+    'assets/images/duigou.svg',
+    color: Colors.white70,
+    width: 30,
+    height: 30,
+    ),
+    SizedBox(
+    width: 10,
+    ),
+    Text(
+    '完成次数',
+    style: AppTheme.appTheme.textStyle(
+    textColor: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontSize: 20),
+    ),
+    SizedBox(
+    width: 10,
+    ),
+    Container(
+    width: 55,
+    height: 55,
+    alignment: Alignment.center,
+    decoration: BoxDecoration(
+    shape: BoxShape.circle,
+    border: Border.all(color: Colors.white, width: 2),
+    color: AppTheme.appTheme
+    .gradientColorDark()
+    .withOpacity(0.08)),
+    child: AnimatedBuilder(
+    builder: (context, child) {
+    return Text(
+    '$completeNun',
+    style: AppTheme.appTheme.textStyle(
+    textColor: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontSize: 20 * fontAnimationController.value),
+    );
+    },
+    animation: CurvedAnimation(
+    parent: fontAnimationController,
+    curve: Curves.elasticInOut),
+    ),
+    ),
+    SizedBox(
+    width: 16,
+    ),
+    Column(
+    children: [
+    GestureDetector(
+    onTap: () {
+    setState(() {
+    completeNun += 1;
+    fontAnimationController.forward(from: 0.5);
+    });
+    },
+    child: SvgPicture.asset(
+    'assets/images/jia.svg',
+    color: Colors.white,
+    width: 30,
+    height: 30,
+    ),
+    ),
+    SizedBox(
+    height: 5,
+    ),
+    GestureDetector(
+    onTap: () {
+    if (completeNun == 1) {
+    return;
+    }
+    setState(() {
+    completeNun -= 1;
+    fontAnimationController.forward(from: 0.5);
+    });
+    },
+    child: SvgPicture.asset(
+    'assets/images/jian.svg',
+    color: Colors.white,
+    width: 30,
+    height: 30,
+    ),
+    ),
+    ],
+    )
+    ],
+    )),
+ */

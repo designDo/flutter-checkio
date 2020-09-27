@@ -31,7 +31,7 @@ class _EditNameViewState extends State<EditNameView>
   void didChangeMetrics() {
     super.didChangeMetrics();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
+
         if (MediaQuery.of(context).viewInsets.bottom == 0) {
           //关闭键盘
 
@@ -41,7 +41,7 @@ class _EditNameViewState extends State<EditNameView>
             keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
           });
         }
-      });
+
     });
   }
 

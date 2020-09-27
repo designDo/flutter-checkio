@@ -20,8 +20,8 @@ class _HabitItemViewState extends State<HabitItemView> {
       decoration: BoxDecoration(
           boxShadow: <BoxShadow>[
             BoxShadow(
-                color: Colors.black26,
-                offset: const Offset(10, 9.0),
+                color: Colors.black12.withOpacity(0.2),
+                offset: const Offset(10, 19.0),
                 blurRadius: 20),
           ],
           shape: BoxShape.rectangle,
@@ -57,7 +57,7 @@ class _HabitItemViewState extends State<HabitItemView> {
                     height: 16,
                   ),
                   Text(
-                    widget.habit.remindTimes[0],
+                    '${widget.habit.remindTimes == null ? '' : widget.habit.remindTimes[0]}',
                     style: AppTheme.appTheme.textStyle(
                         textColor: AppTheme.appTheme.textColorSecond(),
                         fontSize: 16,

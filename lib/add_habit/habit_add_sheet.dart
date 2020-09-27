@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:timefly/add_habit/time_peroid.dart';
 import 'package:timefly/app_theme.dart';
+import 'package:timefly/models/habit.dart';
 
 import 'Icon_color.dart';
 import 'name_mark.dart';
@@ -37,7 +38,11 @@ class _HabitAddSheet extends State<HabitAddSheet>
   ///完成编辑事件
   Function onEndEdit;
 
+  Function onComplete;
+
   int _index = 0;
+
+  Habit habit = Habit();
 
   @override
   void initState() {
@@ -68,16 +73,24 @@ class _HabitAddSheet extends State<HabitAddSheet>
       nextPage();
     };
 
+    onComplete = () {
+      Navigator.of(context).pop();
+    };
     widgets.add(NameAndMarkPage(
+      habit: habit,
       onPageNext: onPageNext,
       onStartEdit: onStartEdit,
       onEndEdit: onEndEdit,
       editAnimationController: editPageAnimationController,
     ));
     widgets.add(IconAndColorPage(
+      habit: habit,
       onNext: onPageNext,
     ));
-    widgets.add(TimePeroidPage());
+    widgets.add(TimePeroidPage(
+      onComplete: onComplete,
+      habit: habit,
+    ));
     super.initState();
   }
 

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:timefly/app_theme.dart';
+import 'package:timefly/models/habit.dart';
 
 import 'edit_name.dart';
 
 class NameAndMarkPage extends StatefulWidget {
+  final Habit habit;
   final Function onPageNext;
   final Function onStartEdit;
   final Function onEndEdit;
@@ -14,7 +16,7 @@ class NameAndMarkPage extends StatefulWidget {
       this.onPageNext,
       this.onStartEdit,
       this.editAnimationController,
-      this.onEndEdit})
+      this.onEndEdit, this.habit})
       : super(key: key);
 
   @override
@@ -184,6 +186,8 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
                           if (_name.length == 0) {
                             return;
                           }
+                          widget.habit.name = _name;
+                          widget.habit.mark = _mark;
                           widget.onPageNext();
                         },
                         onDoubleTap: () {},
