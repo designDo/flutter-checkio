@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:timefly/add_habit/habit_add_sheet.dart';
 import 'package:timefly/add_habit/habit_edit_page.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/db/database_provider.dart';
+import 'package:timefly/notification/notification_plugin.dart';
 import 'package:timefly/one_day/habit_item_view.dart';
 import 'package:timefly/utils/hex_color.dart';
 import 'package:timefly/widget/float_modal.dart';
@@ -109,9 +111,14 @@ class _OneDayScreenState extends State<OneDayScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Hello,Good Morning',
-                  style: AppTheme.appTheme.textStyle(),
+                GestureDetector(
+                  onTap: () async {
+                  await  NotificationPlugin.getInstance().scheduleNotification();
+                  },
+                  child: Text(
+                    'Hello,Good Morning',
+                    style: AppTheme.appTheme.textStyle(),
+                  ),
                 ),
                 Text(
                   'You have 7 habits last !!',
@@ -127,6 +134,8 @@ class _OneDayScreenState extends State<OneDayScreen>
       },
     );
   }
+
+
 
   Widget getTipsView() {
     return AnimatedBuilder(

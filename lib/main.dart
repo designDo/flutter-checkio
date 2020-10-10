@@ -7,9 +7,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timefly/blocs/theme/theme_bloc.dart';
 import 'package:timefly/blocs/theme/theme_state.dart';
 import 'package:timefly/home_screen.dart';
+import 'package:timefly/notification/notification_plugin.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  NotificationPlugin.ensureInitialized();
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown

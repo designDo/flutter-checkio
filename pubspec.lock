@@ -90,6 +90,20 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "6.0.4"
+  flutter_local_notifications:
+    dependency: "direct main"
+    description:
+      name: flutter_local_notifications
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.0.0+1"
+  flutter_local_notifications_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_local_notifications_platform_interface
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.0.0"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -158,6 +172,20 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.4"
+  platform:
+    dependency: transitive
+    description:
+      name: platform
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.2.1"
+  plugin_platform_interface:
+    dependency: transitive
+    description:
+      name: plugin_platform_interface
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.3"
   provider:
     dependency: transitive
     description:
@@ -247,6 +275,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.2.17"
+  timezone:
+    dependency: transitive
+    description:
+      name: timezone
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.5.7"
   typed_data:
     dependency: transitive
     description:

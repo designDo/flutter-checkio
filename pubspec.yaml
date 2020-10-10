@@ -32,6 +32,7 @@ dependencies:
   modal_bottom_sheet: ^0.2.0+1
   flutter_svg: ^0.18.1
   sleek_circular_slider: ^1.1.0
+  flutter_local_notifications: ^2.0.0+1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
