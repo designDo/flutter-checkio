@@ -34,7 +34,14 @@ class _HabitItemViewState extends State<HabitItemView> {
             margin: EdgeInsets.only(left: 16),
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
-                shape: BoxShape.circle, color: Color(widget.habit.mainColor)),
+              boxShadow:<BoxShadow>[
+                BoxShadow(
+                  color: Color(widget.habit.mainColor).withOpacity(0.3),
+                  offset: Offset(0,7),
+                  blurRadius: 10
+                )
+              ],
+                shape: BoxShape.circle, color: Color(widget.habit.mainColor).withOpacity(0.5)),
             width: 60,
             height: 60,
             child: Image.asset(widget.habit.iconPath),
