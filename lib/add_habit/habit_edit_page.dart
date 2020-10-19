@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:timefly/add_habit/edit_field_container.dart';
@@ -44,117 +45,105 @@ class _HabitEditPageState extends State<HabitEditPage> {
         children: [
           barView(),
           Expanded(
-            child: Stack(
-              children: [
-                ListView(
-                  padding: EdgeInsets.only(bottom: 20),
-                  children: [
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      margin: EdgeInsets.only(left: 18),
-                      child: Text(
-                        'Name',
-                        style: AppTheme.appTheme.textStyle(
-                            textColor: Colors.black38,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16),
-                      ),
-                    ),
-                    EditFiledContainer(
-                      editType: 1,
-                      initValue: '',
-                      onValueChanged: (value) {
-                        _name = value;
-                      },
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          margin: EdgeInsets.only(left: 18),
-                          child: Text(
-                            'Icon and Colors',
-                            style: AppTheme.appTheme.textStyle(
-                                textColor: Colors.black38,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16),
-                          ),
+            child: Container(
+              child: ListView(
+                padding: EdgeInsets.only(bottom: 20),
+                children: [
+                  SizedBox(height: 16,),
+                  EditFiledContainer(
+                    editType: 1,
+                    initValue: '',
+                    onValueChanged: (value) {
+                      _name = value;
+                    },
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        margin: EdgeInsets.only(left: 18),
+                        child: Text(
+                          'Icon and Colors',
+                          style: AppTheme.appTheme.textStyle(
+                              textColor: Colors.black38,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16),
                         ),
-                        AnimatedContainer(
-                          margin: EdgeInsets.only(left: 16),
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: Colors.black.withOpacity(0.8),
-                                  width: 2),
-                              shape: BoxShape.circle,
-                              color: _selectColor.color),
-                          width: 60,
-                          height: 60,
-                          child: Image.asset(_selectIcon.icon),
-                          duration: Duration(milliseconds: 500),
-                        )
-                      ],
-                    ),
-                    habitIconsView(),
-                    habitColorsView(),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      margin: EdgeInsets.only(left: 18, top: 8),
-                      child: Text(
-                        'Time Space',
-                        style: AppTheme.appTheme.textStyle(
-                            textColor: Colors.black38,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16),
                       ),
+                      AnimatedContainer(
+                        margin: EdgeInsets.only(left: 16),
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Colors.black.withOpacity(0.8), width: 2),
+                            shape: BoxShape.circle,
+                            color: _selectColor.color),
+                        width: 60,
+                        height: 60,
+                        child: Image.asset(_selectIcon.icon),
+                        duration: Duration(milliseconds: 500),
+                      )
+                    ],
+                  ),
+                  habitIconsView(),
+                  habitColorsView(),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    margin: EdgeInsets.only(left: 18, top: 8),
+                    child: Text(
+                      'Time Space',
+                      style: AppTheme.appTheme.textStyle(
+                          textColor: Colors.black38,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16),
                     ),
-                    timeView(),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      margin: EdgeInsets.only(left: 18, top: 16),
-                      child: Text(
-                        'Reminder',
-                        style: AppTheme.appTheme.textStyle(
-                            textColor: Colors.black38,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16),
-                      ),
+                  ),
+                  timeView(),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    margin: EdgeInsets.only(left: 18, top: 16),
+                    child: Text(
+                      'Reminder',
+                      style: AppTheme.appTheme.textStyle(
+                          textColor: Colors.black38,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16),
                     ),
-                    timeReminderView(),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      margin: EdgeInsets.only(left: 18, top: 16),
-                      child: Text(
-                        'Note',
-                        style: AppTheme.appTheme.textStyle(
-                            textColor: Colors.black38,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16),
-                      ),
+                  ),
+                  timeReminderView(),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    margin: EdgeInsets.only(left: 18, top: 16),
+                    child: Text(
+                      'Note',
+                      style: AppTheme.appTheme.textStyle(
+                          textColor: Colors.black38,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16),
                     ),
-                    EditFiledContainer(
-                      editType: 2,
-                      initValue: '',
-                      onValueChanged: (value) {
-                        _mark = value;
-                      },
-                    ),
-                    SizedBox(
-                      height: 60,
-                    ),
-                    GestureDetector(
-                      onTap: () async {
-                        if (_name.length == 0) {
-                          return;
-                        }
-                        if (timeOfDay == null) {
-                          return;
-                        }
-                        await DatabaseProvider.db.insert(Habit(
+                  ),
+                  EditFiledContainer(
+                    editType: 2,
+                    initValue: '',
+                    onValueChanged: (value) {
+                      _mark = value;
+                    },
+                  ),
+                  SizedBox(
+                    height: 60,
+                  ),
+                  GestureDetector(
+                    onTap: () async {
+                      if (_name.length == 0) {
+                        return;
+                      }
+                      if (timeOfDay == null) {
+                        return;
+                      }
+                      await DatabaseProvider.db.insert(Habit(
                           id: Uuid().generateV4(),
                           name: _name,
                           iconPath: _selectIcon.icon,
@@ -164,32 +153,29 @@ class _HabitEditPageState extends State<HabitEditPage> {
                             '${timeOfDay.hour}:${timeOfDay.minute}'
                           ],
                           createTime: DateTime.now().millisecondsSinceEpoch,
-                          completed: false
-                        ));
-                        Navigator.of(context).pop();
-                      },
-                      child: Container(
-                        margin:
-                            EdgeInsets.only(left: 32, right: 32, bottom: 32),
-                        alignment: Alignment.center,
-                        width: 250,
-                        height: 60,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            borderRadius: BorderRadius.all(Radius.circular(32)),
-                            color: AppTheme.appTheme.gradientColorLight()),
-                        child: Text(
-                          '完成',
-                          style: AppTheme.appTheme.textStyle(
-                              textColor: Colors.black87,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
-                        ),
+                          completed: false));
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(left: 32, right: 32, bottom: 32),
+                      alignment: Alignment.center,
+                      width: 250,
+                      height: 60,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.all(Radius.circular(32)),
+                          color: AppTheme.appTheme.gradientColorLight()),
+                      child: Text(
+                        '完成',
+                        style: AppTheme.appTheme.textStyle(
+                            textColor: Colors.black87,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
                       ),
-                    )
-                  ],
-                ),
-              ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ],
@@ -200,7 +186,7 @@ class _HabitEditPageState extends State<HabitEditPage> {
   Widget barView() {
     return Container(
       padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-      height: 50 + MediaQuery.of(context).padding.top,
+      height: 60 + MediaQuery.of(context).padding.top,
       child: Row(
         children: [
           Expanded(
@@ -232,7 +218,12 @@ class _HabitEditPageState extends State<HabitEditPage> {
             ),
           ),
           Expanded(
-            child: SizedBox(),
+            child: Container(
+              child: RaisedButton(
+                onPressed: () {},
+                child: Text('Save'),
+              ),
+            ),
           ),
         ],
       ),

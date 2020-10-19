@@ -113,7 +113,8 @@ class _OneDayScreenState extends State<OneDayScreen>
               children: [
                 GestureDetector(
                   onTap: () async {
-                  await  NotificationPlugin.getInstance().scheduleNotification();
+                    await NotificationPlugin.getInstance()
+                        .scheduleNotification();
                   },
                   child: Text(
                     'Hello,Good Morning',
@@ -135,8 +136,6 @@ class _OneDayScreenState extends State<OneDayScreen>
     );
   }
 
-
-
   Widget getTipsView() {
     return AnimatedBuilder(
       animation: tipController,
@@ -145,14 +144,15 @@ class _OneDayScreenState extends State<OneDayScreen>
           position: tipAnimation,
           child: GestureDetector(
             onTap: () async {
-              /* Navigator.of(context).push(CupertinoPageRoute(builder: (context) {
+              await Navigator.of(context)
+                  .push(CupertinoPageRoute(builder: (context) {
                 return HabitEditPage();
-              }));*/
-              await showFloatingModalBottomSheet(
+              }));
+              /*await showFloatingModalBottomSheet(
                   context: context,
                   builder: (context, scroller) {
                     return HabitAddSheet();
-                  });
+                  });*/
               setState(() {});
             },
             child: Padding(

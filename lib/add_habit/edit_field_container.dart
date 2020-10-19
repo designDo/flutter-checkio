@@ -6,7 +6,8 @@ class EditFiledContainer extends StatefulWidget {
   final String initValue;
   final ValueChanged<String> onValueChanged;
 
-  const EditFiledContainer({Key key, this.editType, this.initValue, this.onValueChanged})
+  const EditFiledContainer(
+      {Key key, this.editType, this.initValue, this.onValueChanged})
       : super(key: key);
 
   @override
@@ -75,8 +76,8 @@ class _EditFiledContainerState extends State<EditFiledContainer>
               decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(
                       left: 16,
-                      top: widget.editType == 1 ? 30 : 15,
-                      bottom: widget.editType == 1 ? 30 : 15,
+                      top: widget.editType == 1 ? 23 : 15,
+                      bottom: widget.editType == 1 ? 23 : 15,
                       right: 16),
                   hintText: widget.editType == 1 ? '名字 ...' : '标记 ...',
                   hintStyle: AppTheme.appTheme.textStyle(
@@ -85,18 +86,16 @@ class _EditFiledContainerState extends State<EditFiledContainer>
                           ? FontWeight.bold
                           : FontWeight.w500,
                       fontSize: 18),
-                  fillColor: Colors.white,
+                  fillColor: AppTheme.appTheme.containerBackgroundColor(),
                   counterText: '',
                   filled: true,
                   enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          width: 2,
-                          color: AppTheme.appTheme.gradientColorLight()),
+                      borderSide:
+                          BorderSide(width: 0, color: Colors.transparent),
                       borderRadius: BorderRadius.all(Radius.circular(15))),
                   focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          width: 2,
-                          color: AppTheme.appTheme.gradientColorDark()),
+                      borderSide:
+                          BorderSide(width: 0, color: Colors.transparent),
                       borderRadius: BorderRadius.all(Radius.circular(15)))),
             ),
           ),
@@ -110,8 +109,12 @@ class _EditFiledContainerState extends State<EditFiledContainer>
                       shape: BoxShape.rectangle,
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(15)),
-                      border: Border.all(
-                          color: Colors.black.withOpacity(0.6), width: 3)),
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                            color: Colors.black26,
+                            offset: Offset(3, 3),
+                            blurRadius: 6)
+                      ]),
                   width: 50,
                   height: 35,
                   child: Text(
