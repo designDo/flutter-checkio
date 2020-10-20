@@ -4,7 +4,7 @@ import 'package:timefly/add_habit/time_peroid.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/models/habit.dart';
 
-import 'Icon_color.dart';
+import 'icon_color.dart';
 import 'name_mark.dart';
 
 class HabitAddSheet extends StatefulWidget {
@@ -83,10 +83,7 @@ class _HabitAddSheet extends State<HabitAddSheet>
       onEndEdit: onEndEdit,
       editAnimationController: editPageAnimationController,
     ));
-    widgets.add(IconAndColorPage(
-      habit: habit,
-      onNext: onPageNext,
-    ));
+
     widgets.add(TimePeroidPage(
       onComplete: onComplete,
       habit: habit,

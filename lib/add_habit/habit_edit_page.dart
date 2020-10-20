@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:timefly/add_habit/Icon_color.dart';
 import 'package:timefly/add_habit/edit_field_container.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/db/database_provider.dart';
@@ -9,6 +10,7 @@ import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_color.dart';
 import 'package:timefly/models/habit_icon.dart';
 import 'package:timefly/utils/uuid.dart';
+import 'package:timefly/widget/float_modal.dart';
 
 class HabitEditPage extends StatefulWidget {
   @override
@@ -49,7 +51,54 @@ class _HabitEditPageState extends State<HabitEditPage> {
               child: ListView(
                 padding: EdgeInsets.only(bottom: 20),
                 children: [
-                  SizedBox(height: 16,),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Container(
+                    height: 60,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(left: 16),
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Colors.black.withOpacity(0.8),
+                                  width: 2),
+                              shape: BoxShape.circle,
+                              color: _selectColor.color),
+                          width: 60,
+                          height: 60,
+                          child: Image.asset(_selectIcon.icon),
+                        ),
+                        Container(
+                          alignment: Alignment.bottomCenter,
+                          height: 60,
+                          width: 30,
+                          child: InkWell(
+                            onTap: () {
+                              showFloatingModalBottomSheet(
+                                  context: context,
+                                  barrierColor: Colors.black87,
+                                  builder: (context, scroller) {
+                                    return IconAndColorPage();
+                                  });
+                            },
+                            child: SvgPicture.asset(
+                              'assets/images/bianji.svg',
+                              color: Colors.black,
+                              width: 30,
+                              height: 30,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
                   EditFiledContainer(
                     editType: 1,
                     initValue: '',
@@ -60,36 +109,6 @@ class _HabitEditPageState extends State<HabitEditPage> {
                   SizedBox(
                     height: 16,
                   ),
-                  Row(
-                    children: [
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        margin: EdgeInsets.only(left: 18),
-                        child: Text(
-                          'Icon and Colors',
-                          style: AppTheme.appTheme.textStyle(
-                              textColor: Colors.black38,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16),
-                        ),
-                      ),
-                      AnimatedContainer(
-                        margin: EdgeInsets.only(left: 16),
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Colors.black.withOpacity(0.8), width: 2),
-                            shape: BoxShape.circle,
-                            color: _selectColor.color),
-                        width: 60,
-                        height: 60,
-                        child: Image.asset(_selectIcon.icon),
-                        duration: Duration(milliseconds: 500),
-                      )
-                    ],
-                  ),
-                  habitIconsView(),
-                  habitColorsView(),
                   Container(
                     alignment: Alignment.centerLeft,
                     margin: EdgeInsets.only(left: 18, top: 8),

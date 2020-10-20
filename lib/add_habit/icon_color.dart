@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_color.dart';
 
 import '../app_theme.dart';
 
 class IconAndColorPage extends StatefulWidget {
-  final Habit habit;
-  final Function onNext;
-
-  const IconAndColorPage({Key key, this.onNext, this.habit}) : super(key: key);
-
   @override
   _IconAndColorPageState createState() => _IconAndColorPageState();
 }
 
-class _IconAndColorPageState extends State<IconAndColorPage>
-    with AutomaticKeepAliveClientMixin {
+class _IconAndColorPageState extends State<IconAndColorPage> {
   List<Icon> icons = [];
   Icon _selectIcon;
 
@@ -33,44 +28,36 @@ class _IconAndColorPageState extends State<IconAndColorPage>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        ListView(
+    return Material(
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: <Color>[
+              AppTheme.appTheme.addHabitSheetBgLight(),
+              AppTheme.appTheme.addHabitSheetBgDark()
+            ],
+            begin: Alignment.bottomLeft,
+            end: Alignment.topRight,
+          ),
+        ),
+        child: Column(
           children: [
-            SizedBox(
-              height: 68,
-            ),
-            Container(
-              alignment: Alignment.center,
-              child: Text('请挑选一个图标和颜色吧',
-                  style: AppTheme.appTheme.textStyle(
-                      textColor: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20)),
-            ),
             SizedBox(
               height: 10,
             ),
-            AnimatedContainer(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: _selectBackgroundColor.color,
-                  border: Border.all(color: Colors.white, width: 2)),
-              width: 80,
-              height: 80,
-              child: Image.asset(
-                _selectIcon.icon,
-                fit: BoxFit.contain,
-                width: 50,
-                height: 50,
+            Container(
+              padding: EdgeInsets.only(right: 32, top: 16),
+              alignment: Alignment.centerRight,
+              child: SvgPicture.asset(
+                'assets/images/guanbi.svg',
+                color: Colors.white70,
+                width: 30,
+                height: 30,
               ),
-              duration: Duration(milliseconds: 500),
             ),
             Container(
               padding: EdgeInsets.only(top: 16, bottom: 16),
-              height: 220,
+              height: 240,
               child: GridView.builder(
                 padding: EdgeInsets.only(left: 18),
                 itemCount: icons.length,
@@ -109,7 +96,7 @@ class _IconAndColorPageState extends State<IconAndColorPage>
               ),
             ),
             Container(
-              height: 140,
+              height: 130,
               padding: EdgeInsets.only(top: 16, bottom: 16),
               child: GridView.builder(
                   scrollDirection: Axis.horizontal,
@@ -156,41 +143,11 @@ class _IconAndColorPageState extends State<IconAndColorPage>
                     );
                   }),
             ),
-            SizedBox(
-              height: 100,
-            )
           ],
         ),
-        GestureDetector(
-          onTap: () {
-            widget.habit.iconPath = _selectIcon.icon;
-            widget.habit.mainColor = _selectBackgroundColor.color.value;
-            widget.onNext();
-          },
-          child: Container(
-            margin: EdgeInsets.only(bottom: 42),
-            alignment: Alignment.center,
-            width: 250,
-            height: 60,
-            decoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.all(Radius.circular(32)),
-                color: Colors.white),
-            child: Text(
-              '下一步',
-              style: AppTheme.appTheme.textStyle(
-                  textColor: AppTheme.appTheme.gradientColorDark(),
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
-        )
-      ],
+      ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
 
 class Icon {
