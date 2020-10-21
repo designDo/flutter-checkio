@@ -11,6 +11,7 @@ import 'package:timefly/models/complete_time.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_color.dart';
 import 'package:timefly/models/habit_icon.dart';
+import 'package:timefly/models/habit_peroid.dart';
 import 'package:timefly/utils/uuid.dart';
 
 class HabitEditPage extends StatefulWidget {
@@ -23,6 +24,9 @@ class _HabitEditPageState extends State<HabitEditPage> {
   Color _habitColor;
 
   List<CompleteTime> completeTimes = [];
+  List<CompleteDay> completeDays = [];
+
+  List<HabitPeroid> habitPeroids = [];
 
   String _name = '';
   String _mark = '';
@@ -36,6 +40,10 @@ class _HabitEditPageState extends State<HabitEditPage> {
     _habitColor = colors[Random().nextInt(colors.length - 1)].color;
 
     completeTimes = CompleteTime.getCompleteTimes();
+    completeDays = CompleteDay.getCompleteDays();
+
+    habitPeroids = HabitPeroid.getHabitPeroids();
+
     super.initState();
   }
 
@@ -121,14 +129,37 @@ class _HabitEditPageState extends State<HabitEditPage> {
                     alignment: Alignment.centerLeft,
                     margin: EdgeInsets.only(left: 18, top: 8),
                     child: Text(
-                      'Time Space',
+                      '时间段',
                       style: AppTheme.appTheme.textStyle(
                           textColor: Colors.black38,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w700,
                           fontSize: 16),
                     ),
                   ),
                   timeView(),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    margin: EdgeInsets.only(left: 18),
+                    child: Text(
+                      '周期',
+                      style: AppTheme.appTheme.textStyle(
+                          textColor: Colors.black38,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16),
+                    ),
+                  ),
+                  periodChooseView(),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    margin: EdgeInsets.only(left: 18),
+                    child: Text(
+                      '每${HabitPeroid.getPeroid(currentPeroid)}完成次数',
+                      style: AppTheme.appTheme.textStyle(
+                          textColor: Colors.black38,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16),
+                    ),
+                  ),
                   Container(
                     alignment: Alignment.centerLeft,
                     margin: EdgeInsets.only(left: 18, top: 16),
@@ -260,9 +291,9 @@ class _HabitEditPageState extends State<HabitEditPage> {
   Widget timeView() {
     return Container(
       margin: EdgeInsets.only(top: 16),
-      height: 50,
+      height: 60,
       child: ListView.builder(
-        padding: EdgeInsets.only(left: 16, right: 16),
+        padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
         itemBuilder: (context, index) {
           CompleteTime completeTime = completeTimes[index];
           return GestureDetector(
@@ -279,18 +310,30 @@ class _HabitEditPageState extends State<HabitEditPage> {
               margin: EdgeInsets.only(left: 16),
               width: 60,
               decoration: BoxDecoration(
-                  border: Border.all(
-                      color: completeTime.isSelect
-                          ? Colors.black
-                          : Colors.transparent,
-                      width: 2),
-                  shape: BoxShape.circle,
-                  color: Theme.of(context).primaryColorDark.withOpacity(0.08)),
+                  boxShadow: completeTime.isSelect
+                      ? [
+                          BoxShadow(
+                              color: _habitColor.withOpacity(0.45),
+                              offset: Offset(3, 3),
+                              blurRadius: 5)
+                        ]
+                      : [
+                          BoxShadow(
+                              color: Colors.black12.withOpacity(0.1),
+                              offset: Offset(3, 3),
+                              blurRadius: 5)
+                        ],
+                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                  shape: BoxShape.rectangle,
+                  color: completeTime.isSelect
+                      ? _habitColor
+                      : AppTheme.appTheme.containerBackgroundColor()),
               child: Text(
                 CompleteTime.getTime(completeTime.time),
                 style: AppTheme.appTheme.textStyle(
-                    textColor: Colors.black87,
-                    fontWeight: FontWeight.w500,
+                    textColor:
+                        completeTime.isSelect ? Colors.white : Colors.black87,
+                    fontWeight: FontWeight.w600,
                     fontSize: 16),
               ),
               duration: Duration(milliseconds: 300),
@@ -300,6 +343,126 @@ class _HabitEditPageState extends State<HabitEditPage> {
         itemCount: completeTimes.length,
         scrollDirection: Axis.horizontal,
       ),
+    );
+  }
+
+  int currentPeroid = 0;
+
+  Widget periodChooseView() {
+    return Column(
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 16),
+          height: 60,
+          child: ListView.builder(
+            padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+            itemBuilder: (context, index) {
+              HabitPeroid habitPeroid = habitPeroids[index];
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    habitPeroids.forEach((element) {
+                      element.isSelect = false;
+                    });
+                    habitPeroid.isSelect = true;
+                    currentPeroid = habitPeroid.peroid;
+                  });
+                },
+                child: AnimatedContainer(
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.only(left: 16),
+                  width: 60,
+                  decoration: BoxDecoration(
+                      boxShadow: habitPeroid.isSelect
+                          ? [
+                              BoxShadow(
+                                  color: _habitColor.withOpacity(0.45),
+                                  offset: Offset(3, 3),
+                                  blurRadius: 5)
+                            ]
+                          : [
+                              BoxShadow(
+                                  color: Colors.black12.withOpacity(0.1),
+                                  offset: Offset(3, 3),
+                                  blurRadius: 5)
+                            ],
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                      shape: BoxShape.rectangle,
+                      color: habitPeroid.isSelect
+                          ? _habitColor
+                          : AppTheme.appTheme.containerBackgroundColor()),
+                  child: Text(
+                    HabitPeroid.getPeroid(habitPeroid.peroid),
+                    style: AppTheme.appTheme.textStyle(
+                        textColor: habitPeroid.isSelect
+                            ? Colors.white
+                            : Colors.black87,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16),
+                  ),
+                  duration: Duration(milliseconds: 300),
+                ),
+              );
+            },
+            itemCount: habitPeroids.length,
+            scrollDirection: Axis.horizontal,
+          ),
+        ),
+        currentPeroid == 1
+            ? Container(
+                height: 60,
+                child: ListView.builder(
+                  padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                  itemBuilder: (context, index) {
+                    CompleteDay completeDay = completeDays[index];
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          completeDay.isSelect = !completeDay.isSelect;
+                        });
+                      },
+                      child: AnimatedContainer(
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.only(left: 16),
+                        width: 60,
+                        decoration: BoxDecoration(
+                            boxShadow: completeDay.isSelect
+                                ? [
+                                    BoxShadow(
+                                        color: _habitColor.withOpacity(0.45),
+                                        offset: Offset(3, 3),
+                                        blurRadius: 5)
+                                  ]
+                                : [
+                                    BoxShadow(
+                                        color: Colors.black12.withOpacity(0.1),
+                                        offset: Offset(3, 3),
+                                        blurRadius: 5)
+                                  ],
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                            shape: BoxShape.rectangle,
+                            color: completeDay.isSelect
+                                ? _habitColor
+                                : AppTheme.appTheme.containerBackgroundColor()),
+                        child: Text(
+                          CompleteDay.getDay(completeDay.day),
+                          style: AppTheme.appTheme.textStyle(
+                              textColor: completeDay.isSelect
+                                  ? Colors.white
+                                  : Colors.black87,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16),
+                        ),
+                        duration: Duration(milliseconds: 300),
+                      ),
+                    );
+                  },
+                  itemCount: completeDays.length,
+                  scrollDirection: Axis.horizontal,
+                ),
+              )
+            : SizedBox()
+      ],
     );
   }
 
