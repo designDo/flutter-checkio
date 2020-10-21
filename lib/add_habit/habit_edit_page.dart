@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,7 +12,6 @@ import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_color.dart';
 import 'package:timefly/models/habit_icon.dart';
 import 'package:timefly/utils/uuid.dart';
-import 'package:timefly/widget/float_modal.dart';
 
 class HabitEditPage extends StatefulWidget {
   @override
@@ -18,11 +19,8 @@ class HabitEditPage extends StatefulWidget {
 }
 
 class _HabitEditPageState extends State<HabitEditPage> {
-  List<HabitIcon> icons = [];
-  HabitIcon _selectIcon;
-
-  List<HabitColor> colors;
-  HabitColor _selectColor;
+  String _habitIcon;
+  Color _habitColor;
 
   List<CompleteTime> completeTimes = [];
 
@@ -31,10 +29,12 @@ class _HabitEditPageState extends State<HabitEditPage> {
 
   @override
   void initState() {
-    icons = HabitIcon.getIcons();
-    _selectIcon = icons[0];
-    colors = HabitColor.getBackgroundColors();
-    _selectColor = colors[0];
+    List<HabitIcon> icons = HabitIcon.getIcons();
+    _habitIcon = icons[Random().nextInt(icons.length - 1)].icon;
+
+    List<HabitColor> colors = HabitColor.getBackgroundColors();
+    _habitColor = colors[Random().nextInt(colors.length - 1)].color;
+
     completeTimes = CompleteTime.getCompleteTimes();
     super.initState();
   }
@@ -62,28 +62,36 @@ class _HabitEditPageState extends State<HabitEditPage> {
                         Container(
                           margin: EdgeInsets.only(left: 16),
                           padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: Colors.black.withOpacity(0.8),
-                                  width: 2),
-                              shape: BoxShape.circle,
-                              color: _selectColor.color),
+                          decoration: BoxDecoration(boxShadow: <BoxShadow>[
+                            BoxShadow(
+                                color: _habitColor.withOpacity(0.4),
+                                offset: Offset(0, 7),
+                                blurRadius: 10)
+                          ], shape: BoxShape.circle, color: _habitColor),
                           width: 60,
                           height: 60,
-                          child: Image.asset(_selectIcon.icon),
+                          child: Image.asset(_habitIcon),
                         ),
                         Container(
                           alignment: Alignment.bottomCenter,
                           height: 60,
                           width: 30,
                           child: InkWell(
-                            onTap: () {
-                              showFloatingModalBottomSheet(
+                            onTap: () async {
+                              Map<String, dynamic> result = await showDialog(
                                   context: context,
                                   barrierColor: Colors.black87,
-                                  builder: (context, scroller) {
-                                    return IconAndColorPage();
+                                  builder: (context) {
+                                    return IconAndColorPage(
+                                        selectedIcon: _habitIcon,
+                                        selectedColor: _habitColor);
                                   });
+                              if (result != null) {
+                                setState(() {
+                                  _habitIcon = result['icon'];
+                                  _habitColor = result['color'];
+                                });
+                              }
                             },
                             child: SvgPicture.asset(
                               'assets/images/bianji.svg',
@@ -165,8 +173,8 @@ class _HabitEditPageState extends State<HabitEditPage> {
                       await DatabaseProvider.db.insert(Habit(
                           id: Uuid().generateV4(),
                           name: _name,
-                          iconPath: _selectIcon.icon,
-                          mainColor: _selectColor.color.value,
+                          iconPath: _habitIcon,
+                          mainColor: _habitColor.value,
                           mark: _mark,
                           remindTimes: [
                             '${timeOfDay.hour}:${timeOfDay.minute}'
@@ -246,104 +254,6 @@ class _HabitEditPageState extends State<HabitEditPage> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget habitIconsView() {
-    return Container(
-      padding: EdgeInsets.only(top: 8, bottom: 8),
-      height: 190,
-      child: GridView.builder(
-        padding: EdgeInsets.only(left: 32),
-        itemCount: icons.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3, mainAxisSpacing: 10, crossAxisSpacing: 10),
-        itemBuilder: (context, index) {
-          HabitIcon habitIcon = icons[index];
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                icons.forEach((element) {
-                  element.isSelect = false;
-                });
-                habitIcon.isSelect = true;
-                _selectIcon = habitIcon;
-              });
-            },
-            child: AnimatedContainer(
-              decoration: BoxDecoration(
-                  borderRadius: habitIcon.isSelect
-                      ? BorderRadius.all(Radius.circular(10))
-                      : BorderRadius.all(Radius.circular(30)),
-                  shape: BoxShape.rectangle,
-                  color: Colors.transparent,
-                  border: Border.all(
-                      color: habitIcon.isSelect
-                          ? AppTheme.appTheme.gradientColorLight()
-                          : Colors.transparent,
-                      width: 2)),
-              alignment: Alignment.center,
-              child: Image.asset(
-                icons[index].icon,
-                width: 40,
-                height: 40,
-              ),
-              duration: Duration(milliseconds: 300),
-            ),
-          );
-        },
-        scrollDirection: Axis.horizontal,
-      ),
-    );
-  }
-
-  Widget habitColorsView() {
-    return Container(
-      height: 110,
-      padding: EdgeInsets.only(top: 8, bottom: 8),
-      child: GridView.builder(
-          scrollDirection: Axis.horizontal,
-          padding: EdgeInsets.only(left: 32),
-          itemCount: colors.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, mainAxisSpacing: 16, crossAxisSpacing: 16),
-          itemBuilder: (context, index) {
-            HabitColor habitColor = colors[index];
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  colors.forEach((element) {
-                    element.isSelect = false;
-                  });
-                  habitColor.isSelect = true;
-                  _selectColor = habitColor;
-                });
-              },
-              child: AnimatedContainer(
-                alignment: Alignment.center,
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                        color: habitColor.isSelect
-                            ? habitColor.color
-                            : AppTheme.appTheme
-                                .gradientColorLight()
-                                .withOpacity(0.3),
-                        width: habitColor.isSelect ? 4 : 1.5),
-                    color: Colors.transparent),
-                child: habitColor.isSelect
-                    ? SizedBox()
-                    : Container(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle, color: habitColor.color),
-                        width: 25,
-                        height: 25),
-                duration: Duration(milliseconds: 300),
-              ),
-            );
-          }),
     );
   }
 

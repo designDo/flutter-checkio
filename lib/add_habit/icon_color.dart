@@ -1,36 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_color.dart';
+import 'package:timefly/models/habit_icon.dart';
 
 import '../app_theme.dart';
 
 class IconAndColorPage extends StatefulWidget {
+  final String selectedIcon;
+  final Color selectedColor;
+
+  const IconAndColorPage({Key key, this.selectedIcon, this.selectedColor})
+      : super(key: key);
+
   @override
   _IconAndColorPageState createState() => _IconAndColorPageState();
 }
 
 class _IconAndColorPageState extends State<IconAndColorPage> {
-  List<Icon> icons = [];
-  Icon _selectIcon;
+  List<HabitIcon> icons = [];
+  HabitIcon _selectIcon;
 
   List<HabitColor> backgroundColors = [];
   HabitColor _selectBackgroundColor;
 
   @override
   void initState() {
-    icons = Icon.getIcons();
-    _selectIcon = icons[0];
+    icons = HabitIcon.getIcons();
+
+    icons.forEach((icon) {
+      if (icon.icon == widget.selectedIcon) {
+        icon.isSelect = true;
+        _selectIcon = icon;
+      } else {
+        icon.isSelect = false;
+      }
+    });
+
     backgroundColors = HabitColor.getBackgroundColors();
-    _selectBackgroundColor = backgroundColors[0];
+    backgroundColors.forEach((color) {
+      if (color.color == widget.selectedColor) {
+        color.isSelect = true;
+        _selectBackgroundColor = color;
+      } else {
+        color.isSelect = false;
+      }
+    });
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Material(
+    return Center(
       child: Container(
+        height: 450,
+        width: MediaQuery.of(context).size.width * 0.85,
         decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.all(Radius.circular(20)),
           gradient: LinearGradient(
             colors: <Color>[
               AppTheme.appTheme.addHabitSheetBgLight(),
@@ -43,17 +70,7 @@ class _IconAndColorPageState extends State<IconAndColorPage> {
         child: Column(
           children: [
             SizedBox(
-              height: 10,
-            ),
-            Container(
-              padding: EdgeInsets.only(right: 32, top: 16),
-              alignment: Alignment.centerRight,
-              child: SvgPicture.asset(
-                'assets/images/guanbi.svg',
-                color: Colors.white70,
-                width: 30,
-                height: 30,
-              ),
+              height: 20,
             ),
             Container(
               padding: EdgeInsets.only(top: 16, bottom: 16),
@@ -76,13 +93,14 @@ class _IconAndColorPageState extends State<IconAndColorPage> {
                         _selectIcon = icons[index];
                       });
                     },
-                    child: Container(
+                    child: AnimatedContainer(
+                      duration: Duration(milliseconds: 300),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           shape: BoxShape.rectangle,
                           color: (icons[index].isSelect
-                              ? Colors.white
-                              : Colors.transparent)),
+                              ? _selectBackgroundColor.color
+                              : Colors.white12)),
                       alignment: Alignment.center,
                       child: Image.asset(
                         icons[index].icon,
@@ -128,7 +146,7 @@ class _IconAndColorPageState extends State<IconAndColorPage> {
                                 color: habitColor.isSelect
                                     ? habitColor.color
                                     : Colors.white.withOpacity(0.3),
-                                width: habitColor.isSelect ? 6 : 1.5),
+                                width: habitColor.isSelect ? 3 : 1.5),
                             color: Colors.transparent),
                         child: habitColor.isSelect
                             ? SizedBox()
@@ -136,53 +154,37 @@ class _IconAndColorPageState extends State<IconAndColorPage> {
                                 decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: habitColor.color),
-                                width: 32,
-                                height: 32),
+                                width: 28,
+                                height: 28),
                         duration: Duration(milliseconds: 300),
                       ),
                     );
                   }),
             ),
+            SizedBox(
+              height: 5,
+            ),
+            Container(
+              height: 40,
+              child: GestureDetector(
+                onTap: () {
+                  Map<String, dynamic> result = Map();
+                  print(_selectIcon.icon);
+                  result['icon'] = _selectIcon.icon;
+                  result['color'] = _selectBackgroundColor.color;
+                  Navigator.of(context).pop(result);
+                },
+                child: SvgPicture.asset(
+                  'assets/images/duigou.svg',
+                  width: 35,
+                  height: 35,
+                  color: Colors.white,
+                ),
+              ),
+            )
           ],
         ),
       ),
     );
-  }
-}
-
-class Icon {
-  final String icon;
-  bool isSelect = false;
-
-  Icon(this.icon, {this.isSelect = false});
-
-  static List<Icon> getIcons() {
-    List<Icon> icons = [];
-
-    icons.add(Icon('assets/images/aquarium-水族馆.png', isSelect: true));
-    icons.add(Icon('assets/images/bumblebee-熊峰.png'));
-    icons.add(Icon('assets/images/butterfly-蝴蝶.png'));
-    icons.add(Icon('assets/images/cat-footprint-猫抓.png'));
-    icons.add(Icon('assets/images/cute-hamster-可爱仓鼠.png'));
-    icons.add(Icon('assets/images/dinosaur-egg-龙宝宝.png'));
-    icons.add(Icon('assets/images/dog-狗.png'));
-    icons.add(Icon('assets/images/dove-鸽子.png'));
-    icons.add(Icon('assets/images/flamingo-火烈鸟.png'));
-    icons.add(Icon('assets/images/parrot-鹦鹉.png'));
-    icons.add(Icon('assets/images/swan-天鹅.png'));
-
-    icons.add(Icon('assets/images/badminton-player-羽毛球.png'));
-    icons.add(Icon('assets/images/basketball-篮球.png'));
-    icons.add(Icon('assets/images/cycling-自行车.png'));
-    icons.add(Icon('assets/images/exercise-运动.png'));
-    icons.add(Icon('assets/images/fishing-钓鱼.png'));
-    icons.add(Icon('assets/images/jump-rope-跳绳.png'));
-    icons.add(Icon('assets/images/pilates-普拉提.png'));
-    icons.add(Icon('assets/images/ping-pong-乒乓球.png'));
-    icons.add(Icon('assets/images/skateboard-滑板.png'));
-    icons.add(Icon('assets/images/tennis-racquet-网球.png'));
-    icons.add(Icon('assets/images/treadmill-跑步机.png'));
-
-    return icons;
   }
 }
