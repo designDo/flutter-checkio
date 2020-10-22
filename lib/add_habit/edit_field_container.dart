@@ -79,7 +79,7 @@ class _EditFiledContainerState extends State<EditFiledContainer>
                       top: widget.editType == 1 ? 23 : 15,
                       bottom: widget.editType == 1 ? 23 : 15,
                       right: 16),
-                  hintText: widget.editType == 1 ? '名字 ...' : '标记 ...',
+                  hintText: widget.editType == 1 ? '名字 ...' : '千里之行，始于足下 ...',
                   hintStyle: AppTheme.appTheme.textStyle(
                       textColor: Colors.black.withOpacity(0.5),
                       fontWeight: widget.editType == 1

@@ -16,7 +16,8 @@ class NameAndMarkPage extends StatefulWidget {
       this.onPageNext,
       this.onStartEdit,
       this.editAnimationController,
-      this.onEndEdit, this.habit})
+      this.onEndEdit,
+      this.habit})
       : super(key: key);
 
   @override

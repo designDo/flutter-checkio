@@ -177,7 +177,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                     alignment: Alignment.centerLeft,
                     margin: EdgeInsets.only(left: 18, top: 16),
                     child: Text(
-                      'Reminder',
+                      '提醒时间',
                       style: AppTheme.appTheme.textStyle(
                           textColor: Colors.black38,
                           fontWeight: FontWeight.w600,
@@ -189,7 +189,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                     alignment: Alignment.centerLeft,
                     margin: EdgeInsets.only(left: 18, top: 16),
                     child: Text(
-                      'Note',
+                      '写一句话鼓励自己',
                       style: AppTheme.appTheme.textStyle(
                           textColor: Colors.black38,
                           fontWeight: FontWeight.w600,
@@ -204,46 +204,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                     },
                   ),
                   SizedBox(
-                    height: 60,
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      if (_name.length == 0) {
-                        return;
-                      }
-                      if (timeOfDay == null) {
-                        return;
-                      }
-                      await DatabaseProvider.db.insert(Habit(
-                          id: Uuid().generateV4(),
-                          name: _name,
-                          iconPath: _habitIcon,
-                          mainColor: _habitColor.value,
-                          mark: _mark,
-                          remindTimes: [
-                            '${timeOfDay.hour}:${timeOfDay.minute}'
-                          ],
-                          createTime: DateTime.now().millisecondsSinceEpoch,
-                          completed: false));
-                      Navigator.of(context).pop();
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(left: 32, right: 32, bottom: 32),
-                      alignment: Alignment.center,
-                      width: 250,
-                      height: 60,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.all(Radius.circular(32)),
-                          color: AppTheme.appTheme.gradientColorLight()),
-                      child: Text(
-                        '完成',
-                        style: AppTheme.appTheme.textStyle(
-                            textColor: Colors.black87,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                    height: 32,
                   )
                 ],
               ),
@@ -290,9 +251,49 @@ class _HabitEditPageState extends State<HabitEditPage>
           ),
           Expanded(
             child: Container(
-              child: RaisedButton(
-                onPressed: () {},
-                child: Text('Save'),
+              alignment: Alignment.centerRight,
+              child: GestureDetector(
+                onTap: () async {
+                  if (_name.length == 0) {
+                    return;
+                  }
+                  if (timeOfDay == null) {
+                    return;
+                  }
+                  await DatabaseProvider.db.insert(Habit(
+                      id: Uuid().generateV4(),
+                      name: _name,
+                      iconPath: _habitIcon,
+                      mainColor: _habitColor.value,
+                      mark: _mark,
+                      remindTimes: ['${timeOfDay.hour}:${timeOfDay.minute}'],
+                      createTime: DateTime.now().millisecondsSinceEpoch,
+                      completed: false));
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  margin: EdgeInsets.only(right: 16),
+                  alignment: Alignment.center,
+                  width: 60,
+                  height: 40,
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: _habitColor.withOpacity(0.45),
+                            offset: Offset(3, 3),
+                            blurRadius: 5)
+                      ],
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                      color: _habitColor),
+                  child: Text(
+                    '完成',
+                    style: AppTheme.appTheme.textStyle(
+                        textColor: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
               ),
             ),
           ),
@@ -593,14 +594,67 @@ class _HabitEditPageState extends State<HabitEditPage>
       height: 50,
       child: GestureDetector(
         onTap: () async {
-          TimeOfDay result = await showTimePicker(
+          DateTime dateTime = await showCupertinoModalPopup(
               context: context,
-              initialTime: timeOfDay == null ? TimeOfDay.now() : timeOfDay,
-              cancelText: '取消',
-              confirmText: '确定',
-              helpText: '选择时间');
+              builder: (context) {
+                DateTime currentTime = DateTime.now();
+                return Container(
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: <Color>[
+                            AppTheme.appTheme.addHabitSheetBgLight(),
+                            AppTheme.appTheme.addHabitSheetBgDark()
+                          ],
+                          begin: Alignment.bottomLeft,
+                          end: Alignment.topRight,
+                        ),
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(20),
+                            topLeft: Radius.circular(20))),
+                    height: 318,
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 230,
+                          child: CupertinoTheme(
+                            data: CupertinoThemeData(
+                                textTheme: CupertinoTextThemeData(
+                                    dateTimePickerTextStyle: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18))),
+                            child: CupertinoDatePicker(
+                              mode: CupertinoDatePickerMode.time,
+                              onDateTimeChanged: (time) {
+                                currentTime = time;
+                              },
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 16, bottom: 32),
+                          height: 40,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop(currentTime);
+                            },
+                            child: SvgPicture.asset(
+                              'assets/images/duigou.svg',
+                              width: 35,
+                              height: 35,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
+                      ],
+                    ));
+              });
+          if (dateTime == null) {
+            return;
+          }
           setState(() {
-            timeOfDay = result;
+            timeOfDay = TimeOfDay.fromDateTime(dateTime);
           });
         },
         child: Container(
