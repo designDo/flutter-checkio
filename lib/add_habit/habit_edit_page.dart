@@ -252,7 +252,8 @@ class _HabitEditPageState extends State<HabitEditPage>
           Expanded(
             child: Container(
               alignment: Alignment.centerRight,
-              child: GestureDetector(
+              margin: EdgeInsets.only(right: 11),
+              child: InkWell(
                 onTap: () async {
                   if (_name.length == 0) {
                     return;
@@ -272,26 +273,14 @@ class _HabitEditPageState extends State<HabitEditPage>
                   Navigator.of(context).pop();
                 },
                 child: Container(
-                  margin: EdgeInsets.only(right: 16),
                   alignment: Alignment.center,
-                  width: 60,
+                  width: 40,
                   height: 40,
-                  decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            color: _habitColor.withOpacity(0.45),
-                            offset: Offset(3, 3),
-                            blurRadius: 5)
-                      ],
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
-                      color: _habitColor),
-                  child: Text(
-                    '完成',
-                    style: AppTheme.appTheme.textStyle(
-                        textColor: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),
+                  child: SvgPicture.asset(
+                    'assets/images/wancheng.svg',
+                    width: 30,
+                    height: 30,
+                    color: Colors.black,
                   ),
                 ),
               ),
