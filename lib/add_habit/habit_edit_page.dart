@@ -19,7 +19,8 @@ class HabitEditPage extends StatefulWidget {
   _HabitEditPageState createState() => _HabitEditPageState();
 }
 
-class _HabitEditPageState extends State<HabitEditPage> {
+class _HabitEditPageState extends State<HabitEditPage>
+    with TickerProviderStateMixin {
   String _habitIcon;
   Color _habitColor;
 
@@ -30,6 +31,8 @@ class _HabitEditPageState extends State<HabitEditPage> {
 
   String _name = '';
   String _mark = '';
+
+  AnimationController fontAnimationController;
 
   @override
   void initState() {
@@ -44,7 +47,16 @@ class _HabitEditPageState extends State<HabitEditPage> {
 
     habitPeroids = HabitPeroid.getHabitPeroids();
 
+    fontAnimationController =
+        AnimationController(duration: Duration(milliseconds: 300), vsync: this);
+    fontAnimationController.forward(from: 0.5);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    fontAnimationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -129,7 +141,7 @@ class _HabitEditPageState extends State<HabitEditPage> {
                     alignment: Alignment.centerLeft,
                     margin: EdgeInsets.only(left: 18, top: 8),
                     child: Text(
-                      '时间段',
+                      '时段',
                       style: AppTheme.appTheme.textStyle(
                           textColor: Colors.black38,
                           fontWeight: FontWeight.w700,
@@ -160,6 +172,7 @@ class _HabitEditPageState extends State<HabitEditPage> {
                           fontSize: 16),
                     ),
                   ),
+                  completeCountView(),
                   Container(
                     alignment: Alignment.centerLeft,
                     margin: EdgeInsets.only(left: 18, top: 16),
@@ -290,7 +303,7 @@ class _HabitEditPageState extends State<HabitEditPage> {
 
   Widget timeView() {
     return Container(
-      margin: EdgeInsets.only(top: 16),
+      margin: EdgeInsets.only(top: 12),
       height: 60,
       child: ListView.builder(
         padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
@@ -352,7 +365,7 @@ class _HabitEditPageState extends State<HabitEditPage> {
     return Column(
       children: [
         Container(
-          margin: EdgeInsets.only(top: 16),
+          margin: EdgeInsets.only(top: 12),
           height: 60,
           child: ListView.builder(
             padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
@@ -463,6 +476,110 @@ class _HabitEditPageState extends State<HabitEditPage> {
               )
             : SizedBox()
       ],
+    );
+  }
+
+  int countByDay = 1;
+  int countByWeek = 7;
+  int countByMonth = 30;
+
+  int getCurrentCount() {
+    int count = 0;
+    switch (currentPeroid) {
+      case 0:
+        count = countByDay;
+        break;
+      case 1:
+        count = countByWeek;
+        break;
+      case 2:
+        count = countByMonth;
+        break;
+    }
+    return count;
+  }
+
+  void setCurrentCount(int count) {
+    switch (currentPeroid) {
+      case 0:
+        countByDay = count;
+        break;
+      case 1:
+        countByWeek = count;
+        break;
+      case 2:
+        countByMonth = count;
+        break;
+    }
+  }
+
+  Widget completeCountView() {
+    return Container(
+      margin: EdgeInsets.only(left: 32, top: 12),
+      height: 50,
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () {
+              if (getCurrentCount() == 1) {
+                return;
+              }
+              setState(() {
+                setCurrentCount(getCurrentCount() - 1);
+                fontAnimationController.forward(from: 0.5);
+              });
+            },
+            child: SvgPicture.asset(
+              'assets/images/jian.svg',
+              color: Colors.black,
+              width: 32,
+              height: 32,
+            ),
+          ),
+          Container(
+            alignment: Alignment.center,
+            margin: EdgeInsets.only(left: 8, right: 8),
+            width: 50,
+            decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                      color: _habitColor.withOpacity(0.45),
+                      offset: Offset(3, 3),
+                      blurRadius: 5)
+                ],
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+                shape: BoxShape.rectangle,
+                color: _habitColor),
+            child: AnimatedBuilder(
+              builder: (context, child) {
+                return Text(
+                  '${getCurrentCount()}',
+                  style: AppTheme.appTheme.textStyle(
+                      textColor: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 23 * fontAnimationController.value),
+                );
+              },
+              animation: CurvedAnimation(
+                  parent: fontAnimationController, curve: Curves.elasticInOut),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                setCurrentCount(getCurrentCount() + 1);
+                fontAnimationController.forward(from: 0.5);
+              });
+            },
+            child: SvgPicture.asset(
+              'assets/images/jia.svg',
+              color: Colors.black,
+              width: 32,
+              height: 32,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
