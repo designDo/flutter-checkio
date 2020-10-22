@@ -37,6 +37,8 @@ class DatabaseProvider {
           "mark TEXT,"
           "remindTimes TEXT,"
           "period INTEGER,"
+          "completeTime INTEGER,"
+          "completeDays TEXT,"
           "createTime INTEGER,"
           "modifyTime INTEGER,"
           "completed INTEGER,"

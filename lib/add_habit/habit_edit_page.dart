@@ -258,7 +258,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                   if (_name.length == 0) {
                     return;
                   }
-                  if (timeOfDay == null) {
+                  if (remindTime == null) {
                     return;
                   }
                   await DatabaseProvider.db.insert(Habit(
@@ -267,7 +267,21 @@ class _HabitEditPageState extends State<HabitEditPage>
                       iconPath: _habitIcon,
                       mainColor: _habitColor.value,
                       mark: _mark,
-                      remindTimes: ['${timeOfDay.hour}:${timeOfDay.minute}'],
+                      period: currentPeroid,
+                      doNum: getCurrentCount(),
+                      completeTime: completeTimes
+                          .where((element) => element.isSelect)
+                          .first
+                          .time,
+                      completeDays: currentPeroid == 1
+                          ? completeDays
+                              .where((element) => element.isSelect)
+                              .map((e) => e.day)
+                              .toList()
+                          : [],
+                      remindTimes: [
+                        '${_twoDigits(remindTime.hour)}:${_twoDigits(remindTime.minute)}'
+                      ],
                       createTime: DateTime.now().millisecondsSinceEpoch,
                       completed: false));
                   Navigator.of(context).pop();
@@ -573,7 +587,7 @@ class _HabitEditPageState extends State<HabitEditPage>
     );
   }
 
-  TimeOfDay timeOfDay;
+  DateTime remindTime;
 
   Widget timeReminderView() {
     return Container(
@@ -643,7 +657,7 @@ class _HabitEditPageState extends State<HabitEditPage>
             return;
           }
           setState(() {
-            timeOfDay = TimeOfDay.fromDateTime(dateTime);
+            remindTime = dateTime;
           });
         },
         child: Container(
@@ -655,7 +669,7 @@ class _HabitEditPageState extends State<HabitEditPage>
               color: Theme.of(context).primaryColorDark.withOpacity(0.08)),
           width: 50,
           height: 50,
-          child: timeOfDay == null
+          child: remindTime == null
               ? SvgPicture.asset(
                   'assets/images/jia.svg',
                   color: Colors.black,
@@ -663,7 +677,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                   height: 30,
                 )
               : Text(
-                  '${timeOfDay.hour}:${timeOfDay.minute}',
+                  '${_twoDigits(remindTime.hour)}:${_twoDigits(remindTime.minute)}',
                   style: AppTheme.appTheme.textStyle(
                       textColor: Colors.black,
                       fontSize: 16,
@@ -672,5 +686,10 @@ class _HabitEditPageState extends State<HabitEditPage>
         ),
       ),
     );
+  }
+
+  String _twoDigits(int n) {
+    if (n >= 10) return '$n';
+    return '0$n';
   }
 }

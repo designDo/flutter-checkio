@@ -73,7 +73,18 @@ class Habit {
   ///转化为 json String 存储 ["10:20","11:50"]
   List<String> remindTimes;
 
-  ///周期 1 天 2 天
+  ///完成时间
+  /// 0 任意 1 早上 2 上午 3 中午 4 下午 5 晚上
+  int completeTime;
+
+  ///按周时 完成的day
+  /// 1-7，周一 -- 周日
+  List<int> completeDays;
+
+  ///周期
+  /// 0 按天
+  /// 1 按周
+  /// 2 按月
   int period;
 
   ///创建时间
@@ -99,6 +110,8 @@ class Habit {
     this.mainColor,
     this.mark,
     this.remindTimes,
+    this.completeDays,
+    this.completeTime,
     this.period,
     this.createTime,
     this.modifyTime,
@@ -109,7 +122,7 @@ class Habit {
 
   @override
   String toString() {
-    return 'Habit{id: $id, name: $name, iconPath: $iconPath, mainColor: $mainColor, mark: $mark, remindTimes: $remindTimes, period: $period, createTime: $createTime, modifyTime: $modifyTime, completed: $completed, doNum: $doNum, records: $records}';
+    return 'Habit{id: $id, name: $name, iconPath: $iconPath, mainColor: $mainColor, mark: $mark, remindTimes: $remindTimes, completeTime: $completeTime, completeDays:$completeDays, period: $period, createTime: $createTime, modifyTime: $modifyTime, completed: $completed, doNum: $doNum, records: $records}';
   }
 
   Habit.fromJson(Map<String, dynamic> json) {
@@ -126,6 +139,15 @@ class Habit {
       });
       remindTimes = times;
     }
+    if (json["completeDays"] != null) {
+      var daysJson = jsonDecode(json["completeDays"]);
+      var days = List<int>();
+      daysJson.forEach((json) {
+        days.add(json.toInt());
+      });
+      completeDays = days;
+    }
+    completeTime = json['completeTime']?.toInt();
     period = json["period"]?.toInt();
     createTime = json["createTime"]?.toInt();
     modifyTime = json["modifyTime"]?.toInt();
@@ -158,6 +180,16 @@ class Habit {
       });
       data["remindTimes"] = jsonEncode(temp);
     }
+    if (completeDays != null) {
+      var days = completeDays;
+      var temp = List();
+      days.forEach((day) {
+        temp.add(day);
+      });
+      data["completeDays"] = jsonEncode(temp);
+    }
+
+    data['completeTime'] = completeTime;
     data["period"] = period;
     data["createTime"] = createTime;
     data["modifyTime"] = modifyTime;
