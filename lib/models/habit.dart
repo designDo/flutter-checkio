@@ -103,6 +103,12 @@ class Habit {
   ///转化为 json String 存储
   List<HabitRecords> records;
 
+  ///当天打卡时间记录
+  List<int> todayChek;
+
+  ///所有打卡记录
+  Map<String, List<int>> totalCheck;
+
   Habit({
     this.id,
     this.name,
@@ -122,7 +128,10 @@ class Habit {
 
   @override
   String toString() {
-    return 'Habit{id: $id, name: $name, iconPath: $iconPath, mainColor: $mainColor, mark: $mark, remindTimes: $remindTimes, completeTime: $completeTime, completeDays:$completeDays, period: $period, createTime: $createTime, modifyTime: $modifyTime, completed: $completed, doNum: $doNum, records: $records}';
+    return 'Habit{id: $id, name: $name, iconPath: $iconPath, mainColor: $mainColor, mark: $mark,'
+        ' remindTimes: $remindTimes, completeTime: $completeTime, completeDays:$completeDays, period: $period, '
+        'createTime: $createTime, modifyTime: $modifyTime, completed: $completed, doNum: $doNum, records: $records'
+        'todayCheck: $todayChek, totalCheck: $totalCheck}';
   }
 
   Habit.fromJson(Map<String, dynamic> json) {
@@ -161,6 +170,32 @@ class Habit {
         recordList.add(HabitRecords.fromJson(json));
       });
       records = recordList;
+    }
+
+    if (json['todayCheck'] != null) {
+      var checkJson = jsonDecode(json['todayCheck']) as List;
+      var checks = List<int>();
+      checkJson.forEach((json) {
+        checks.add(json.toInt());
+      });
+      todayChek = checks;
+    }
+
+    if (json['totalCheck'] != null) {
+      var checkJson = jsonEncode(json['totalCheck']) as List;
+      var checks = Map<String, List<int>>();
+      checkJson.forEach((json) {
+        String value = json as String;
+        List<String> values = value.split(':');
+
+        List<int> time = List();
+        var times = jsonEncode(values[1]) as List;
+        times.forEach((element) {
+          time.add(element.toInt());
+        });
+        checks[values[0]] = time;
+      });
+      totalCheck = checks;
     }
   }
 
@@ -203,6 +238,22 @@ class Habit {
         temp.add(record.toJson());
       });
       data["records"] = jsonEncode(temp);
+    }
+    if (todayChek != null) {
+      var checks = todayChek;
+      var temp = List();
+      checks.forEach((check) {
+        temp.add(check);
+      });
+      data["todayCheck"] = jsonEncode(temp);
+    }
+    if (totalCheck != null) {
+      var checks = totalCheck;
+      var temp = List();
+      checks.forEach((key, value) {
+        temp.add('$value:${jsonEncode(value)}');
+      });
+      data['totalCheck'] = jsonEncode(temp);
     }
     return data;
   }

@@ -1,6 +1,7 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:timefly/models/habit.dart';
+import 'package:timefly/utils/date_util.dart';
 
 class DatabaseProvider {
   DatabaseProvider._();
@@ -43,7 +44,9 @@ class DatabaseProvider {
           "modifyTime INTEGER,"
           "completed INTEGER,"
           "doNum INTEGER,"
-          "records TEXT"
+          "records TEXT,"
+          "todayCheck TEXT,"
+          "totalCheck TEXT"
           ")",
         );
       },
@@ -53,12 +56,31 @@ class DatabaseProvider {
   Future<List<Habit>> getHabits() async {
     final db = await database;
     var habits = await db.query('habits');
-    List<Habit> habitList = [];
-    habits.forEach((element) {
-      habitList.add(Habit.fromJson(element));
-    });
+    habits.forEach((element) async {
+      Habit habit = Habit.fromJson(element);
+      if (habit.todayChek != null && habit.todayChek.length > 0) {
+        int time = habit.todayChek.last;
+        if (!DateUtil.isToday(time)) {
+          Map totalCheck;
+          if (habit.totalCheck == null) {
+            totalCheck = Map<String, List<int>>();
+          } else {
+            totalCheck = habit.totalCheck;
+          }
+          totalCheck[DateUtil.getDayString(time)] = habit.todayChek;
 
-    return habitList;
+          await db.update(
+              'habits', {'todayChek': [], 'totalCheck': habit.totalCheck},
+              where: 'id = ?', whereArgs: [habit.id]);
+        }
+      }
+    });
+    var newHabits = await db.query('habits');
+    List<Habit> newHabitList = [];
+    newHabits.forEach((element) {
+      newHabitList.add(Habit.fromJson(element));
+    });
+    return newHabitList;
   }
 
   ///获取天数分类习惯个数，用于’我的一天‘页面分类
