@@ -16,14 +16,10 @@ class HabitItemView extends StatefulWidget {
 }
 
 class _HabitItemViewState extends State<HabitItemView> {
-
-
   @override
   void initState() {
-
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +27,8 @@ class _HabitItemViewState extends State<HabitItemView> {
     int _maxValue = 1;
     switch (widget.habit.period) {
       case 0:
-        _initValue = widget.habit.todayChek == null ? 0 : widget.habit.todayChek.length;
+        _initValue =
+            widget.habit.todayChek == null ? 0 : widget.habit.todayChek.length;
         _maxValue = widget.habit.doNum;
         if (_initValue > _maxValue) {
           _maxValue = _initValue;
@@ -76,13 +73,13 @@ class _HabitItemViewState extends State<HabitItemView> {
                 if (widget.habit.todayChek == null) {
                   widget.habit.todayChek = List<int>();
                 }
-                widget.habit.todayChek.add(DateTime.now().millisecondsSinceEpoch);
+                widget.habit.todayChek
+                    .add(DateTime.now().millisecondsSinceEpoch);
                 bool success = await DatabaseProvider.db.update(
-                    {'todayCheck': jsonEncode(widget.habit.todayChek)}, widget.habit.id);
+                    {'todayCheck': jsonEncode(widget.habit.todayChek)},
+                    widget.habit.id);
                 if (success) {
-                  setState(() {
-
-                  });
+                  setState(() {});
                 }
               },
               child: Image.asset(widget.habit.iconPath),

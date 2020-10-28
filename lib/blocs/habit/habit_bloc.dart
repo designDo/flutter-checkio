@@ -28,8 +28,11 @@ class HabitsBloc extends Bloc<HabitsEvent, HabitsState> {
   }
 
   Stream<HabitsState> _mapHabitsAddToState(HabitsAdd habitsAdd) async* {
-    await DatabaseProvider.db.insert(habitsAdd.habit);
-    List<Habit> habits = await DatabaseProvider.db.getHabits();
-    yield HabitLoadSuccess(habits);
+    if (state is HabitLoadSuccess) {
+      final List<Habit> habits = List.from((state as HabitLoadSuccess).habits)
+        ..add(habitsAdd.habit);
+      yield HabitLoadSuccess(habits);
+      DatabaseProvider.db.insert(habitsAdd.habit);
+    }
   }
 }

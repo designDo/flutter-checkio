@@ -2,11 +2,13 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:timefly/add_habit/Icon_color.dart';
 import 'package:timefly/add_habit/edit_field_container.dart';
 import 'package:timefly/app_theme.dart';
-import 'package:timefly/db/database_provider.dart';
+import 'package:timefly/blocs/habit/habit_bloc.dart';
+import 'package:timefly/blocs/habit/habit_event.dart';
 import 'package:timefly/models/complete_time.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_color.dart';
@@ -261,7 +263,8 @@ class _HabitEditPageState extends State<HabitEditPage>
                   if (remindTime == null) {
                     return;
                   }
-                  Habit habit = await DatabaseProvider.db.insert(Habit(
+
+                  Habit habit = Habit(
                       id: Uuid().generateV4(),
                       name: _name,
                       iconPath: _habitIcon,
@@ -283,7 +286,8 @@ class _HabitEditPageState extends State<HabitEditPage>
                         '${_twoDigits(remindTime.hour)}:${_twoDigits(remindTime.minute)}'
                       ],
                       createTime: DateTime.now().millisecondsSinceEpoch,
-                      completed: false));
+                      completed: false);
+                  BlocProvider.of<HabitsBloc>(context).add(HabitsAdd(habit));
                   Navigator.of(context).pop(habit);
                 },
                 child: Container(
