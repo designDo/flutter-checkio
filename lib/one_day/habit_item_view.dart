@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:timefly/app_theme.dart';
+import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/models/habit.dart';
 
 class HabitItemView extends StatefulWidget {
@@ -13,8 +16,32 @@ class HabitItemView extends StatefulWidget {
 }
 
 class _HabitItemViewState extends State<HabitItemView> {
+
+
+  @override
+  void initState() {
+
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    int _initValue = 0;
+    int _maxValue = 1;
+    switch (widget.habit.period) {
+      case 0:
+        _initValue = widget.habit.todayChek == null ? 0 : widget.habit.todayChek.length;
+        _maxValue = widget.habit.doNum;
+        if (_initValue > _maxValue) {
+          _maxValue = _initValue;
+        }
+        break;
+      case 1:
+        break;
+      case 2:
+        break;
+    }
     return Container(
       margin: EdgeInsets.only(left: 16, top: 16, right: 16, bottom: 16),
       decoration: BoxDecoration(
@@ -34,17 +61,32 @@ class _HabitItemViewState extends State<HabitItemView> {
             margin: EdgeInsets.only(left: 16),
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
-              boxShadow:<BoxShadow>[
-                BoxShadow(
-                  color: Color(widget.habit.mainColor).withOpacity(0.3),
-                  offset: Offset(0,7),
-                  blurRadius: 10
-                )
-              ],
-                shape: BoxShape.circle, color: Color(widget.habit.mainColor).withOpacity(0.5)),
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                      color: Color(widget.habit.mainColor).withOpacity(0.3),
+                      offset: Offset(0, 7),
+                      blurRadius: 10)
+                ],
+                shape: BoxShape.circle,
+                color: Color(widget.habit.mainColor).withOpacity(0.5)),
             width: 60,
             height: 60,
-            child: Image.asset(widget.habit.iconPath),
+            child: GestureDetector(
+              onTap: () async {
+                if (widget.habit.todayChek == null) {
+                  widget.habit.todayChek = List<int>();
+                }
+                widget.habit.todayChek.add(DateTime.now().millisecondsSinceEpoch);
+                bool success = await DatabaseProvider.db.update(
+                    {'todayCheck': jsonEncode(widget.habit.todayChek)}, widget.habit.id);
+                if (success) {
+                  setState(() {
+
+                  });
+                }
+              },
+              child: Image.asset(widget.habit.iconPath),
+            ),
           ),
           Expanded(
             child: Container(
@@ -79,13 +121,13 @@ class _HabitItemViewState extends State<HabitItemView> {
             alignment: Alignment.center,
             width: 70,
             child: SleekCircularSlider(
-              initialValue: 5,
-              max: 7,
+              initialValue: _initValue.roundToDouble(),
+              max: _maxValue.roundToDouble(),
               innerWidget: (value) {
                 return Container(
                   alignment: Alignment.center,
                   child: Text(
-                    '${value.floor()}/7',
+                    '${value.floor()}/${widget.habit.doNum}',
                     style: AppTheme.appTheme.textStyle(
                         textColor: AppTheme.appTheme.textColorMain(),
                         fontWeight: FontWeight.bold,
@@ -100,10 +142,12 @@ class _HabitItemViewState extends State<HabitItemView> {
                       handlerSize: 0,
                       shadowWidth: 0),
                   customColors: CustomSliderColors(
+                      hideShadow: true,
+                      shadowColor: Colors.transparent,
                       trackColor: Color(widget.habit.mainColor),
                       progressBarColors: [
-                        AppTheme.appTheme.gradientColorLight(),
-                        AppTheme.appTheme.gradientColorDark()
+                        Color(widget.habit.mainColor).withBlue(100),
+                        Color(widget.habit.mainColor).withBlue(200)
                       ])),
             ),
           ),

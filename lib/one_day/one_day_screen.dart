@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:timefly/add_habit/habit_edit_page.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/db/database_provider.dart';
+import 'package:timefly/models/habit.dart';
 import 'package:timefly/notification/notification_plugin.dart';
 import 'package:timefly/one_day/habit_item_view.dart';
 
@@ -80,6 +81,7 @@ class _OneDayScreenState extends State<OneDayScreen>
 
   ///获取列表所有数据
   Future<List<ListData>> getListData() async {
+    print('getListData');
     List<ListData> datas = [];
     datas.add(ListData(type: ListData.typeHeader, value: null));
     var habits = await DatabaseProvider.db.getHabits();
@@ -139,11 +141,11 @@ class _OneDayScreenState extends State<OneDayScreen>
           position: tipAnimation,
           child: GestureDetector(
             onTap: () async {
-              await Navigator.of(context)
+              Habit newHabit = await Navigator.of(context)
                   .push(CupertinoPageRoute(builder: (context) {
                 return HabitEditPage();
               }));
-              setState(() {});
+
             },
             child: Padding(
               padding: EdgeInsets.only(left: 50),

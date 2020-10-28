@@ -108,4 +108,12 @@ class DatabaseProvider {
     await db.insert('habits', habit.toJson());
     return habit;
   }
+
+  ///更新
+  Future<bool> update(Map<String, dynamic> values, String habitId) async {
+    final db = await database;
+    int change = await db
+        .update('habits', values, where: 'id = ?', whereArgs: [habitId]);
+    return change > 0;
+  }
 }

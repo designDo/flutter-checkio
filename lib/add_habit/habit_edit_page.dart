@@ -261,7 +261,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                   if (remindTime == null) {
                     return;
                   }
-                  await DatabaseProvider.db.insert(Habit(
+                  Habit habit = await DatabaseProvider.db.insert(Habit(
                       id: Uuid().generateV4(),
                       name: _name,
                       iconPath: _habitIcon,
@@ -284,7 +284,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                       ],
                       createTime: DateTime.now().millisecondsSinceEpoch,
                       completed: false));
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(habit);
                 },
                 child: Container(
                   alignment: Alignment.center,
