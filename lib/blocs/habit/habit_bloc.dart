@@ -14,6 +14,8 @@ class HabitsBloc extends Bloc<HabitsEvent, HabitsState> {
       yield* _mapHabitsLoadToState();
     } else if (event is HabitsAdd) {
       yield* _mapHabitsAddToState(event);
+    } else if (event is HabitUpdate) {
+      yield* _mapHabitUpdateToState(event);
     }
   }
 
@@ -33,6 +35,18 @@ class HabitsBloc extends Bloc<HabitsEvent, HabitsState> {
         ..add(habitsAdd.habit);
       yield HabitLoadSuccess(habits);
       DatabaseProvider.db.insert(habitsAdd.habit);
+    }
+  }
+
+  Stream<HabitsState> _mapHabitUpdateToState(HabitUpdate habitUpdate) async* {
+    if (state is HabitLoadSuccess) {
+      final List<Habit> habits = (state as HabitLoadSuccess)
+          .habits
+          .map((habit) =>
+              habit.id == habitUpdate.habit.id ? habitUpdate.habit : habit)
+          .toList();
+      yield HabitLoadSuccess(habits);
+      DatabaseProvider.db.update(habitUpdate.habit);
     }
   }
 }

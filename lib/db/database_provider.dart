@@ -115,10 +115,10 @@ class DatabaseProvider {
   }
 
   ///更新
-  Future<bool> update(Map<String, dynamic> values, String habitId) async {
+  Future<bool> update(Habit habit) async {
     final db = await database;
-    int change = await db
-        .update('habits', values, where: 'id = ?', whereArgs: [habitId]);
+    int change = await db.update('habits', habit.toJson(),
+        where: 'id = ?', whereArgs: [habit.id]);
     return change > 0;
   }
 }

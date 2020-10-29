@@ -1,9 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:timefly/app_theme.dart';
-import 'package:timefly/db/database_provider.dart';
+import 'package:timefly/blocs/habit/habit_bloc.dart';
+import 'package:timefly/blocs/habit/habit_event.dart';
 import 'package:timefly/models/habit.dart';
 
 class HabitItemView extends StatefulWidget {
@@ -70,17 +70,13 @@ class _HabitItemViewState extends State<HabitItemView> {
             height: 60,
             child: GestureDetector(
               onTap: () async {
-                if (widget.habit.todayChek == null) {
-                  widget.habit.todayChek = List<int>();
+                List<int> times = List();
+                if (widget.habit.todayChek != null) {
+                  times.addAll(widget.habit.todayChek);
                 }
-                widget.habit.todayChek
-                    .add(DateTime.now().millisecondsSinceEpoch);
-                bool success = await DatabaseProvider.db.update(
-                    {'todayCheck': jsonEncode(widget.habit.todayChek)},
-                    widget.habit.id);
-                if (success) {
-                  setState(() {});
-                }
+                times.add(DateTime.now().millisecondsSinceEpoch);
+                BlocProvider.of<HabitsBloc>(context)
+                    .add(HabitUpdate(widget.habit.copyWith(todayChek: times)));
               },
               child: Image.asset(widget.habit.iconPath),
             ),

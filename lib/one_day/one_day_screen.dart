@@ -53,6 +53,7 @@ class _OneDayScreenState extends State<OneDayScreen>
           }
           if (state is HabitLoadSuccess) {
             List<ListData> listData = getHabits((state).habits);
+            print('HabitLoadSuccess ListData');
             headerController.forward();
             return ListView.builder(
                 itemCount: listData.length,
