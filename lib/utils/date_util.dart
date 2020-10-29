@@ -12,4 +12,10 @@ class DateUtil {
         DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch);
     return '${dateTime.year}-${dateTime.month}-${dateTime.day}';
   }
+
+  static int millisecondsUntilTomorrow() {
+    DateTime now = DateTime.now();
+    DateTime tomorrow = DateTime(now.year, now.month, now.day, 23, 59, 59, 999);
+    return tomorrow.millisecondsSinceEpoch - now.millisecondsSinceEpoch;
+  }
 }

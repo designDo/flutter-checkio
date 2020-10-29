@@ -10,6 +10,7 @@ import 'package:timefly/blocs/theme/theme_bloc.dart';
 import 'package:timefly/blocs/theme/theme_state.dart';
 import 'package:timefly/home_screen.dart';
 import 'package:timefly/notification/notification_plugin.dart';
+import 'package:timefly/utils/date_util.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,6 +40,11 @@ class MyApp extends StatelessWidget {
         create: (context) => HabitsBloc()..add(HabitsLoad()),
         child: BlocBuilder<ThemeBloc, ThemeState>(
           builder: (context, themeState) {
+            Future.delayed(
+                Duration(milliseconds: DateUtil.millisecondsUntilTomorrow()),
+                () {
+              BlocProvider.of<HabitsBloc>(context).add(HabitsLoad());
+            });
             return MaterialApp(
               title: 'Flutter',
               debugShowCheckedModeBanner: false,
