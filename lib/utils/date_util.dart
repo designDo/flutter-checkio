@@ -43,4 +43,26 @@ class DateUtil {
     }
     return num;
   }
+
+  static int getMonthCheckNum(
+      List<int> todayCheck, Map<String, List<int>> totalCheck) {
+    int num = 0;
+    if (totalCheck != null) {
+      DateTime now = DateTime.now();
+      //2020-10-10 get 10-1 --> 10-10
+      int today = now.day;
+      for (int i = 1; i < today; i++) {
+        DateTime oldDay = DateTime(now.year, now.month, i);
+        List<int> checks =
+            totalCheck['${oldDay.year}-${oldDay.month}-${oldDay.day}'];
+        if (checks != null) {
+          num += checks.length;
+        }
+      }
+    }
+    if (todayCheck != null) {
+      num += todayCheck.length;
+    }
+    return num;
+  }
 }

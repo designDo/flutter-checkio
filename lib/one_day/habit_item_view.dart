@@ -19,21 +19,19 @@ class HabitItemView extends StatelessWidget {
     switch (habit.period) {
       case 0:
         _initValue = habit.todayChek == null ? 0 : habit.todayChek.length;
-        _maxValue = habit.doNum;
-        if (_initValue > _maxValue) {
-          _maxValue = _initValue;
-        }
         break;
       case 1:
         _initValue =
             DateUtil.getWeekCheckNum(habit.todayChek, habit.totalCheck);
-        _maxValue = habit.doNum;
-        if (_initValue > _maxValue) {
-          _maxValue = _initValue;
-        }
         break;
       case 2:
+        _initValue =
+            DateUtil.getMonthCheckNum(habit.todayChek, habit.totalCheck);
         break;
+    }
+    _maxValue = habit.doNum;
+    if (_initValue > _maxValue) {
+      _maxValue = _initValue;
     }
     return Container(
       margin: EdgeInsets.only(left: 16, top: 16, right: 16, bottom: 16),
