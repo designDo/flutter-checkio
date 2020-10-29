@@ -5,6 +5,7 @@ import 'package:timefly/app_theme.dart';
 import 'package:timefly/blocs/habit/habit_bloc.dart';
 import 'package:timefly/blocs/habit/habit_event.dart';
 import 'package:timefly/models/habit.dart';
+import 'package:timefly/utils/date_util.dart';
 
 class HabitItemView extends StatelessWidget {
   final Habit habit;
@@ -24,6 +25,12 @@ class HabitItemView extends StatelessWidget {
         }
         break;
       case 1:
+        _initValue =
+            DateUtil.getWeekCheckNum(habit.todayChek, habit.totalCheck);
+        _maxValue = habit.doNum;
+        if (_initValue > _maxValue) {
+          _maxValue = _initValue;
+        }
         break;
       case 2:
         break;

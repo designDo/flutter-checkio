@@ -275,6 +275,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.2.17"
+  time:
+    dependency: "direct main"
+    description:
+      name: time
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.3.0"
   timezone:
     dependency: transitive
     description:
