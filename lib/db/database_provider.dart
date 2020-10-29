@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:timefly/models/habit.dart';
@@ -68,9 +70,12 @@ class DatabaseProvider {
             totalCheck = habit.totalCheck;
           }
           totalCheck[DateUtil.getDayString(time)] = habit.todayChek;
-
-          await db.update(
-              'habits', {'todayChek': [], 'totalCheck': habit.totalCheck},
+          var temp = List<String>();
+          totalCheck.forEach((key, value) {
+            temp.add('$key:${jsonEncode(value)}');
+          });
+          await db.update('habits',
+              {'todayCheck': jsonEncode([]), 'totalCheck': jsonEncode(temp)},
               where: 'id = ?', whereArgs: [habit.id]);
         }
       }

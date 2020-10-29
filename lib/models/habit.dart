@@ -182,14 +182,14 @@ class Habit {
     }
 
     if (json['totalCheck'] != null) {
-      var checkJson = jsonEncode(json['totalCheck']) as List;
+      var checkJson = jsonDecode(json['totalCheck']) as List;
       var checks = Map<String, List<int>>();
       checkJson.forEach((json) {
         String value = json as String;
         List<String> values = value.split(':');
-
+        print(values[0]);
         List<int> time = List();
-        var times = jsonEncode(values[1]) as List;
+        var times = jsonDecode(values[1]) as List;
         times.forEach((element) {
           time.add(element.toInt());
         });
