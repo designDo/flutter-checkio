@@ -6,30 +6,19 @@ import 'package:timefly/blocs/habit/habit_bloc.dart';
 import 'package:timefly/blocs/habit/habit_event.dart';
 import 'package:timefly/models/habit.dart';
 
-class HabitItemView extends StatefulWidget {
+class HabitItemView extends StatelessWidget {
   final Habit habit;
 
   const HabitItemView({Key key, this.habit}) : super(key: key);
 
   @override
-  _HabitItemViewState createState() => _HabitItemViewState();
-}
-
-class _HabitItemViewState extends State<HabitItemView> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     int _initValue = 0;
     int _maxValue = 1;
-    switch (widget.habit.period) {
+    switch (habit.period) {
       case 0:
-        _initValue =
-            widget.habit.todayChek == null ? 0 : widget.habit.todayChek.length;
-        _maxValue = widget.habit.doNum;
+        _initValue = habit.todayChek == null ? 0 : habit.todayChek.length;
+        _maxValue = habit.doNum;
         if (_initValue > _maxValue) {
           _maxValue = _initValue;
         }
@@ -60,25 +49,25 @@ class _HabitItemViewState extends State<HabitItemView> {
             decoration: BoxDecoration(
                 boxShadow: <BoxShadow>[
                   BoxShadow(
-                      color: Color(widget.habit.mainColor).withOpacity(0.3),
+                      color: Color(habit.mainColor).withOpacity(0.3),
                       offset: Offset(0, 7),
                       blurRadius: 10)
                 ],
                 shape: BoxShape.circle,
-                color: Color(widget.habit.mainColor).withOpacity(0.5)),
+                color: Color(habit.mainColor).withOpacity(0.5)),
             width: 60,
             height: 60,
             child: GestureDetector(
               onTap: () async {
                 List<int> times = List();
-                if (widget.habit.todayChek != null) {
-                  times.addAll(widget.habit.todayChek);
+                if (habit.todayChek != null) {
+                  times.addAll(habit.todayChek);
                 }
                 times.add(DateTime.now().millisecondsSinceEpoch);
                 BlocProvider.of<HabitsBloc>(context)
-                    .add(HabitUpdate(widget.habit.copyWith(todayChek: times)));
+                    .add(HabitUpdate(habit.copyWith(todayChek: times)));
               },
-              child: Image.asset(widget.habit.iconPath),
+              child: Image.asset(habit.iconPath),
             ),
           ),
           Expanded(
@@ -89,7 +78,7 @@ class _HabitItemViewState extends State<HabitItemView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.habit.name,
+                    habit.name,
                     style: AppTheme.appTheme.textStyle(
                         textColor: AppTheme.appTheme.textColorMain(),
                         fontSize: 20,
@@ -99,7 +88,7 @@ class _HabitItemViewState extends State<HabitItemView> {
                     height: 16,
                   ),
                   Text(
-                    '${widget.habit.remindTimes == null ? '' : widget.habit.remindTimes[0]}',
+                    '${habit.remindTimes == null ? '' : habit.remindTimes[0]}',
                     style: AppTheme.appTheme.textStyle(
                         textColor: AppTheme.appTheme.textColorSecond(),
                         fontSize: 16,
@@ -120,7 +109,7 @@ class _HabitItemViewState extends State<HabitItemView> {
                 return Container(
                   alignment: Alignment.center,
                   child: Text(
-                    '${value.floor()}/${widget.habit.doNum}',
+                    '${value.floor()}/${habit.doNum}',
                     style: AppTheme.appTheme.textStyle(
                         textColor: AppTheme.appTheme.textColorMain(),
                         fontWeight: FontWeight.bold,
@@ -137,10 +126,10 @@ class _HabitItemViewState extends State<HabitItemView> {
                   customColors: CustomSliderColors(
                       hideShadow: true,
                       shadowColor: Colors.transparent,
-                      trackColor: Color(widget.habit.mainColor),
+                      trackColor: Color(habit.mainColor),
                       progressBarColors: [
-                        Color(widget.habit.mainColor).withBlue(100),
-                        Color(widget.habit.mainColor).withBlue(200)
+                        Color(habit.mainColor).withBlue(100),
+                        Color(habit.mainColor).withBlue(200)
                       ])),
             ),
           ),
