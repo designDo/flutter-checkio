@@ -1,4 +1,8 @@
 class HabitPeroid {
+  static const int day = 0;
+  static const int week = 1;
+  static const int month = 2;
+
   ///0 按天
   ///1 按周
   ///2 按月
@@ -18,13 +22,13 @@ class HabitPeroid {
   static String getPeroid(int peroid) {
     String peroidString = '天';
     switch (peroid) {
-      case 0:
+      case day:
         peroidString = '天';
         break;
-      case 1:
+      case week:
         peroidString = '周';
         break;
-      case 2:
+      case month:
         peroidString = '月';
         break;
     }

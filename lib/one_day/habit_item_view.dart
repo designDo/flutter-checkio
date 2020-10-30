@@ -5,6 +5,7 @@ import 'package:timefly/app_theme.dart';
 import 'package:timefly/blocs/habit/habit_bloc.dart';
 import 'package:timefly/blocs/habit/habit_event.dart';
 import 'package:timefly/models/habit.dart';
+import 'package:timefly/models/habit_peroid.dart';
 import 'package:timefly/utils/date_util.dart';
 
 class HabitItemView extends StatelessWidget {
@@ -17,14 +18,14 @@ class HabitItemView extends StatelessWidget {
     int _initValue = 0;
     int _maxValue = 1;
     switch (habit.period) {
-      case 0:
+      case HabitPeroid.day:
         _initValue = habit.todayChek == null ? 0 : habit.todayChek.length;
         break;
-      case 1:
+      case HabitPeroid.week:
         _initValue =
             DateUtil.getWeekCheckNum(habit.todayChek, habit.totalCheck);
         break;
-      case 2:
+      case HabitPeroid.month:
         _initValue =
             DateUtil.getMonthCheckNum(habit.todayChek, habit.totalCheck);
         break;

@@ -367,7 +367,7 @@ class _HabitEditPageState extends State<HabitEditPage>
     );
   }
 
-  int currentPeroid = 0;
+  int currentPeroid = HabitPeroid.day;
 
   Widget periodChooseView() {
     return Column(
@@ -429,7 +429,7 @@ class _HabitEditPageState extends State<HabitEditPage>
             scrollDirection: Axis.horizontal,
           ),
         ),
-        currentPeroid == 1
+        currentPeroid == HabitPeroid.week
             ? Container(
                 height: 60,
                 child: ListView.builder(
