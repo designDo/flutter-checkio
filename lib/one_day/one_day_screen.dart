@@ -83,64 +83,11 @@ class _OneDayScreenState extends State<OneDayScreen>
         },
       ),
     );
-    return Container(
-      child: FutureBuilder(
-        future: getListData(),
-        builder: (context, snapshot) {
-          if (snapshot.data == null) {
-            return SizedBox();
-          }
-          List<ListData> listData = snapshot.data;
-          headerController.forward();
-          return ListView.builder(
-              itemCount: listData.length,
-              itemBuilder: (context, index) {
-                ListData data = listData[index];
-                Widget widget;
-                switch (data.type) {
-                  case ListData.typeHeader:
-                    widget = getHeaderView();
-                    break;
-                  case ListData.typeTip:
-                    widget = getTipsView();
-                    break;
-                  case ListData.typeTitle:
-                    widget = Text('title');
-                    break;
-                  case ListData.typeHabit:
-                    widget = HabitItemView(
-                      habit: data.value,
-                    );
-                    break;
-                }
-                return widget;
-              });
-        },
-      ),
-    );
   }
 
   List<ListData> getHabits(List<Habit> habits) {
     List<ListData> datas = [];
     datas.add(ListData(type: ListData.typeHeader, value: null));
-    if (habits.length > 0) {
-      habits.sort((a, b) => b.createTime.compareTo(a.createTime));
-      datas.add(ListData(type: ListData.typeTip, value: habits.length));
-      for (var habit in habits) {
-        datas.add(ListData(type: ListData.typeHabit, value: habit));
-      }
-    } else {
-      datas.add(ListData(type: ListData.typeTip, value: null));
-    }
-    return datas;
-  }
-
-  ///获取列表所有数据
-  Future<List<ListData>> getListData() async {
-    print('getListData');
-    List<ListData> datas = [];
-    datas.add(ListData(type: ListData.typeHeader, value: null));
-    var habits = await DatabaseProvider.db.getHabits();
     if (habits.length > 0) {
       habits.sort((a, b) => b.createTime.compareTo(a.createTime));
       datas.add(ListData(type: ListData.typeTip, value: habits.length));

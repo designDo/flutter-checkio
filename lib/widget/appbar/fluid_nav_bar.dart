@@ -68,14 +68,14 @@ class _FluidNavBarState extends State<FluidNavBar> with TickerProviderStateMixin
     final height = FluidNavBar.nominalHeight;
     return Container(
       width: appSize.width,
-      height: FluidNavBar.nominalHeight,
+      height: FluidNavBar.nominalHeight + MediaQuery.of(context).padding.bottom,
       child: Stack(
         children: [
           Positioned(
             left: 0,
             top: 0,
             width: appSize.width,
-            height: height,
+            height: height+ MediaQuery.of(context).padding.bottom,
             child: _buildBackground(),
           ),
           Positioned(
@@ -87,6 +87,10 @@ class _FluidNavBarState extends State<FluidNavBar> with TickerProviderStateMixin
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: _buildButtons(),
             ),
+          ),
+          Positioned(
+            top: height,
+            child: SizedBox(height: MediaQuery.of(context).padding.bottom,),
           ),
         ],
       ),
