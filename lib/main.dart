@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
               BlocProvider.of<HabitsBloc>(context).add(HabitsLoad());
             });
             return MaterialApp(
-              title: 'Flutter',
+              title: 'Time Fly',
               debugShowCheckedModeBanner: false,
               theme:
                   themeState.themeData.copyWith(platform: TargetPlatform.iOS),
