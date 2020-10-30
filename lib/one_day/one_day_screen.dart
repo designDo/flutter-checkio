@@ -5,10 +5,11 @@ import 'package:timefly/add_habit/habit_edit_page.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/blocs/habit/habit_bloc.dart';
 import 'package:timefly/blocs/habit/habit_state.dart';
-import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/models/habit.dart';
+import 'package:timefly/models/habit_list_model.dart';
 import 'package:timefly/notification/notification_plugin.dart';
 import 'package:timefly/one_day/habit_item_view.dart';
+import 'package:timefly/utils/habit_util.dart';
 
 class OneDayScreen extends StatefulWidget {
   @override
@@ -52,25 +53,25 @@ class _OneDayScreenState extends State<OneDayScreen>
             return Container();
           }
           if (state is HabitLoadSuccess) {
-            List<ListData> listData = getHabits((state).habits);
+            List<OnDayHabitListData> listData = getHabits((state).habits);
             print('HabitLoadSuccess ListData');
             headerController.forward();
             return ListView.builder(
                 itemCount: listData.length,
                 itemBuilder: (context, index) {
-                  ListData data = listData[index];
+                  OnDayHabitListData data = listData[index];
                   Widget widget;
                   switch (data.type) {
-                    case ListData.typeHeader:
+                    case OnDayHabitListData.typeHeader:
                       widget = getHeaderView();
                       break;
-                    case ListData.typeTip:
+                    case OnDayHabitListData.typeTip:
                       widget = getTipsView();
                       break;
-                    case ListData.typeTitle:
-                      widget = Text('title');
+                    case OnDayHabitListData.typeTitle:
+                      widget = Text(data.value);
                       break;
-                    case ListData.typeHabit:
+                    case OnDayHabitListData.typeHabit:
                       widget = HabitItemView(
                         habit: data.value,
                       );
@@ -85,18 +86,13 @@ class _OneDayScreenState extends State<OneDayScreen>
     );
   }
 
-  List<ListData> getHabits(List<Habit> habits) {
-    List<ListData> datas = [];
-    datas.add(ListData(type: ListData.typeHeader, value: null));
-    if (habits.length > 0) {
-      habits.sort((a, b) => b.createTime.compareTo(a.createTime));
-      datas.add(ListData(type: ListData.typeTip, value: habits.length));
-      for (var habit in habits) {
-        datas.add(ListData(type: ListData.typeHabit, value: habit));
-      }
-    } else {
-      datas.add(ListData(type: ListData.typeTip, value: null));
-    }
+  List<OnDayHabitListData> getHabits(List<Habit> habits) {
+    List<OnDayHabitListData> datas = [];
+    datas.add(
+        OnDayHabitListData(type: OnDayHabitListData.typeHeader, value: null));
+    datas
+        .add(OnDayHabitListData(type: OnDayHabitListData.typeTip, value: null));
+    datas.addAll(HabitUtil.sortByCompleteTime(habits));
     return datas;
   }
 
@@ -188,16 +184,4 @@ class _OneDayScreenState extends State<OneDayScreen>
       },
     );
   }
-}
-
-class ListData {
-  static const int typeHeader = 0;
-  static const int typeTip = 1;
-  static const int typeTitle = 2;
-  static const int typeHabit = 3;
-
-  final int type;
-  final dynamic value;
-
-  const ListData({this.type, this.value});
 }
