@@ -1,6 +1,8 @@
 import 'package:timefly/models/complete_time.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_list_model.dart';
+import 'package:time/time.dart';
+import 'package:timefly/models/habit_peroid.dart';
 
 class HabitUtil {
   ///按 completeTime分类，子分类下按时间排序
@@ -36,5 +38,31 @@ class HabitUtil {
       });
     }
     return datas;
+  }
+
+  static int getMostStreaks(Habit habit) {
+    int num = 0;
+    Map<String, List<int>> totalCheck = habit.totalCheck;
+    DateTime now = DateTime.now();
+    DateTime today = DateTime(now.year, now.month, now.day);
+
+    ///昨天 前天 大前天 是否连续包含
+    for (int i = 1; i < 10000; i++) {
+      DateTime lastDay = today - i.days;
+      List<int> lastDayCheck =
+          totalCheck['${lastDay.year}-${lastDay.month}-${lastDay.day}'];
+      if (lastDayCheck != null) {
+        if (habit.period == HabitPeroid.day &&
+            lastDayCheck.length != habit.doNum) {
+          return num;
+        } else {
+          num += 1;
+        }
+      } else {
+        return num;
+      }
+    }
+
+    return num;
   }
 }

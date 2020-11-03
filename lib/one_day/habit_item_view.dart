@@ -7,6 +7,7 @@ import 'package:timefly/blocs/habit/habit_event.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_peroid.dart';
 import 'package:timefly/utils/date_util.dart';
+import 'package:timefly/utils/habit_util.dart';
 
 class HabitItemView extends StatelessWidget {
   final Habit habit;
@@ -35,7 +36,7 @@ class HabitItemView extends StatelessWidget {
       _maxValue = _initValue;
     }
     return Container(
-      margin: EdgeInsets.only(left: 16, top: 16, right: 16, bottom: 16),
+      margin: EdgeInsets.only(left: 16, top: 12, right: 16, bottom: 16),
       decoration: BoxDecoration(
           boxShadow: <BoxShadow>[
             BoxShadow(
@@ -87,14 +88,14 @@ class HabitItemView extends StatelessWidget {
                     habit.name,
                     style: AppTheme.appTheme.textStyle(
                         textColor: AppTheme.appTheme.textColorMain(),
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
                     height: 16,
                   ),
                   Text(
-                    '${habit.remindTimes == null ? '' : habit.remindTimes[0]}',
+                    getHabitInfo(),
                     style: AppTheme.appTheme.textStyle(
                         textColor: AppTheme.appTheme.textColorSecond(),
                         fontSize: 16,
@@ -105,38 +106,61 @@ class HabitItemView extends StatelessWidget {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 10),
             alignment: Alignment.center,
-            width: 70,
-            child: SleekCircularSlider(
-              initialValue: _initValue.roundToDouble(),
-              max: _maxValue.roundToDouble(),
-              innerWidget: (value) {
-                return Container(
+            width: 66,
+            child: Stack(
+              fit: StackFit.expand,
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 16),
+                  height: 30,
                   alignment: Alignment.center,
-                  child: Text(
-                    '${value.floor()}/${habit.doNum}',
-                    style: AppTheme.appTheme.textStyle(
-                        textColor: AppTheme.appTheme.textColorMain(),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
+                  width: 60,
+                  child: SleekCircularSlider(
+                    initialValue: _initValue.roundToDouble(),
+                    max: _maxValue.roundToDouble(),
+                    innerWidget: (value) {
+                      return Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          '${value.floor()}/${habit.doNum}',
+                          style: AppTheme.appTheme.textStyle(
+                              textColor: AppTheme.appTheme.textColorMain(),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
+                        ),
+                      );
+                    },
+                    appearance: CircularSliderAppearance(
+                        customWidths: CustomSliderWidths(
+                            trackWidth: 2,
+                            progressBarWidth: 5,
+                            handlerSize: 0,
+                            shadowWidth: 0),
+                        customColors: CustomSliderColors(
+                            hideShadow: true,
+                            shadowColor: Colors.transparent,
+                            trackColor: Color(habit.mainColor),
+                            progressBarColors: [
+                              Color(habit.mainColor).withBlue(100),
+                              Color(habit.mainColor).withBlue(200)
+                            ])),
                   ),
-                );
-              },
-              appearance: CircularSliderAppearance(
-                  customWidths: CustomSliderWidths(
-                      trackWidth: 2,
-                      progressBarWidth: 5,
-                      handlerSize: 0,
-                      shadowWidth: 0),
-                  customColors: CustomSliderColors(
-                      hideShadow: true,
-                      shadowColor: Colors.transparent,
-                      trackColor: Color(habit.mainColor),
-                      progressBarColors: [
-                        Color(habit.mainColor).withBlue(100),
-                        Color(habit.mainColor).withBlue(200)
-                      ])),
+                ),
+                getTodayCheckNum() == 0
+                    ? SizedBox()
+                    : Positioned(
+                        top: 73,
+                        child: Text(
+                          '今天 +${getTodayCheckNum()}',
+                          style: AppTheme.appTheme.textStyle(
+                              textColor: AppTheme.appTheme.textColorSecond(),
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      )
+              ],
             ),
           ),
           SizedBox(
@@ -145,5 +169,21 @@ class HabitItemView extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String getHabitInfo() {
+    String info =
+        '${habit.remindTimes == null ? '' : '${habit.remindTimes[0]}  '}'
+        '${HabitPeroid.getPeroid(habit.period)}'
+        '${habit.period != HabitPeroid.week ? '  连续${HabitUtil.getMostStreaks(habit)}天' : ''}';
+    return info;
+  }
+
+  int getTodayCheckNum() {
+    int num = 0;
+    if (habit.period != HabitPeroid.day) {
+      return habit.todayChek != null ? habit.todayChek.length : 0;
+    }
+    return num;
   }
 }

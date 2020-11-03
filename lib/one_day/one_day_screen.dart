@@ -69,7 +69,7 @@ class _OneDayScreenState extends State<OneDayScreen>
                       widget = getTipsView();
                       break;
                     case OnDayHabitListData.typeTitle:
-                      widget = Text(data.value);
+                      widget = getTitleView(data.value);
                       break;
                     case OnDayHabitListData.typeHabit:
                       widget = HabitItemView(
@@ -182,6 +182,19 @@ class _OneDayScreenState extends State<OneDayScreen>
           ),
         );
       },
+    );
+  }
+
+  Widget getTitleView(String title) {
+    return Container(
+      margin: EdgeInsets.only(left: 16, top: 10),
+      child: Text(
+        title,
+        style: AppTheme.appTheme.textStyle(
+            textColor: AppTheme.appTheme.textColorSecond(),
+            fontWeight: FontWeight.w600,
+            fontSize: 15),
+      ),
     );
   }
 }
