@@ -43,6 +43,9 @@ class HabitUtil {
   static int getMostStreaks(Habit habit) {
     int num = 0;
     Map<String, List<int>> totalCheck = habit.totalCheck;
+    if (totalCheck == null) {
+      return num;
+    }
     DateTime now = DateTime.now();
     DateTime today = DateTime(now.year, now.month, now.day);
 
