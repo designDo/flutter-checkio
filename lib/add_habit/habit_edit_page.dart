@@ -132,6 +132,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                   EditFiledContainer(
                     editType: 1,
                     initValue: '',
+                    hintValue: '名字 ...',
                     onValueChanged: (value) {
                       _name = value;
                     },
@@ -201,6 +202,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                   EditFiledContainer(
                     editType: 2,
                     initValue: '',
+                    hintValue: '千里之行，始于足下 ...',
                     onValueChanged: (value) {
                       _mark = value;
                     },

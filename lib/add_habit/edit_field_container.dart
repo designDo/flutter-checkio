@@ -2,12 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:timefly/app_theme.dart';
 
 class EditFiledContainer extends StatefulWidget {
+  ///1 名字 2 标志 3 日志
   final int editType;
   final String initValue;
+  final String hintValue;
   final ValueChanged<String> onValueChanged;
 
   const EditFiledContainer(
-      {Key key, this.editType, this.initValue, this.onValueChanged})
+      {Key key,
+      this.editType,
+      this.initValue,
+      this.onValueChanged,
+      this.hintValue})
       : super(key: key);
 
   @override
@@ -36,6 +42,54 @@ class _EditFiledContainerState extends State<EditFiledContainer>
     super.initState();
   }
 
+  int getMaxLength() {
+    int maxLength = 10;
+    switch (widget.editType) {
+      case 1:
+        maxLength = 10;
+        break;
+      case 2:
+        maxLength = 50;
+        break;
+      case 3:
+        maxLength = 20;
+        break;
+    }
+    return maxLength;
+  }
+
+  int getMaxLines() {
+    int maxLines = 1;
+    switch (widget.editType) {
+      case 1:
+        maxLines = 1;
+        break;
+      case 2:
+        maxLines = 5;
+        break;
+      case 3:
+        maxLines = 2;
+        break;
+    }
+    return maxLines;
+  }
+
+  int getMinLines() {
+    int minLines = 1;
+    switch (widget.editType) {
+      case 1:
+        minLines = 1;
+        break;
+      case 2:
+        minLines = 4;
+        break;
+      case 3:
+        minLines = 2;
+        break;
+    }
+    return minLines;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -47,9 +101,9 @@ class _EditFiledContainerState extends State<EditFiledContainer>
             padding: EdgeInsets.only(top: 10, left: 32, right: 32),
             child: TextField(
               strutStyle: StrutStyle(height: 1.5),
-              maxLength: widget.editType == 1 ? 10 : 50,
-              maxLines: widget.editType == 1 ? 1 : 5,
-              minLines: widget.editType == 1 ? 1 : 4,
+              maxLength: getMaxLength(),
+              maxLines: getMaxLines(),
+              minLines: getMinLines(),
               controller: editingController,
               showCursor: true,
               autofocus: false,
@@ -79,7 +133,7 @@ class _EditFiledContainerState extends State<EditFiledContainer>
                       top: widget.editType == 1 ? 23 : 15,
                       bottom: widget.editType == 1 ? 23 : 15,
                       right: 16),
-                  hintText: widget.editType == 1 ? '名字 ...' : '千里之行，始于足下 ...',
+                  hintText: widget.hintValue,
                   hintStyle: AppTheme.appTheme.textStyle(
                       textColor: Colors.black.withOpacity(0.5),
                       fontWeight: widget.editType == 1
@@ -118,7 +172,7 @@ class _EditFiledContainerState extends State<EditFiledContainer>
                   width: 50,
                   height: 35,
                   child: Text(
-                    '${_value.length}/${widget.editType == 1 ? 10 : 50}',
+                    '${_value.length}/${getMaxLength()}',
                     style: TextStyle(
                         color: AppTheme.appTheme.gradientColorLight(),
                         fontWeight: FontWeight.bold,

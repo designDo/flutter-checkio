@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
+import 'package:timefly/add_habit/edit_field_container.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/blocs/habit/habit_bloc.dart';
 import 'package:timefly/blocs/habit/habit_event.dart';
@@ -8,6 +10,7 @@ import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_peroid.dart';
 import 'package:timefly/utils/date_util.dart';
 import 'package:timefly/utils/habit_util.dart';
+import 'package:timefly/widget/habit_check_dialog.dart';
 
 class HabitItemView extends StatelessWidget {
   final Habit habit;
@@ -69,13 +72,26 @@ class HabitItemView extends StatelessWidget {
                 height: 60,
                 child: GestureDetector(
                   onTap: () async {
-                    List<int> times = List();
-                    if (habit.todayChek != null) {
-                      times.addAll(habit.todayChek);
+                    String log = await showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (context) {
+                          return HabitCheckDialog(
+                            name: habit.name,
+                          );
+                        });
+                    if (log == null) {
+                      return;
                     }
-                    times.add(DateTime.now().millisecondsSinceEpoch);
-                    BlocProvider.of<HabitsBloc>(context)
-                        .add(HabitUpdate(habit.copyWith(todayChek: times)));
+                    Future.delayed(Duration(milliseconds: 500), () {
+                      List<int> times = List();
+                      if (habit.todayChek != null) {
+                        times.addAll(habit.todayChek);
+                      }
+                      times.add(DateTime.now().millisecondsSinceEpoch);
+                      BlocProvider.of<HabitsBloc>(context)
+                          .add(HabitUpdate(habit.copyWith(todayChek: times)));
+                    });
                   },
                   child: Image.asset(habit.iconPath),
                 ),
