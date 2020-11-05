@@ -25,7 +25,7 @@ class _AllHabitsScreenState extends State<AllHabitsScreen>
 
   List<Habit> habits;
 
-  double _listPadding = 20;
+  double _listPadding = 30;
 
   @override
   void initState() {
@@ -88,7 +88,7 @@ class _AllHabitsScreenState extends State<AllHabitsScreen>
                 itemBuilder: (context, index) {
                   return Container(
                     margin: EdgeInsets.symmetric(
-                        vertical: _listPadding / 2, horizontal: _listPadding),
+                        vertical: _listPadding / 2, horizontal: 16),
                     child: AllHabitItemView(
                       habit: listData[index],
                       isOpen: listData[index] == _selectedHabit,
@@ -153,7 +153,7 @@ class _AllHabitsScreenState extends State<AllHabitsScreen>
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  '所有习惯',
+                                  'ALL GOOF',
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontFamily: AppTheme.fontName,

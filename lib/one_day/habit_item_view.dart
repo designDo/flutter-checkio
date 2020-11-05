@@ -121,6 +121,8 @@ class HabitItemView extends StatelessWidget {
                 children: [
                   Text(
                     habit.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: AppTheme.appTheme.textStyle(
                         textColor: AppTheme.appTheme.textColorMain(),
                         fontSize: 18,
