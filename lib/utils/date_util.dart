@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:time/time.dart';
 
 class DateUtil {
@@ -64,5 +65,35 @@ class DateUtil {
       num += todayCheck.length;
     }
     return num;
+  }
+
+  /// thisMonth 2020 10 1
+  static List<DateTime> getThisMonthDays(DateTime thisMonth) {
+    List<DateTime> days = [];
+
+    ///当月第一天为周几 eg 7
+    int firstDayWeekDay = thisMonth.weekday;
+
+    ///若当月第一天不是周一，则需向前补天数到周一
+    if (firstDayWeekDay > DateTime.monday) {
+      for (int i = firstDayWeekDay; i > DateTime.monday; i--) {
+        days.add(null);
+      }
+    }
+    int count = DateTime(thisMonth.year, thisMonth.month + 1, 0).day;
+    for (int day = 1; day <= count; day++) {
+      days.add(DateTime(thisMonth.year, thisMonth.month, day));
+    }
+
+    ///当月最后一天为周几 eg 7
+    int lastDayWeekDay = days.last.weekday;
+
+    ///若当月最后一天不是周日，则需向后补天数到周日
+    if (lastDayWeekDay < DateTime.sunday) {
+      for (int i = lastDayWeekDay + 1; i <= DateTime.sunday; i++) {
+        days.add(null);
+      }
+    }
+    return days;
   }
 }

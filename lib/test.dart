@@ -49,6 +49,15 @@ void main() {
   print(map["records"].runtimeType.toString());
   print(habit.toJson());
   print(habit.toString());
+
+
+  for(int i =1 ; i <= 12; i++) {
+    int year = DateTime.now().year;
+
+    int count  = DateTime(year, i +1 ,0).day;
+
+    print('$i 月天数为 $count');
+  }
 }
 
 class Name {

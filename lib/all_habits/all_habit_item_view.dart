@@ -3,10 +3,11 @@ import 'package:timefly/app_theme.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_peroid.dart';
 import 'package:timefly/utils/habit_util.dart';
+import 'package:timefly/widget/calendar_view.dart';
 
 class AllHabitItemView extends StatefulWidget {
   static double nominalHeightClosed = 100;
-  static double nominalHeightOpen = 290;
+  static double nominalHeightOpen = 297;
   final Habit habit;
 
   final Function(Habit) onTap;
@@ -39,8 +40,8 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
       onTap: _handleTap,
       child: AnimatedContainer(
         height: cardHeight,
-        curve: !_wasOpen ? ElasticInCurve(.9) : Curves.elasticOut,
-        duration: Duration(milliseconds: !_wasOpen ? 800 : 1500),
+        curve: !_wasOpen ? ElasticInCurve(.8) : Curves.elasticOut,
+        duration: Duration(milliseconds: !_wasOpen ? 1200 : 1500),
         child: Container(
           decoration: BoxDecoration(
               boxShadow: <BoxShadow>[
@@ -65,8 +66,10 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                     opacity: widget.isOpen ? 1 : 0,
                     curve: Curves.easeOut,
                     child: Container(
-                      height: 174,
-                      color: Colors.red,
+                      height: 181,
+                      child: CalendarView(
+                        currentDay: DateTime.now(),
+                      ),
                     ),
                   ),
                   SizedBox(
