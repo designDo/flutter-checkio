@@ -68,4 +68,13 @@ class HabitUtil {
 
     return num;
   }
+
+  static List<Habit> sortByCreateTime(List<Habit> habits) {
+    if (habits == null) {
+      return <Habit>[];
+    }
+
+    habits.sort((a, b) => b.createTime.compareTo(a.createTime));
+    return habits;
+  }
 }

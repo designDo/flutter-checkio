@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:timefly/all_habits/all_habits_screen.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/habit_progress/habit_progress_screen.dart';
 import 'package:timefly/mine/mine_screen.dart';
@@ -44,10 +45,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           _child = OneDayScreen();
           break;
         case 1:
-          _child = HabitProgressScreen();
+          _child = AllHabitsScreen();
           break;
         case 2:
-          _child = OneDayScreen();
+          _child = HabitProgressScreen();
           break;
         case 3:
           _child = MineScreen();

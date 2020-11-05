@@ -1,20 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:timefly/all_habits/all_habit_item_view.dart';
 import 'package:timefly/app_theme.dart';
-import 'package:timefly/db/database_provider.dart';
+import 'package:timefly/blocs/habit/habit_bloc.dart';
+import 'package:timefly/blocs/habit/habit_state.dart';
+import 'package:timefly/models/habit.dart';
+import 'package:timefly/utils/habit_util.dart';
 
-class HabitProgressScreen extends StatefulWidget {
+class AllHabitsScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _HabitProgressScreenState();
+    return _AllHabitsScreenState();
   }
 }
 
-class _HabitProgressScreenState extends State<HabitProgressScreen>
+class _AllHabitsScreenState extends State<AllHabitsScreen>
     with TickerProviderStateMixin {
   AnimationController animationController;
   Animation<double> topBarAnimation;
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
+
+  Habit _selectedHabit;
+
+  List<Habit> habits;
+
+  double _listPadding = 20;
 
   @override
   void initState() {
@@ -52,18 +63,11 @@ class _HabitProgressScreenState extends State<HabitProgressScreen>
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppTheme.background,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Stack(
-          children: <Widget>[
-            getMainListViewUI(),
-            getAppBarUI(),
-            SizedBox(
-              height: MediaQuery.of(context).padding.bottom,
-            )
-          ],
-        ),
+      child: Stack(
+        children: <Widget>[
+          getMainListViewUI(),
+          getAppBarUI(),
+        ],
       ),
     );
   }
@@ -71,37 +75,43 @@ class _HabitProgressScreenState extends State<HabitProgressScreen>
   Widget getMainListViewUI() {
     //之前动画不显示是主动画没开始，导致初始进度为0
     animationController.forward();
-    return FutureBuilder(
-        future: DatabaseProvider.db.getHabits(),
-        builder: (context, data) {
-          var habits = data.data;
-          if (habits == null) {
-            return SizedBox();
+    return BlocBuilder<HabitsBloc, HabitsState>(
+      builder: (context, state) {
+        if (state is HabitsLoadInProgress) {
+          return Container();
+        }
+        if (state is HabitLoadSuccess) {
+          List<Habit> listData = HabitUtil.sortByCreateTime((state).habits);
+          if (listData.length > 0) {
+            habits = listData;
+            return ListView.builder(
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: EdgeInsets.symmetric(
+                        vertical: _listPadding / 2, horizontal: _listPadding),
+                    child: AllHabitItemView(
+                      habit: listData[index],
+                      isOpen: listData[index] == _selectedHabit,
+                      onTap: _handleHabitTapped,
+                    ),
+                  );
+                },
+                itemCount: listData.length,
+                controller: scrollController,
+                padding: EdgeInsets.only(
+                  top: AppBar().preferredSize.height +
+                      MediaQuery.of(context).padding.top +
+                      24,
+                  bottom: MediaQuery.of(context).padding.bottom,
+                ));
           }
-          return ListView.builder(
-              padding: EdgeInsets.only(
-                top: AppBar().preferredSize.height +
-                    MediaQuery.of(context).padding.top +
-                    24,
-                bottom: 62 + MediaQuery.of(context).padding.bottom,
-              ),
-              itemCount: habits.length,
-              scrollDirection: Axis.vertical,
-              controller: scrollController,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Text(
-                    habits[index].toString(),
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                );
-              });
-        });
+        }
+        return Container();
+      },
+    );
   }
 
   Widget getAppBarUI() {
-    int i = 0;
     return Column(
       children: <Widget>[
         AnimatedBuilder(
@@ -143,7 +153,7 @@ class _HabitProgressScreenState extends State<HabitProgressScreen>
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  '完成进度',
+                                  '所有习惯',
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontFamily: AppTheme.fontName,
@@ -160,7 +170,6 @@ class _HabitProgressScreenState extends State<HabitProgressScreen>
                               width: 38,
                               child: GestureDetector(
                                 onTap: () {
-                                  i++;
                                   print('add habit');
                                 },
                                 child: Center(
@@ -183,5 +192,25 @@ class _HabitProgressScreenState extends State<HabitProgressScreen>
         )
       ],
     );
+  }
+
+  void _handleHabitTapped(Habit data) {
+    setState(() {
+      //If the same habit was tapped twice, un-select it
+      if (_selectedHabit == data) {
+        _selectedHabit = null;
+      }
+      //Open tapped habit card and scroll to it
+      else {
+        _selectedHabit = data;
+        var selectedIndex = habits.indexOf(_selectedHabit);
+        var closedHeight = AllHabitItemView.nominalHeightClosed;
+        //Calculate scrollTo offset, subtract a bit so we don't end up perfectly at the top
+        var offset =
+            selectedIndex * (closedHeight + _listPadding) - closedHeight * .35;
+        scrollController.animateTo(offset,
+            duration: Duration(milliseconds: 700), curve: Curves.easeOutQuad);
+      }
+    });
   }
 }
