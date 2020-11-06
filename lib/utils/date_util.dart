@@ -71,6 +71,11 @@ class DateUtil {
   static List<DateTime> getMonthDays(DateTime thisMonth) {
     List<DateTime> days = [];
 
+    ///前7个为 一 ---> 日
+    for (int i = 0; i < 7; i++) {
+      days.add(null);
+    }
+
     ///当月第一天为周几 eg 7
     int firstDayWeekDay = thisMonth.weekday;
 
@@ -99,5 +104,33 @@ class DateUtil {
 
   static int getThisMonthDaysNum() {
     return getMonthDays(DateTime.now().copyWith(day: 1)).length;
+  }
+
+  static String getWeekendString(int weekday) {
+    String str = '';
+    switch (weekday) {
+      case 1:
+        str = '一';
+        break;
+      case 2:
+        str = '二';
+        break;
+      case 3:
+        str = '三';
+        break;
+      case 4:
+        str = '四';
+        break;
+      case 5:
+        str = '五';
+        break;
+      case 6:
+        str = '六';
+        break;
+      case 7:
+        str = '日';
+        break;
+    }
+    return str;
   }
 }

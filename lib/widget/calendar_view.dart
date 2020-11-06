@@ -36,6 +36,12 @@ class _CalendarViewState extends State<CalendarView> {
           itemBuilder: (context, index) {
             DateTime day = days[index];
             if (day == null) {
+              if (index < 7) {
+                return Container(
+                  alignment: Alignment.center,
+                  child: Text('${DateUtil.getWeekendString(index + 1)}'),
+                );
+              }
               return Container();
             }
             return Container(
