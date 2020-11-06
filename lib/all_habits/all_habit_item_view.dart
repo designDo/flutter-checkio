@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_peroid.dart';
+import 'package:timefly/utils/date_util.dart';
 import 'package:timefly/utils/habit_util.dart';
 import 'package:timefly/widget/calendar_view.dart';
 
@@ -23,6 +24,8 @@ class AllHabitItemView extends StatefulWidget {
 class _AllHabitItemViewState extends State<AllHabitItemView> {
   bool _wasOpen;
 
+  double ratio = 1.8;
+
   @override
   void initState() {
     super.initState();
@@ -33,9 +36,13 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
     if (widget.isOpen != _wasOpen) {
       _wasOpen = widget.isOpen;
     }
+    double calendarHeight = ((MediaQuery.of(context).size.width - 32) / 7) /
+        ratio *
+        (DateUtil.getThisMonthDaysNum() / 7);
     double cardHeight = widget.isOpen
-        ? AllHabitItemView.nominalHeightOpen
+        ? AllHabitItemView.nominalHeightClosed + calendarHeight + 16
         : AllHabitItemView.nominalHeightClosed;
+
     return GestureDetector(
       onTap: _handleTap,
       child: AnimatedContainer(
@@ -65,16 +72,13 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                         Duration(milliseconds: widget.isOpen ? 1000 : 500),
                     opacity: widget.isOpen ? 1 : 0,
                     curve: Curves.easeOut,
-                    child: Container(
-                      height: 181,
-                      child: CalendarView(
-                        currentDay: DateTime.now(),
-                      ),
+                    child: CalendarView(
+                      currentDay: DateTime.now(),
+                      caculatorHeight: () {
+                        return calendarHeight;
+                      },
                     ),
                   ),
-                  SizedBox(
-                    height: 16,
-                  )
                 ],
               ),
             ),

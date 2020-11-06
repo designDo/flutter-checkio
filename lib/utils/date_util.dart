@@ -68,7 +68,7 @@ class DateUtil {
   }
 
   /// thisMonth 2020 10 1
-  static List<DateTime> getThisMonthDays(DateTime thisMonth) {
+  static List<DateTime> getMonthDays(DateTime thisMonth) {
     List<DateTime> days = [];
 
     ///当月第一天为周几 eg 7
@@ -95,5 +95,9 @@ class DateUtil {
       }
     }
     return days;
+  }
+
+  static int getThisMonthDaysNum() {
+    return getMonthDays(DateTime.now().copyWith(day: 1)).length;
   }
 }
