@@ -75,6 +75,11 @@ flutter:
      - family: MaShanZheng
        fonts:
          - asset: fonts/MaShanZheng-Regular.ttf
+     - family: Montserrat
+       fonts:
+         - asset: fonts/Montserrat-Regular.ttf
+         - asset: fonts/Montserrat-Bold.ttf
+           weight: 700
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

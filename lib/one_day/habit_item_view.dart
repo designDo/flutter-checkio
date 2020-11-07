@@ -138,7 +138,7 @@ class HabitItemView extends StatelessWidget {
                     style: AppTheme.appTheme.textStyle(
                         textColor: AppTheme.appTheme.textColorSecond(),
                         fontSize: 16,
-                        fontWeight: FontWeight.w500),
+                        fontWeight: FontWeight.w600).copyWith(fontFamily: 'Montserrat'),
                   ),
                 ],
               ),
@@ -160,7 +160,7 @@ class HabitItemView extends StatelessWidget {
                     style: AppTheme.appTheme.textStyle(
                         textColor: AppTheme.appTheme.textColorMain(),
                         fontWeight: FontWeight.bold,
-                        fontSize: 20),
+                        fontSize: 20).copyWith(fontFamily: 'Montserrat'),
                   ),
                 );
               },

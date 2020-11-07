@@ -37,8 +37,9 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
       _wasOpen = widget.isOpen;
     }
     double calendarHeight = ((MediaQuery.of(context).size.width - 32) / 7) /
-        ratio *
-        (DateUtil.getThisMonthDaysNum() / 7);
+            ratio *
+            (DateUtil.getThisMonthDaysNum() / 7) +
+        (DateUtil.getThisMonthDaysNum() / 7 - 1) * 5;
     double cardHeight = widget.isOpen
         ? AllHabitItemView.nominalHeightClosed + calendarHeight + 16
         : AllHabitItemView.nominalHeightClosed;
@@ -77,6 +78,7 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                       caculatorHeight: () {
                         return calendarHeight;
                       },
+                      habit: widget.habit,
                     ),
                   ),
                 ],
@@ -160,10 +162,12 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                     width: 3,
                   ),
                   Text('${HabitUtil.getDoDays(widget.habit)}',
-                      style: AppTheme.appTheme.textStyle(
-                          textColor: AppTheme.appTheme.textColorMain(),
-                          fontSize: 22,
-                          fontWeight: FontWeight.w600)),
+                      style: AppTheme.appTheme
+                          .textStyle(
+                              textColor: AppTheme.appTheme.textColorMain(),
+                              fontSize: 22,
+                              fontWeight: FontWeight.w600)
+                          .copyWith(fontFamily: 'Montserrat')),
                 ],
               ),
               SizedBox(
@@ -180,10 +184,12 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                     width: 3,
                   ),
                   Text('${HabitUtil.getDoNums(widget.habit)}',
-                      style: AppTheme.appTheme.textStyle(
-                          textColor: AppTheme.appTheme.textColorMain(),
-                          fontSize: 22,
-                          fontWeight: FontWeight.w600)),
+                      style: AppTheme.appTheme
+                          .textStyle(
+                              textColor: AppTheme.appTheme.textColorMain(),
+                              fontSize: 22,
+                              fontWeight: FontWeight.w600)
+                          .copyWith(fontFamily: 'Montserrat')),
                 ],
               ),
             ],

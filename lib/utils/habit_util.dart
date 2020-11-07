@@ -88,9 +88,6 @@ class HabitUtil {
   static int getDoDays(Habit habit) {
     int num = 0;
     Map<String, List<int>> totalCheck = habit.totalCheck;
-    if (habit.todayChek != null) {
-      num += 1;
-    }
     if (totalCheck != null) {
       totalCheck.forEach((key, value) {
         if (value != null) {
