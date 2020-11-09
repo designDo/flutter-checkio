@@ -138,8 +138,8 @@ class _CalendarViewState extends State<CalendarView> {
     Map<String, List<int>> totalCheck = widget.habit.totalCheck;
     if (totalCheck == null) {
       contain = false;
-    }
-    if (totalCheck.containsKey('${date.year}-${date.month}-${date.day}')) {
+    } else if (totalCheck
+        .containsKey('${date.year}-${date.month}-${date.day}')) {
       contain = true;
     }
     return contain;
