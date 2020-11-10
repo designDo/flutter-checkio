@@ -48,7 +48,7 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
       onTap: _handleTap,
       child: AnimatedContainer(
         height: cardHeight,
-        curve: !_wasOpen ? ElasticInCurve(.8) : Curves.elasticOut,
+        curve: !_wasOpen ? ElasticOutCurve(.9) : Curves.elasticOut,
         duration: Duration(milliseconds: !_wasOpen ? 1200 : 1500),
         child: Container(
           decoration: BoxDecoration(
