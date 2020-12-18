@@ -37,13 +37,13 @@ class HabitItemView extends StatelessWidget {
       _maxValue = _initValue;
     }
     return Container(
-      margin: EdgeInsets.only(left: 16, top: 12, right: 16, bottom: 16),
+      margin: EdgeInsets.only(left: 16, top: 12,  bottom: 16),
       decoration: BoxDecoration(
           boxShadow: <BoxShadow>[
             BoxShadow(
-                color: Colors.black12.withOpacity(0.2),
-                offset: const Offset(10, 19.0),
-                blurRadius: 20),
+                color: Colors.black12,
+                offset: const Offset(20, 15),
+                blurRadius: 18),
           ],
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.all(Radius.circular(15)),

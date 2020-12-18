@@ -153,16 +153,15 @@ class _OneDayScreenState extends State<OneDayScreen>
                 decoration: BoxDecoration(
                     boxShadow: <BoxShadow>[
                       BoxShadow(
-                          color: AppTheme.appTheme
-                              .gradientColorLight()
+                          color: Color(0xFF738AE6)
                               .withOpacity(0.8),
                           offset: const Offset(13.1, 4.0),
                           blurRadius: 16.0),
                     ],
                     gradient: LinearGradient(
                       colors: <Color>[
-                        AppTheme.appTheme.gradientColorLight(),
-                        AppTheme.appTheme.gradientColorDark(),
+                        Color(0xFF738AE6),
+                       Color(0xFF5C5EDD),
                       ],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
