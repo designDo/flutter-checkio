@@ -77,7 +77,7 @@ class _HabitListViewState extends State<HabitListView>
   }
 }
 
-class HabitView extends StatelessWidget {
+class HabitView extends StatefulWidget {
   final Habit habit;
   final AnimationController animationController;
   final Animation<dynamic> animation;
@@ -87,44 +87,82 @@ class HabitView extends StatelessWidget {
       : super(key: key);
 
   @override
+  State<StatefulWidget> createState() {
+    return _HabitView();
+  }
+}
+
+class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
+  AnimationController tapAnimationController;
+  Animation<double> tapAnimation;
+
+  @override
+  void initState() {
+    tapAnimationController =
+        AnimationController(duration: Duration(milliseconds: 300), vsync: this);
+    tapAnimationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        tapAnimationController.reverse();
+      }
+    });
+    tapAnimation = Tween<double>(begin: 1, end: 0.9).animate(CurvedAnimation(
+        parent: tapAnimationController, curve: Curves.fastOutSlowIn));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    tapAnimationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: animationController,
+      animation: widget.animationController,
       builder: (context, child) {
         return FadeTransition(
-          opacity: animation,
+          opacity: widget.animation,
           child: Transform(
             transform: Matrix4.translationValues(
-                100 * (1.0 - animation.value), 0.0, 0.0),
-            child: Container(
-              width: 130,
-              child: Padding(
-                padding:
-                    EdgeInsets.only(top: 16, left: 8, right: 8, bottom: 16),
+                100 * (1.0 - widget.animation.value), 0.0, 0.0),
+            child: ScaleTransition(
+              scale: tapAnimation,
+              child: GestureDetector(
+                onTap: () {
+                  tapAnimationController.forward();
+                },
                 child: Container(
-                  decoration: BoxDecoration(
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                          color: Color(0xff5C5EDD).withOpacity(0.6),
-                          offset: const Offset(1.1, 4.0),
-                          blurRadius: 8.0),
-                    ],
-                    gradient: LinearGradient(
-                      colors: <Color>[
-                        Color(0xff738AE6),
-                        Color(0xff5C5EDD),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: const BorderRadius.only(
-                      bottomRight: Radius.circular(8.0),
-                      bottomLeft: Radius.circular(8.0),
-                      topLeft: Radius.circular(8.0),
-                      topRight: Radius.circular(54.0),
+                  width: 130,
+                  child: Padding(
+                    padding:
+                        EdgeInsets.only(top: 16, left: 8, right: 8, bottom: 16),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                              color: Color(0xff5C5EDD).withOpacity(0.6),
+                              offset: const Offset(1.1, 4.0),
+                              blurRadius: 8.0),
+                        ],
+                        gradient: LinearGradient(
+                          colors: <Color>[
+                            Color(0xff738AE6),
+                            Color(0xff5C5EDD),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: const BorderRadius.only(
+                          bottomRight: Radius.circular(8.0),
+                          bottomLeft: Radius.circular(8.0),
+                          topLeft: Radius.circular(8.0),
+                          topRight: Radius.circular(54.0),
+                        ),
+                      ),
+                      child: Text('${widget.habit.name}'),
                     ),
                   ),
-                  child: Text('${habit.name}'),
                 ),
               ),
             ),
