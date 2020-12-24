@@ -5,7 +5,7 @@ import 'package:time/time.dart';
 import 'package:timefly/models/habit_peroid.dart';
 
 class HabitUtil {
-  ///按 completeTime分类，子分类下按时间排序
+  ///按completeTime分类，子分类下按时间排序
   static List<OnDayHabitListData> sortByCompleteTime(List<Habit> habits) {
     List<OnDayHabitListData> datas = [];
     if (habits.length > 0) {
@@ -31,10 +31,8 @@ class HabitUtil {
             type: OnDayHabitListData.typeTitle,
             value: CompleteTime.getTime(completeTime)));
         habits.sort((a, b) => b.createTime.compareTo(a.createTime));
-        for (var habit in habits) {
-          datas.add(OnDayHabitListData(
-              type: OnDayHabitListData.typeHabit, value: habit));
-        }
+        datas.add(OnDayHabitListData(
+            type: OnDayHabitListData.typeHabits, value: habits));
       });
     }
     return datas;

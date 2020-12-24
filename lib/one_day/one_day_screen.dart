@@ -8,7 +8,7 @@ import 'package:timefly/blocs/habit/habit_state.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_list_model.dart';
 import 'package:timefly/notification/notification_plugin.dart';
-import 'package:timefly/one_day/habit_item_view.dart';
+import 'package:timefly/one_day/habit_list_view.dart';
 import 'package:timefly/utils/habit_util.dart';
 
 class OneDayScreen extends StatefulWidget {
@@ -20,28 +20,21 @@ class OneDayScreen extends StatefulWidget {
 
 class _OneDayScreenState extends State<OneDayScreen>
     with TickerProviderStateMixin {
-  AnimationController headerController;
-  Animation<Offset> headerAnimation;
-  AnimationController tipController;
-  Animation<Offset> tipAnimation;
+  ///整个页面动画控制器
+  AnimationController screenAnimationController;
 
   @override
   void initState() {
-    headerController =
-        AnimationController(duration: Duration(milliseconds: 600), vsync: this);
-    headerController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        tipController.forward();
-      }
-    });
-    headerAnimation = Tween<Offset>(begin: Offset(0, 0.5), end: Offset.zero)
-        .animate(CurvedAnimation(
-            parent: headerController, curve: Curves.decelerate));
-    tipController =
-        AnimationController(duration: Duration(milliseconds: 500), vsync: this);
-    tipAnimation = Tween<Offset>(begin: Offset(1, 0), end: Offset.zero).animate(
-        CurvedAnimation(parent: tipController, curve: Curves.decelerate));
+    screenAnimationController = AnimationController(
+        duration: Duration(milliseconds: 1000), vsync: this);
+    screenAnimationController.forward();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    screenAnimationController.dispose();
   }
 
   @override
@@ -55,7 +48,7 @@ class _OneDayScreenState extends State<OneDayScreen>
           if (state is HabitLoadSuccess) {
             List<OnDayHabitListData> listData = getHabits((state).habits);
             print('HabitLoadSuccess ListData');
-            headerController.forward();
+            final int count = listData.length;
             return ListView.builder(
                 itemCount: listData.length,
                 itemBuilder: (context, index) {
@@ -63,17 +56,43 @@ class _OneDayScreenState extends State<OneDayScreen>
                   Widget widget;
                   switch (data.type) {
                     case OnDayHabitListData.typeHeader:
-                      widget = getHeaderView();
+                      widget = getHeaderView(
+                          Tween<Offset>(begin: Offset(0, 0.5), end: Offset.zero)
+                              .animate(CurvedAnimation(
+                                  parent: screenAnimationController,
+                                  curve: Interval((1 / count) * index, 1,
+                                      curve: Curves.fastOutSlowIn))),
+                          screenAnimationController);
                       break;
                     case OnDayHabitListData.typeTip:
-                      widget = getTipsView();
+                      widget = getTipsView(
+                          Tween<Offset>(begin: Offset(1, 0), end: Offset.zero)
+                              .animate(CurvedAnimation(
+                                  parent: screenAnimationController,
+                                  curve: Interval((1 / count) * index, 1,
+                                      curve: Curves.fastOutSlowIn))),
+                          screenAnimationController);
                       break;
                     case OnDayHabitListData.typeTitle:
-                      widget = getTitleView(data.value);
+                      widget = getTitleView(
+                          data.value,
+                          Tween<double>(begin: 0, end: 1).animate(
+                              CurvedAnimation(
+                                  parent: screenAnimationController,
+                                  curve: Interval((1 / count) * index, 1,
+                                      curve: Curves.fastOutSlowIn))),
+                          screenAnimationController);
                       break;
-                    case OnDayHabitListData.typeHabit:
-                      widget = HabitItemView(
-                        habit: data.value,
+                    case OnDayHabitListData.typeHabits:
+                      widget = HabitListView(
+                        mainScreenAnimation: Tween<double>(begin: 0, end: 1)
+                            .animate(CurvedAnimation(
+                                parent: screenAnimationController,
+                                curve: Interval((1 / count) * index, 1,
+                                    curve: Curves.fastOutSlowIn))),
+                        mainScreenAnimationController:
+                            screenAnimationController,
+                        habits: data.value,
                       );
                       break;
                   }
@@ -96,12 +115,13 @@ class _OneDayScreenState extends State<OneDayScreen>
     return datas;
   }
 
-  Widget getHeaderView() {
+  Widget getHeaderView(
+      Animation animation, AnimationController animationController) {
     return AnimatedBuilder(
-      animation: headerController,
+      animation: animationController,
       builder: (context, child) {
         return SlideTransition(
-          position: headerAnimation,
+          position: animation,
           child: Padding(
             padding: EdgeInsets.only(left: 20, top: 40, bottom: 30),
             child: Column(
@@ -132,12 +152,13 @@ class _OneDayScreenState extends State<OneDayScreen>
     );
   }
 
-  Widget getTipsView() {
+  Widget getTipsView(
+      Animation animation, AnimationController animationController) {
     return AnimatedBuilder(
-      animation: tipController,
+      animation: animationController,
       builder: (context, child) {
         return SlideTransition(
-          position: tipAnimation,
+          position: animation,
           child: GestureDetector(
             onTap: () async {
               Habit newHabit = await Navigator.of(context)
@@ -153,15 +174,14 @@ class _OneDayScreenState extends State<OneDayScreen>
                 decoration: BoxDecoration(
                     boxShadow: <BoxShadow>[
                       BoxShadow(
-                          color: Color(0xFF738AE6)
-                              .withOpacity(0.8),
+                          color: Color(0xFF738AE6).withOpacity(0.8),
                           offset: const Offset(13.1, 4.0),
                           blurRadius: 16.0),
                     ],
                     gradient: LinearGradient(
                       colors: <Color>[
                         Color(0xFF738AE6),
-                       Color(0xFF5C5EDD),
+                        Color(0xFF5C5EDD),
                       ],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
@@ -184,16 +204,25 @@ class _OneDayScreenState extends State<OneDayScreen>
     );
   }
 
-  Widget getTitleView(String title) {
-    return Container(
-      margin: EdgeInsets.only(left: 16, top: 10),
-      child: Text(
-        title,
-        style: AppTheme.appTheme.textStyle(
-            textColor: AppTheme.appTheme.textColorSecond(),
-            fontWeight: FontWeight.w600,
-            fontSize: 15),
-      ),
+  Widget getTitleView(String title, Animation animation,
+      AnimationController animationController) {
+    return AnimatedBuilder(
+      animation: animationController,
+      builder: (context, child) {
+        return FadeTransition(
+          opacity: animation,
+          child: Container(
+            margin: EdgeInsets.only(left: 16, top: 10),
+            child: Text(
+              title,
+              style: AppTheme.appTheme.textStyle(
+                  textColor: AppTheme.appTheme.textColorSecond(),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15),
+            ),
+          ),
+        );
+      },
     );
   }
 }
