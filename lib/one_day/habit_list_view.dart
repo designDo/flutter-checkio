@@ -132,6 +132,9 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
                 onTap: () {
                   tapAnimationController.forward();
                 },
+                onLongPress: () {
+                  tapAnimationController.forward();
+                },
                 child: Container(
                   width: 130,
                   child: Padding(
