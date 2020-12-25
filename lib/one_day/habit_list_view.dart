@@ -46,7 +46,7 @@ class _HabitListViewState extends State<HabitListView>
             transform: Matrix4.translationValues(
                 0, 30 * (1.0 - widget.mainScreenAnimation.value), 0),
             child: Container(
-              height: 216,
+              height: 232,
               width: double.infinity,
               child: ListView.builder(
                   padding: EdgeInsets.only(left: 16, right: 16),
@@ -99,7 +99,7 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     tapAnimationController =
-        AnimationController(duration: Duration(milliseconds: 300), vsync: this);
+        AnimationController(duration: Duration(milliseconds: 150), vsync: this);
     tapAnimationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         tapAnimationController.reverse();
@@ -139,28 +139,21 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
                   width: 130,
                   child: Padding(
                     padding:
-                        EdgeInsets.only(top: 16, left: 8, right: 8, bottom: 16),
+                        EdgeInsets.only(top: 16, left: 8, right: 8, bottom: 32),
                     child: Container(
                       decoration: BoxDecoration(
+                        color: Colors.white,
                         boxShadow: <BoxShadow>[
                           BoxShadow(
-                              color: Color(0xff5C5EDD).withOpacity(0.6),
-                              offset: const Offset(1.1, 4.0),
-                              blurRadius: 8.0),
+                              color: Colors.black.withOpacity(0.1),
+                              offset: const Offset(13.1, 4.0),
+                              blurRadius: 16.0),
                         ],
-                        gradient: LinearGradient(
-                          colors: <Color>[
-                            Color(0xff738AE6),
-                            Color(0xff5C5EDD),
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
                         borderRadius: const BorderRadius.only(
                           bottomRight: Radius.circular(8.0),
                           bottomLeft: Radius.circular(8.0),
                           topLeft: Radius.circular(8.0),
-                          topRight: Radius.circular(54.0),
+                          topRight: Radius.circular(50.0),
                         ),
                       ),
                       child: Text('${widget.habit.name}'),
