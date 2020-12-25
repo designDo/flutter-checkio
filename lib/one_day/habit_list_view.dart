@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:timefly/app_theme.dart';
 import 'package:timefly/models/habit.dart';
+import 'package:timefly/models/habit_peroid.dart';
+import 'package:timefly/widget/circle_progress_bar.dart';
 
 class HabitListView extends StatefulWidget {
   ///主页动画控制器，整体ListView的显示动画
@@ -152,11 +155,112 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
                         borderRadius: const BorderRadius.only(
                           bottomRight: Radius.circular(8.0),
                           bottomLeft: Radius.circular(8.0),
-                          topLeft: Radius.circular(8.0),
-                          topRight: Radius.circular(50.0),
+                          topLeft: Radius.circular(40.0),
+                          topRight: Radius.circular(28.0),
                         ),
                       ),
-                      child: Text('${widget.habit.name}'),
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            left: 10, top: 10, bottom: 10, right: 4),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Stack(
+                              alignment: Alignment.bottomRight,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(right: 6),
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                      boxShadow: <BoxShadow>[
+                                        BoxShadow(
+                                            color: Color(widget.habit.mainColor)
+                                                .withOpacity(0.3),
+                                            offset: Offset(0, 7),
+                                            blurRadius: 10)
+                                      ],
+                                      shape: BoxShape.circle,
+                                      color: Color(widget.habit.mainColor)
+                                          .withOpacity(0.5)),
+                                  width: 45,
+                                  height: 45,
+                                  child: Image.asset(widget.habit.iconPath),
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  width: 16,
+                                  height: 16,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.rectangle,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(3)),
+                                      color: Color(widget.habit.mainColor)),
+                                  child: Text(
+                                    '${HabitPeroid.getPeroid(widget.habit.period)}',
+                                    style: TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 6,
+                            ),
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              height: 45,
+                              child: Text(
+                                '${widget.habit.name}',
+                                maxLines: 2,
+                                style: AppTheme.appTheme.textStyle(
+                                    textColor: Colors.black,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 2,
+                            ),
+                            Text(
+                              getReminderTime(),
+                              style: AppTheme.appTheme
+                                  .textStyle(
+                                      textColor: Colors.black54,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600)
+                                  .copyWith(fontFamily: 'Montserrat'),
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Expanded(
+                                child: Row(
+                              children: [
+                                Expanded(
+                                    child: Container(
+                                  alignment: Alignment.center,
+                                  child: Text('0/1',
+                                      maxLines: 1,
+                                      style: AppTheme.appTheme
+                                          .textStyle(
+                                              textColor: Colors.black,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600)
+                                          .copyWith(fontFamily: 'Montserrat')),
+                                )),
+                                Expanded(
+                                    child: Padding(
+                                  padding: EdgeInsets.all(5),
+                                  child: CircleProgressBar(
+                                      foregroundColor: Colors.red, value: 0.8),
+                                )),
+                              ],
+                            )),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -166,5 +270,11 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
         );
       },
     );
+  }
+
+  String getReminderTime() {
+    return widget.habit.remindTimes == null
+        ? ''
+        : '${widget.habit.remindTimes[0]}';
   }
 }
