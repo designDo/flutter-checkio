@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timefly/app_theme.dart';
+import 'package:timefly/blocs/habit/habit_bloc.dart';
+import 'package:timefly/blocs/habit/habit_event.dart';
+import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_peroid.dart';
+import 'package:timefly/utils/date_util.dart';
 import 'package:timefly/widget/circle_progress_bar.dart';
+import 'package:timefly/widget/habit_check_dialog.dart';
 
 class HabitListView extends StatefulWidget {
   ///主页动画控制器，整体ListView的显示动画
@@ -49,7 +55,7 @@ class _HabitListViewState extends State<HabitListView>
             transform: Matrix4.translationValues(
                 0, 30 * (1.0 - widget.mainScreenAnimation.value), 0),
             child: Container(
-              height: 232,
+              height: 216,
               width: double.infinity,
               child: ListView.builder(
                   padding: EdgeInsets.only(left: 16, right: 16),
@@ -99,6 +105,9 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
   AnimationController tapAnimationController;
   Animation<double> tapAnimation;
 
+  int _initValue = 0;
+  int _maxValue = 1;
+
   @override
   void initState() {
     tapAnimationController =
@@ -110,7 +119,29 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
     });
     tapAnimation = Tween<double>(begin: 1, end: 0.9).animate(CurvedAnimation(
         parent: tapAnimationController, curve: Curves.fastOutSlowIn));
+    setCheckValue();
     super.initState();
+  }
+
+  void setCheckValue() {
+    switch (widget.habit.period) {
+      case HabitPeroid.day:
+        _initValue =
+            widget.habit.todayChek == null ? 0 : widget.habit.todayChek.length;
+        break;
+      case HabitPeroid.week:
+        _initValue = DateUtil.getWeekCheckNum(
+            widget.habit.todayChek, widget.habit.totalCheck);
+        break;
+      case HabitPeroid.month:
+        _initValue = DateUtil.getMonthCheckNum(
+            widget.habit.todayChek, widget.habit.totalCheck);
+        break;
+    }
+    _maxValue = widget.habit.doNum;
+    if (_initValue > _maxValue) {
+      _maxValue = _initValue;
+    }
   }
 
   @override
@@ -132,8 +163,33 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
             child: ScaleTransition(
               scale: tapAnimation,
               child: GestureDetector(
-                onTap: () {
+                onTap: () async {
                   tapAnimationController.forward();
+                  String log = await showDialog(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (context) {
+                        return HabitCheckDialog(
+                          name: widget.habit.name,
+                        );
+                      });
+                  if (log == null) {
+                    return;
+                  }
+                  Future.delayed(Duration(milliseconds: 500), () async {
+                    List<int> times = List();
+                    if (widget.habit.todayChek == null) {
+                      widget.habit.todayChek = List();
+                    }
+                    widget.habit.todayChek
+                        .add(DateTime.now().millisecondsSinceEpoch);
+                    times.addAll(widget.habit.todayChek);
+                    setState(() {
+                      setCheckValue();
+                    });
+                    await DatabaseProvider.db
+                        .update(widget.habit.copyWith(todayChek: times));
+                  });
                 },
                 onLongPress: () {
                   tapAnimationController.forward();
@@ -142,7 +198,7 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
                   width: 130,
                   child: Padding(
                     padding:
-                        EdgeInsets.only(top: 16, left: 8, right: 8, bottom: 32),
+                        EdgeInsets.only(top: 16, left: 8, right: 8, bottom: 18),
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -241,7 +297,8 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
                                 Expanded(
                                     child: Container(
                                   alignment: Alignment.center,
-                                  child: Text('0/1',
+                                  child: Text(
+                                      '$_initValue/${widget.habit.doNum}',
                                       maxLines: 1,
                                       style: AppTheme.appTheme
                                           .textStyle(
@@ -254,7 +311,8 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
                                     child: Padding(
                                   padding: EdgeInsets.all(5),
                                   child: CircleProgressBar(
-                                      foregroundColor: Colors.red, value: 0.8),
+                                      foregroundColor: Colors.red,
+                                      value: _initValue / _maxValue),
                                 )),
                               ],
                             )),

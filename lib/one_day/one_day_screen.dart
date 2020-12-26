@@ -218,7 +218,7 @@ class _OneDayScreenState extends State<OneDayScreen>
               style: AppTheme.appTheme.textStyle(
                   textColor: AppTheme.appTheme.textColorSecond(),
                   fontWeight: FontWeight.w600,
-                  fontSize: 15),
+                  fontSize: 16),
             ),
           ),
         );
