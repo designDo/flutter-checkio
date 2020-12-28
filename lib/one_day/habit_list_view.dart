@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timefly/app_theme.dart';
-import 'package:timefly/blocs/habit/habit_bloc.dart';
-import 'package:timefly/blocs/habit/habit_event.dart';
-import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_peroid.dart';
+import 'package:timefly/one_day/habit_check_bottom_sheet.dart';
 import 'package:timefly/utils/date_util.dart';
 import 'package:timefly/widget/circle_progress_bar.dart';
-import 'package:timefly/widget/habit_check_dialog.dart';
+import 'package:timefly/widget/float_modal.dart';
 
 class HabitListView extends StatefulWidget {
   ///主页动画控制器，整体ListView的显示动画
@@ -165,7 +162,19 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
               child: GestureDetector(
                 onTap: () async {
                   tapAnimationController.forward();
-                  String log = await showDialog(
+                  Future.delayed(Duration(milliseconds: 300), () {
+                    /// return today check List<int>
+                    showFloatingModalBottomSheet(
+                        barrierColor: Colors.black87,
+                        context: context,
+                        builder: (context, scroller) {
+                          return HabitCheckView(
+                            habit: widget.habit,
+                          );
+                        });
+                  });
+
+                  /*String log = await showDialog(
                       barrierDismissible: false,
                       context: context,
                       builder: (context) {
@@ -189,7 +198,7 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
                     });
                     await DatabaseProvider.db
                         .update(widget.habit.copyWith(todayChek: times));
-                  });
+                  });*/
                 },
                 onLongPress: () {
                   tapAnimationController.forward();
@@ -311,7 +320,8 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
                                     child: Padding(
                                   padding: EdgeInsets.all(5),
                                   child: CircleProgressBar(
-                                      foregroundColor: Colors.red,
+                                      foregroundColor:
+                                          Color(widget.habit.mainColor),
                                       value: _initValue / _maxValue),
                                 )),
                               ],
