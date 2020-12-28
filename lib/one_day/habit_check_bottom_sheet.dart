@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:timefly/add_habit/edit_field_container.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_peroid.dart';
@@ -17,21 +18,20 @@ class _HabitCheckViewState extends State<HabitCheckView> {
       GlobalKey<AnimatedListState>();
   List<int> todayChecks = [];
 
+  String note;
+
   @override
   void initState() {
     if (widget.habit.todayChek != null) {
       todayChecks.addAll(widget.habit.todayChek);
     }
-    todayChecks.add(11);
-    todayChecks.add(22);
-    todayChecks.add(33);
-    todayChecks.add(44);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       body: Container(
         alignment: Alignment.topCenter,
         child: Column(
@@ -106,9 +106,18 @@ class _HabitCheckViewState extends State<HabitCheckView> {
               height: 16,
             ),
             checkListView(),
+            EditFiledContainer(
+              editType: 2,
+              initValue: '',
+              hintValue: "记录些什么...",
+              onValueChanged: (value) {
+                note = value;
+              },
+            ),
             IconButton(
               onPressed: () {
                 _onAdd(DateTime.now().millisecondsSinceEpoch);
+                Navigator.of(context).pop({'times': todayChecks, 'note': note});
               },
               icon: Icon(Icons.add),
             )
@@ -154,8 +163,6 @@ class _HabitCheckViewState extends State<HabitCheckView> {
   }
 
   void _onAdd(int time) {
-    checkTimeListKey.currentState
-        .insertItem(0, duration: Duration(milliseconds: 500));
     todayChecks.insert(0, time);
   }
 }
@@ -178,12 +185,10 @@ class _CheckTiemViewState extends State<CheckTiemView>
   AnimationController transAnimationController;
   AnimationController scaleAnimationController;
 
-  bool isTransPlaying = false;
-
   @override
   void initState() {
     transAnimationController =
-        AnimationController(duration: Duration(milliseconds: 500), vsync: this);
+        AnimationController(duration: Duration(milliseconds: 350), vsync: this);
     scaleAnimationController =
         AnimationController(duration: Duration(milliseconds: 300), vsync: this);
 

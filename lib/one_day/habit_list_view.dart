@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:timefly/app_theme.dart';
+import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_peroid.dart';
 import 'package:timefly/one_day/habit_check_bottom_sheet.dart';
@@ -147,6 +148,33 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
+  _showCheckBottomSheet() async {
+    Map data = await showFloatingModalBottomSheet(
+        barrierColor: Colors.black87,
+        context: context,
+        builder: (context, scroller) {
+          return HabitCheckView(
+            habit: widget.habit,
+          );
+        });
+    if (data == null) {
+      return;
+    }
+
+    Future.delayed(Duration(milliseconds: 500), () async {
+      List<int> times = data['times'];
+      if (widget.habit.todayChek == null) {
+        widget.habit.todayChek = List();
+      }
+      widget.habit.todayChek.clear();
+      widget.habit.todayChek.addAll(times);
+      setState(() {
+        setCheckValue();
+      });
+      await DatabaseProvider.db.update(widget.habit.copyWith(todayChek: times));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
@@ -162,16 +190,9 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
               child: GestureDetector(
                 onTap: () async {
                   tapAnimationController.forward();
-                  Future.delayed(Duration(milliseconds: 300), () {
+                  Future.delayed(Duration(milliseconds: 300), () async {
                     /// return today check List<int>
-                    showFloatingModalBottomSheet(
-                        barrierColor: Colors.black87,
-                        context: context,
-                        builder: (context, scroller) {
-                          return HabitCheckView(
-                            habit: widget.habit,
-                          );
-                        });
+                    _showCheckBottomSheet();
                   });
 
                   /*String log = await showDialog(
