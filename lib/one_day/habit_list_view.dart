@@ -194,32 +194,6 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
                     /// return today check List<int>
                     _showCheckBottomSheet();
                   });
-
-                  /*String log = await showDialog(
-                      barrierDismissible: false,
-                      context: context,
-                      builder: (context) {
-                        return HabitCheckDialog(
-                          name: widget.habit.name,
-                        );
-                      });
-                  if (log == null) {
-                    return;
-                  }
-                  Future.delayed(Duration(milliseconds: 500), () async {
-                    List<int> times = List();
-                    if (widget.habit.todayChek == null) {
-                      widget.habit.todayChek = List();
-                    }
-                    widget.habit.todayChek
-                        .add(DateTime.now().millisecondsSinceEpoch);
-                    times.addAll(widget.habit.todayChek);
-                    setState(() {
-                      setCheckValue();
-                    });
-                    await DatabaseProvider.db
-                        .update(widget.habit.copyWith(todayChek: times));
-                  });*/
                 },
                 onLongPress: () {
                   tapAnimationController.forward();

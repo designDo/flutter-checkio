@@ -3,6 +3,7 @@ import 'package:timefly/add_habit/edit_field_container.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_peroid.dart';
+import 'package:timefly/utils/date_util.dart';
 
 class HabitCheckView extends StatefulWidget {
   final Habit habit;
@@ -116,8 +117,10 @@ class _HabitCheckViewState extends State<HabitCheckView> {
             ),
             IconButton(
               onPressed: () {
-                _onAdd(DateTime.now().millisecondsSinceEpoch);
-                Navigator.of(context).pop({'times': todayChecks, 'note': note});
+                Navigator.of(context).pop({
+                  'times': _onAdd(DateTime.now().millisecondsSinceEpoch),
+                  'note': note
+                });
               },
               icon: Icon(Icons.add),
             )
@@ -162,8 +165,10 @@ class _HabitCheckViewState extends State<HabitCheckView> {
     todayChecks.removeAt(index);
   }
 
-  void _onAdd(int time) {
-    todayChecks.insert(0, time);
+  List<int> _onAdd(int time) {
+    return []
+      ..add(time)
+      ..addAll(todayChecks);
   }
 }
 
@@ -233,11 +238,17 @@ class _CheckTiemViewState extends State<CheckTiemView>
                           shape: BoxShape.rectangle,
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                           border:
-                              Border.all(color: Colors.blueAccent, width: 2)),
+                              Border.all(color: Colors.blueAccent, width: 3)),
                       alignment: Alignment.center,
                       width: 80,
                       height: 40,
-                      child: Text('${widget.time}'),
+                      child: Text(
+                        '${DateUtil.parseHourAndMin(widget.time)}',
+                        style: AppTheme.appTheme.textStyle(
+                            textColor: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      ),
                     ),
                   );
                 },

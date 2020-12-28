@@ -133,4 +133,14 @@ class DateUtil {
     }
     return str;
   }
+
+  static String parseHourAndMin(int time) {
+    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(time);
+    return '${_twoDigits(dateTime.hour)}:${_twoDigits(dateTime.minute)}';
+  }
+
+  static String _twoDigits(int n) {
+    if (n >= 10) return '$n';
+    return '0$n';
+  }
 }
