@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:timefly/add_habit/edit_field_container.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/models/habit.dart';
@@ -37,46 +38,101 @@ class _HabitCheckViewState extends State<HabitCheckView> {
         alignment: Alignment.topCenter,
         child: Column(
           children: [
-            SizedBox(
-              height: 26,
-            ),
-            Stack(
-              alignment: Alignment.bottomRight,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(right: 6),
-                  padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                            color:
-                                Color(widget.habit.mainColor).withOpacity(0.3),
-                            offset: Offset(0, 7),
-                            blurRadius: 10)
-                      ],
-                      shape: BoxShape.circle,
-                      color: Color(widget.habit.mainColor).withOpacity(0.5)),
-                  width: 60,
-                  height: 60,
-                  child: Image.asset(widget.habit.iconPath),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.all(Radius.circular(3)),
-                      color: Color(widget.habit.mainColor)),
-                  child: Text(
-                    '${HabitPeroid.getPeroid(widget.habit.period)}',
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
+            Container(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(left: 16, top: 16),
+                      alignment: Alignment.centerLeft,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: SvgPicture.asset(
+                          'assets/images/guanbi.svg',
+                          color: Colors.black,
+                          width: 36,
+                          height: 36,
+                        ),
+                      ),
+                    ),
                   ),
-                )
-              ],
+                  Container(
+                    margin: EdgeInsets.only(top: 26),
+                    child: Stack(
+                      alignment: Alignment.bottomRight,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(right: 6),
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                              boxShadow: <BoxShadow>[
+                                BoxShadow(
+                                    color: Color(widget.habit.mainColor)
+                                        .withOpacity(0.3),
+                                    offset: Offset(0, 7),
+                                    blurRadius: 10)
+                              ],
+                              shape: BoxShape.circle,
+                              color: Color(widget.habit.mainColor)
+                                  .withOpacity(0.5)),
+                          width: 60,
+                          height: 60,
+                          child: Image.asset(widget.habit.iconPath),
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          width: 20,
+                          height: 20,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(3)),
+                              color: Color(widget.habit.mainColor)),
+                          child: Text(
+                            '${HabitPeroid.getPeroid(widget.habit.period)}',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(right: 24, top: 20),
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context)
+                              .pop({'times': todayChecks, 'note': note});
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              color: Colors.blueAccent),
+                          width: 60,
+                          height: 36,
+                          child: Text(
+                            'Save',
+                            style: AppTheme.appTheme.textStyle(
+                                textColor: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
             SizedBox(
               height: 12,
@@ -117,10 +173,7 @@ class _HabitCheckViewState extends State<HabitCheckView> {
             ),
             IconButton(
               onPressed: () {
-                Navigator.of(context).pop({
-                  'times': _onAdd(DateTime.now().millisecondsSinceEpoch),
-                  'note': note
-                });
+                _onAdd(DateTime.now().millisecondsSinceEpoch);
               },
               icon: Icon(Icons.add),
             )
@@ -165,10 +218,10 @@ class _HabitCheckViewState extends State<HabitCheckView> {
     todayChecks.removeAt(index);
   }
 
-  List<int> _onAdd(int time) {
-    return []
-      ..add(time)
-      ..addAll(todayChecks);
+  void _onAdd(int time) {
+    checkTimeListKey.currentState
+        .insertItem(0, duration: Duration(milliseconds: 500));
+    todayChecks.insert(0, time);
   }
 }
 
