@@ -184,24 +184,34 @@ class _HabitCheckViewState extends State<HabitCheckView> {
   }
 
   Widget checkListView() {
-    if (todayChecks.length == 0) {
-      return Container();
-    }
-    return Container(
-      height: 55,
-      child: AnimatedList(
-          key: checkTimeListKey,
-          padding: EdgeInsets.only(left: 16, right: 16),
-          scrollDirection: Axis.horizontal,
-          initialItemCount: todayChecks.length,
-          itemBuilder: (context, index, animation) {
-            return CheckTiemView(
-              key: GlobalKey(),
-              time: todayChecks[index],
-              animation: animation,
-              onDelete: _onDelete,
-            );
-          }),
+    return Stack(
+      children: [
+        Container(
+          height: 55,
+          child: AnimatedList(
+              key: checkTimeListKey,
+              padding: EdgeInsets.only(left: 16, right: 16),
+              scrollDirection: Axis.horizontal,
+              initialItemCount: todayChecks.length,
+              itemBuilder: (context, index, animation) {
+                return CheckTiemView(
+                  key: GlobalKey(),
+                  time: todayChecks[index],
+                  animation: animation,
+                  onDelete: _onDelete,
+                );
+              }),
+        ),
+        Visibility(
+          visible: todayChecks.length == 0,
+          child: Container(
+            alignment: Alignment.center,
+            height: 55,
+            width: MediaQuery.of(context).size.width,
+            child: Text('Empty'),
+          ),
+        )
+      ],
     );
   }
 
@@ -215,13 +225,17 @@ class _HabitCheckViewState extends State<HabitCheckView> {
               animation: animation,
             ),
         duration: Duration(milliseconds: 500));
-    todayChecks.removeAt(index);
+    setState(() {
+      todayChecks.removeAt(index);
+    });
   }
 
   void _onAdd(int time) {
     checkTimeListKey.currentState
         .insertItem(0, duration: Duration(milliseconds: 500));
-    todayChecks.insert(0, time);
+    setState(() {
+      todayChecks.insert(0, time);
+    });
   }
 }
 
