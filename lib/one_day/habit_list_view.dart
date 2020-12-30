@@ -124,8 +124,9 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
   void setCheckValue() {
     switch (widget.habit.period) {
       case HabitPeroid.day:
-        _initValue =
-            widget.habit.todayCheck == null ? 0 : widget.habit.todayCheck.length;
+        _initValue = widget.habit.todayCheck == null
+            ? 0
+            : widget.habit.todayCheck.length;
         break;
       case HabitPeroid.week:
         _initValue = DateUtil.getWeekCheckNum(
@@ -157,6 +158,9 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
             habit: widget.habit,
           );
         });
+
+    /// There is the modified habit
+    /// save to db
     if (data == null) {
       return;
     }
@@ -171,7 +175,8 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
       setState(() {
         setCheckValue();
       });
-      await DatabaseProvider.db.update(widget.habit.copyWith(todayCheck: times));
+      await DatabaseProvider.db
+          .update(widget.habit.copyWith(todayCheck: times));
     });
   }
 
