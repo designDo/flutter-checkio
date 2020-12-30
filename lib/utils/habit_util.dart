@@ -40,7 +40,7 @@ class HabitUtil {
 
   static int getMostStreaks(Habit habit) {
     int num = 0;
-    Map<String, List<int>> totalCheck = habit.totalCheck;
+    Map<String, List<HabitRecord>> totalCheck = habit.totalCheck;
     if (totalCheck == null) {
       return num;
     }
@@ -50,7 +50,7 @@ class HabitUtil {
     ///昨天 前天 大前天 是否连续包含
     for (int i = 1; i < 10000; i++) {
       DateTime lastDay = today - i.days;
-      List<int> lastDayCheck =
+      List<HabitRecord> lastDayCheck =
           totalCheck['${lastDay.year}-${lastDay.month}-${lastDay.day}'];
       if (lastDayCheck != null) {
         if (habit.period == HabitPeroid.day &&
@@ -69,9 +69,9 @@ class HabitUtil {
 
   static int getDoNums(Habit habit) {
     int num = 0;
-    Map<String, List<int>> totalCheck = habit.totalCheck;
-    if (habit.todayChek != null) {
-      num += habit.todayChek.length;
+    Map<String, List<HabitRecord>> totalCheck = habit.totalCheck;
+    if (habit.todayCheck != null) {
+      num += habit.todayCheck.length;
     }
     if (totalCheck != null) {
       totalCheck.forEach((key, value) {
@@ -85,7 +85,7 @@ class HabitUtil {
 
   static int getDoDays(Habit habit) {
     int num = 0;
-    Map<String, List<int>> totalCheck = habit.totalCheck;
+    Map<String, List<HabitRecord>> totalCheck = habit.totalCheck;
     if (totalCheck != null) {
       totalCheck.forEach((key, value) {
         if (value != null) {

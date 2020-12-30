@@ -28,8 +28,8 @@ void main() {
   print(jsonEncode(datas));
 
   List<String> times = ["18:11", "12:60"];
-  List<HabitRecords> records = [];
-  records.add(HabitRecords(time: 1111, content: "cidw"));
+  List<HabitRecord> records = [];
+  records.add(HabitRecord(time: 1111, content: "cidw"));
   Habit habit = Habit(
       id: "11",
       name: "name",
@@ -40,8 +40,7 @@ void main() {
       period: 1,
       createTime: 111,
       modifyTime: 1111,
-      completed: false,
-      records: records);
+      completed: false,);
 
   Map<String, dynamic> map = habit.toJson();
   print(map["remindTimes"].runtimeType.toString());

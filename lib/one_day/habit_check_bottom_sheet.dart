@@ -18,14 +18,14 @@ class HabitCheckView extends StatefulWidget {
 class _HabitCheckViewState extends State<HabitCheckView> {
   final GlobalKey<AnimatedListState> checkTimeListKey =
       GlobalKey<AnimatedListState>();
-  List<int> todayChecks = [];
+  List<HabitRecord> todayChecks = [];
 
-  String note;
+  String note = '';
 
   @override
   void initState() {
-    if (widget.habit.todayChek != null) {
-      todayChecks.addAll(widget.habit.todayChek);
+    if (widget.habit.todayCheck != null) {
+      todayChecks.addAll(widget.habit.todayCheck);
     }
     super.initState();
   }
@@ -109,7 +109,7 @@ class _HabitCheckViewState extends State<HabitCheckView> {
                       child: GestureDetector(
                         onTap: () {
                           Navigator.of(context)
-                              .pop({'times': todayChecks, 'note': note});
+                              .pop({'times': todayChecks});
                         },
                         child: Container(
                           alignment: Alignment.center,
@@ -173,7 +173,9 @@ class _HabitCheckViewState extends State<HabitCheckView> {
             ),
             IconButton(
               onPressed: () {
-                _onAdd(DateTime.now().millisecondsSinceEpoch);
+                _onAdd(HabitRecord(
+                    time: DateTime.now().millisecondsSinceEpoch,
+                    content: note));
               },
               icon: Icon(Icons.add),
             )
@@ -215,7 +217,7 @@ class _HabitCheckViewState extends State<HabitCheckView> {
     );
   }
 
-  void _onDelete(int time) {
+  void _onDelete(HabitRecord time) {
     int index = todayChecks.indexOf(time);
     checkTimeListKey.currentState.removeItem(
         index,
@@ -230,7 +232,7 @@ class _HabitCheckViewState extends State<HabitCheckView> {
     });
   }
 
-  void _onAdd(int time) {
+  void _onAdd(HabitRecord time) {
     checkTimeListKey.currentState
         .insertItem(0, duration: Duration(milliseconds: 500));
     setState(() {
@@ -241,9 +243,9 @@ class _HabitCheckViewState extends State<HabitCheckView> {
 
 ///长按显示删除按钮
 class CheckTiemView extends StatefulWidget {
-  final int time;
+  final HabitRecord time;
   final Animation<dynamic> animation;
-  final Function(int time) onDelete;
+  final Function(HabitRecord time) onDelete;
 
   const CheckTiemView({Key key, this.time, this.onDelete, this.animation})
       : super(key: key);
@@ -310,7 +312,7 @@ class _CheckTiemViewState extends State<CheckTiemView>
                       width: 80,
                       height: 40,
                       child: Text(
-                        '${DateUtil.parseHourAndMin(widget.time)}',
+                        '${DateUtil.parseHourAndMin(widget.time.time)}',
                         style: AppTheme.appTheme.textStyle(
                             textColor: Colors.black,
                             fontWeight: FontWeight.bold,

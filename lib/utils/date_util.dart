@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:time/time.dart';
+import 'package:timefly/models/habit.dart';
 
 class DateUtil {
   static bool isToday(int millisecondsSinceEpoch) {
@@ -23,7 +24,7 @@ class DateUtil {
   }
 
   static int getWeekCheckNum(
-      List<int> todayCheck, Map<String, List<int>> totalCheck) {
+      List<HabitRecord> todayCheck, Map<String, List<HabitRecord>> totalCheck) {
     int num = 0;
     if (totalCheck != null) {
       DateTime now = DateTime.now();
@@ -31,7 +32,7 @@ class DateUtil {
       int today = now.weekday;
       for (int i = 1; i < today - 1; i++) {
         DateTime oldDay = now - i.days;
-        List<int> checks =
+        List<HabitRecord> checks =
             totalCheck['${oldDay.year}-${oldDay.month}-${oldDay.day}'];
         if (checks != null) {
           num += checks.length;
@@ -46,7 +47,7 @@ class DateUtil {
   }
 
   static int getMonthCheckNum(
-      List<int> todayCheck, Map<String, List<int>> totalCheck) {
+      List<HabitRecord> todayCheck, Map<String, List<HabitRecord>> totalCheck) {
     int num = 0;
     if (totalCheck != null) {
       DateTime now = DateTime.now();
@@ -54,7 +55,7 @@ class DateUtil {
       int today = now.day;
       for (int i = 1; i < today; i++) {
         DateTime oldDay = DateTime(now.year, now.month, i);
-        List<int> checks =
+        List<HabitRecord> checks =
             totalCheck['${oldDay.year}-${oldDay.month}-${oldDay.day}'];
         if (checks != null) {
           num += checks.length;

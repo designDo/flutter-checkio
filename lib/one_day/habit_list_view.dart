@@ -125,15 +125,15 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
     switch (widget.habit.period) {
       case HabitPeroid.day:
         _initValue =
-            widget.habit.todayChek == null ? 0 : widget.habit.todayChek.length;
+            widget.habit.todayCheck == null ? 0 : widget.habit.todayCheck.length;
         break;
       case HabitPeroid.week:
         _initValue = DateUtil.getWeekCheckNum(
-            widget.habit.todayChek, widget.habit.totalCheck);
+            widget.habit.todayCheck, widget.habit.totalCheck);
         break;
       case HabitPeroid.month:
         _initValue = DateUtil.getMonthCheckNum(
-            widget.habit.todayChek, widget.habit.totalCheck);
+            widget.habit.todayCheck, widget.habit.totalCheck);
         break;
     }
     _maxValue = widget.habit.doNum;
@@ -162,16 +162,16 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
     }
 
     Future.delayed(Duration(milliseconds: 500), () async {
-      List<int> times = data['times'];
-      if (widget.habit.todayChek == null) {
-        widget.habit.todayChek = List();
+      List<HabitRecord> times = data['times'];
+      if (widget.habit.todayCheck == null) {
+        widget.habit.todayCheck = List();
       }
-      widget.habit.todayChek.clear();
-      widget.habit.todayChek.addAll(times);
+      widget.habit.todayCheck.clear();
+      widget.habit.todayCheck.addAll(times);
       setState(() {
         setCheckValue();
       });
-      await DatabaseProvider.db.update(widget.habit.copyWith(todayChek: times));
+      await DatabaseProvider.db.update(widget.habit.copyWith(todayCheck: times));
     });
   }
 

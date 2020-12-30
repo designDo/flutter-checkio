@@ -21,15 +21,15 @@ class HabitItemView extends StatelessWidget {
     int _maxValue = 1;
     switch (habit.period) {
       case HabitPeroid.day:
-        _initValue = habit.todayChek == null ? 0 : habit.todayChek.length;
+        _initValue = habit.todayCheck == null ? 0 : habit.todayCheck.length;
         break;
       case HabitPeroid.week:
         _initValue =
-            DateUtil.getWeekCheckNum(habit.todayChek, habit.totalCheck);
+            DateUtil.getWeekCheckNum(habit.todayCheck, habit.totalCheck);
         break;
       case HabitPeroid.month:
         _initValue =
-            DateUtil.getMonthCheckNum(habit.todayChek, habit.totalCheck);
+            DateUtil.getMonthCheckNum(habit.todayCheck, habit.totalCheck);
         break;
     }
     _maxValue = habit.doNum;
@@ -82,13 +82,13 @@ class HabitItemView extends StatelessWidget {
                       return;
                     }
                     Future.delayed(Duration(milliseconds: 500), () {
-                      List<int> times = List();
-                      if (habit.todayChek != null) {
-                        times.addAll(habit.todayChek);
+                      List<HabitRecord> times = List();
+                      if (habit.todayCheck != null) {
+                        times.addAll(habit.todayCheck);
                       }
-                      times.add(DateTime.now().millisecondsSinceEpoch);
+                      times.add(HabitRecord(time: DateTime.now().millisecondsSinceEpoch));
                       BlocProvider.of<HabitsBloc>(context)
-                          .add(HabitUpdate(habit.copyWith(todayChek: times)));
+                          .add(HabitUpdate(habit.copyWith(todayCheck: times)));
                     });
                   },
                   child: Image.asset(habit.iconPath),
@@ -218,6 +218,6 @@ class HabitItemView extends StatelessWidget {
   }
 
   int getTodayCheckNum() {
-    return habit.todayChek != null ? habit.todayChek.length : 0;
+    return habit.todayCheck != null ? habit.todayCheck.length : 0;
   }
 }

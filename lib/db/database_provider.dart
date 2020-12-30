@@ -46,7 +46,6 @@ class DatabaseProvider {
           "modifyTime INTEGER,"
           "completed INTEGER,"
           "doNum INTEGER,"
-          "records TEXT,"
           "todayCheck TEXT,"
           "totalCheck TEXT"
           ")",
@@ -60,19 +59,19 @@ class DatabaseProvider {
     var habits = await db.query('habits');
     habits.forEach((element) async {
       Habit habit = Habit.fromJson(element);
-      if (habit.todayChek != null && habit.todayChek.length > 0) {
-        int time = habit.todayChek.last;
-        if (!DateUtil.isToday(time)) {
+      if (habit.todayCheck != null && habit.todayCheck.length > 0) {
+        HabitRecord time = habit.todayCheck.last;
+        if (!DateUtil.isToday(time.time)) {
           Map totalCheck;
           if (habit.totalCheck == null) {
-            totalCheck = Map<String, List<int>>();
+            totalCheck = Map<String, List<HabitRecord>>();
           } else {
             totalCheck = habit.totalCheck;
           }
-          totalCheck[DateUtil.getDayString(time)] = habit.todayChek;
+          totalCheck[DateUtil.getDayString(time.time)] = habit.todayCheck;
           var temp = List<String>();
           totalCheck.forEach((key, value) {
-            temp.add('$key:${jsonEncode(value)}');
+            temp.add('$key::${jsonEncode(value)}');
           });
           await db.update('habits',
               {'todayCheck': jsonEncode([]), 'totalCheck': jsonEncode(temp)},

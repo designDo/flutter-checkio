@@ -135,7 +135,7 @@ class _CalendarViewState extends State<CalendarView> {
       return false;
     }
     bool contain = false;
-    Map<String, List<int>> totalCheck = widget.habit.totalCheck;
+    Map<String, List<HabitRecord>> totalCheck = widget.habit.totalCheck;
     if (totalCheck == null) {
       contain = false;
     } else if (totalCheck
