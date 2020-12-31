@@ -65,8 +65,8 @@ class _HabitCheckViewState extends State<HabitCheckView> {
         },
         backgroundColor: Colors.blueAccent,
         child: Icon(
-          Icons.check,
-          size: 40,
+          Icons.add_circle_outline,
+          size: 32,
         ),
       ),
     );
@@ -84,7 +84,7 @@ class _HabitCheckViewState extends State<HabitCheckView> {
           color: AppTheme.appTheme.containerBackgroundColor(),
           indicatorXY: 0.5,
           iconStyle: IconStyle(
-            color: Colors.red,
+            color: Colors.black,
             iconData: Icons.check_circle_outline,
           ),
         ),
@@ -105,11 +105,33 @@ class _HabitCheckViewState extends State<HabitCheckView> {
               controller: slidableController,
               actionPane: SlidableDrawerActionPane(),
               secondaryActions: [
-                IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
+                GestureDetector(
+                  onTap: () {
                     removeItem(record);
                   },
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          boxShadow: <BoxShadow>[
+                            BoxShadow(
+                                color: Colors.redAccent.withOpacity(0.35),
+                                offset: const Offset(2, 2.0),
+                                blurRadius: 6.0),
+                          ],
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.red),
+                      child: Icon(
+                        Icons.delete_outline,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    ),
+                  ),
                 )
               ],
               child: Container(
