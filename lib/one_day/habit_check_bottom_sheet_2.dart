@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:timefly/add_habit/edit_name.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -22,6 +23,7 @@ class HabitCheckView extends StatefulWidget {
 class _HabitCheckViewState extends State<HabitCheckView> {
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
   final SlidableController slidableController = SlidableController();
+  final ScrollController scrollController = ScrollController();
 
   List<HabitRecord> todayChecks;
 
@@ -41,6 +43,7 @@ class _HabitCheckViewState extends State<HabitCheckView> {
       body: Container(
         child: AnimatedList(
           key: listKey,
+          controller: scrollController,
           initialItemCount: todayChecks.length,
           itemBuilder: (context, index, animation) {
             return getCheckItemView(context, todayChecks[index], animation);
@@ -56,6 +59,9 @@ class _HabitCheckViewState extends State<HabitCheckView> {
               HabitRecord(
                   time: DateTime.now().millisecondsSinceEpoch,
                   content: "aaaa"));
+          scrollController.animateTo(0,
+              duration: Duration(milliseconds: 500),
+              curve: Curves.fastOutSlowIn);
         },
         backgroundColor: Colors.blueAccent,
         child: Icon(
@@ -124,24 +130,30 @@ class _HabitCheckViewState extends State<HabitCheckView> {
                               fontSize: 18),
                         ),
                       ),
-                      Container(
-                        padding: EdgeInsets.all(8),
-                        margin: EdgeInsets.only(
-                            left: 16, right: 16, top: 10, bottom: 10),
-                        decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                            color:
-                                AppTheme.appTheme.containerBackgroundColor()),
-                        alignment: Alignment.topLeft,
-                        width: double.infinity,
-                        constraints: BoxConstraints(minHeight: 80),
-                        child: Text(
-                          '${record.content}',
-                          style: AppTheme.appTheme.textStyle(
-                              textColor: Colors.black54,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500),
+                      GestureDetector(
+                        onTap: () {
+                          editNote(context, record);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          margin: EdgeInsets.only(
+                              left: 16, right: 16, top: 10, bottom: 10),
+                          decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8)),
+                              color:
+                                  AppTheme.appTheme.containerBackgroundColor()),
+                          alignment: Alignment.topLeft,
+                          width: double.infinity,
+                          constraints: BoxConstraints(minHeight: 80),
+                          child: Text(
+                            '${record.content}',
+                            style: AppTheme.appTheme.textStyle(
+                                textColor: Colors.black54,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500),
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -162,5 +174,30 @@ class _HabitCheckViewState extends State<HabitCheckView> {
         index, (_, animation) => getCheckItemView(_, record, animation),
         duration: const Duration(milliseconds: 500));
     todayChecks.removeAt(index);
+  }
+
+  void editNote(BuildContext context, HabitRecord record) async {
+    await Navigator.of(context).push(PageRouteBuilder(
+        opaque: false,
+        pageBuilder: (context, ani1, ani2) {
+          return EditNameView(
+            habitRecord: record,
+          );
+        },
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          Animation<double> myAnimation = Tween<double>(begin: 0, end: 1.0)
+              .animate(CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.easeOutSine,
+                  reverseCurve: Interval(0, 0.5, curve: Curves.easeInSine)));
+          return Transform(
+            transform:
+                Matrix4.translationValues(0, 100 * (1 - myAnimation.value), 0),
+            child: FadeTransition(
+              opacity: myAnimation,
+              child: child,
+            ),
+          );
+        }));
   }
 }

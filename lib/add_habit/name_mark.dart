@@ -237,8 +237,6 @@ class _NameAndMarkPageState extends State<NameAndMarkPage>
           opaque: false,
           pageBuilder: (context, ani1, ani2) {
             return EditNameView(
-              editValue: edit_type == type_name ? _name : _mark,
-              editType: edit_type,
             );
           },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {

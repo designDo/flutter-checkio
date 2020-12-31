@@ -14,6 +14,7 @@ class CustomEditField extends StatefulWidget {
   final TextStyle hintTextStyle;
   final TextStyle textStyle;
   final TextStyle numTextStyle;
+  final bool autoFucus;
 
   final String initValue;
   final ValueChanged<String> onValueChanged;
@@ -30,7 +31,8 @@ class CustomEditField extends StatefulWidget {
       this.maxLength,
       this.numDecoration,
       this.numTextStyle,
-      this.minHeight})
+      this.minHeight,
+      this.autoFucus})
       : super(key: key);
 
   @override
@@ -75,7 +77,7 @@ class _CustomEditFieldState extends State<CustomEditField>
               strutStyle: StrutStyle(height: 1.5),
               controller: editingController,
               showCursor: true,
-              autofocus: false,
+              autofocus: widget.autoFucus == null ? false : widget.autoFucus,
               style: widget.textStyle,
               maxLength: widget.maxLength,
               decoration: InputDecoration(
