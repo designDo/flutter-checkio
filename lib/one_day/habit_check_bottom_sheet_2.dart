@@ -92,28 +92,64 @@ class _HabitCheckViewState extends State<HabitCheckView> {
             end: Offset(0, 0),
           ).animate(
               CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn)),
-          child: Slidable(
-            key: GlobalKey(),
-            controller: slidableController,
-            actionPane: SlidableDrawerActionPane(),
-            secondaryActions: [
-              IconButton(
-                icon: Icon(Icons.delete),
-                onPressed: () {
-                  removeItem(record);
-                },
-              )
-            ],
-            child: Container(
-                padding: EdgeInsets.only(left: 28),
-                height: 128.0,
-                child: Card(
-                    color: Colors.red,
-                    child: Center(
-                      child: Text(
-                        'Item item',
+          child: Padding(
+            padding: EdgeInsets.only(top: 10, bottom: 10, left: 28),
+            child: Slidable(
+              key: GlobalKey(),
+              controller: slidableController,
+              actionPane: SlidableDrawerActionPane(),
+              secondaryActions: [
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    removeItem(record);
+                  },
+                )
+              ],
+              child: Container(
+                  decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                      color: Colors.white),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(left: 16, top: 16),
+                        child: Text(
+                          'AAAAAAAA',
+                          style: AppTheme.appTheme.textStyle(
+                              textColor: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18),
+                        ),
                       ),
-                    ))),
+                      Container(
+                        padding: EdgeInsets.all(8),
+                        margin: EdgeInsets.only(
+                            left: 16, right: 16, top: 10, bottom: 10),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            color:
+                                AppTheme.appTheme.containerBackgroundColor()),
+                        alignment: Alignment.topLeft,
+                        width: double.infinity,
+                        constraints: BoxConstraints(minHeight: 80),
+                        child: Text(
+                          '${record.content}',
+                          style: AppTheme.appTheme.textStyle(
+                              textColor: Colors.black54,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 16,
+                      )
+                    ],
+                  )),
+            ),
           ),
         ),
       ),
