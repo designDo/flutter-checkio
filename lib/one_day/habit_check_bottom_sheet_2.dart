@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:timefly/add_habit/edit_name.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/models/habit.dart';
@@ -26,13 +27,10 @@ class _HabitCheckViewState extends State<HabitCheckView> {
   final SlidableController slidableController = SlidableController();
   final ScrollController scrollController = ScrollController();
 
-  List<HabitRecord> todayChecks;
-
   @override
   void initState() {
-    todayChecks = widget.habit.todayCheck;
-    if (todayChecks == null) {
-      todayChecks = [];
+    if (widget.habit.todayCheck == null) {
+      widget.habit.todayCheck = [];
     }
     super.initState();
   }
@@ -41,21 +39,43 @@ class _HabitCheckViewState extends State<HabitCheckView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.appTheme.containerBackgroundColor(),
-      body: Container(
-        child: AnimatedList(
-          key: listKey,
-          controller: scrollController,
-          initialItemCount: todayChecks.length,
-          itemBuilder: (context, index, animation) {
-            return getCheckItemView(context, todayChecks[index], animation);
-          },
-        ),
+      body: Stack(
+        children: [
+          Container(
+            child: AnimatedList(
+              key: listKey,
+              padding: EdgeInsets.only(top: 50, bottom: 16),
+              controller: scrollController,
+              initialItemCount: widget.habit.todayCheck.length,
+              itemBuilder: (context, index, animation) {
+                return getCheckItemView(
+                    context, widget.habit.todayCheck[index], animation);
+              },
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            alignment: Alignment.topRight,
+            margin: EdgeInsets.only(right: 16, top: 16),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: SvgPicture.asset(
+                'assets/images/guanbi.svg',
+                color: Colors.black,
+                width: 40,
+                height: 40,
+              ),
+            ),
+          )
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           listKey.currentState
               .insertItem(0, duration: const Duration(milliseconds: 500));
-          todayChecks.insert(
+          widget.habit.todayCheck.insert(
               0,
               HabitRecord(
                   time: DateTime.now().millisecondsSinceEpoch, content: ''));
@@ -64,9 +84,11 @@ class _HabitCheckViewState extends State<HabitCheckView> {
               curve: Curves.fastOutSlowIn);
         },
         backgroundColor: Colors.blueAccent,
-        child: Icon(
-          Icons.add_circle_outline,
-          size: 32,
+        child: SvgPicture.asset(
+          'assets/images/jia.svg',
+          color: Colors.white,
+          width: 40,
+          height: 40,
         ),
       ),
     );
@@ -90,8 +112,9 @@ class _HabitCheckViewState extends State<HabitCheckView> {
         ),
         alignment: TimelineAlign.manual,
         lineXY: 0.1,
-        isFirst: todayChecks.indexOf(record) == 0,
-        isLast: todayChecks.indexOf(record) == todayChecks.length - 1,
+        isFirst: widget.habit.todayCheck.indexOf(record) == 0,
+        isLast: widget.habit.todayCheck.indexOf(record) ==
+            widget.habit.todayCheck.length - 1,
         endChild: SlideTransition(
           position: Tween<Offset>(
             begin: const Offset(1, 0),
@@ -99,7 +122,7 @@ class _HabitCheckViewState extends State<HabitCheckView> {
           ).animate(
               CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn)),
           child: Padding(
-            padding: EdgeInsets.only(top: 10, bottom: 10, left: 28),
+            padding: EdgeInsets.only(top: 10, bottom: 20, left: 28),
             child: Slidable(
               key: GlobalKey(),
               controller: slidableController,
@@ -138,7 +161,13 @@ class _HabitCheckViewState extends State<HabitCheckView> {
                   decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.all(Radius.circular(15)),
-                      color: Colors.white),
+                      color: Colors.white,
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            offset: const Offset(5.1, 6.0),
+                            blurRadius: 14.0),
+                      ]),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -172,7 +201,7 @@ class _HabitCheckViewState extends State<HabitCheckView> {
                           width: double.infinity,
                           constraints: BoxConstraints(minHeight: 80),
                           child: Text(
-                            '${record.content.length == 0 ? '记录写什么...' : record.content}',
+                            '${record.content.length == 0 ? '记录些什么...' : record.content}',
                             style: AppTheme.appTheme.textStyle(
                                 textColor: record.content.length == 0
                                     ? Colors.black54
@@ -195,11 +224,11 @@ class _HabitCheckViewState extends State<HabitCheckView> {
   }
 
   void removeItem(HabitRecord record) {
-    int index = todayChecks.indexOf(record);
+    int index = widget.habit.todayCheck.indexOf(record);
     listKey.currentState.removeItem(
         index, (_, animation) => getCheckItemView(_, record, animation),
         duration: const Duration(milliseconds: 500));
-    todayChecks.removeAt(index);
+    widget.habit.todayCheck.removeAt(index);
   }
 
   void editNote(BuildContext context, HabitRecord record) async {

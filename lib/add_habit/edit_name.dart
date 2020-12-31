@@ -32,7 +32,7 @@ class _EditNameViewState extends State<EditNameView> {
             maxLength: 50,
             autoFucus: true,
             initValue: widget.habitRecord.content,
-            hintText: '千里之行，始于足下 ...',
+            hintText: '记录些什么 ...',
             hintTextStyle: AppTheme.appTheme.textStyle(
                 textColor: Colors.black.withOpacity(0.5),
                 fontWeight: FontWeight.normal,
