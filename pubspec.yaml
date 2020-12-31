@@ -35,6 +35,8 @@ dependencies:
   flutter_local_notifications: ^2.0.0+1
   time: "^1.3.0"
   shared_preferences: ^0.5.12+4
+  timeline_tile: ^1.0.0
+  flutter_slidable: ^0.5.7
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

@@ -118,6 +118,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.0"
+  flutter_slidable:
+    dependency: "direct main"
+    description:
+      name: flutter_slidable
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.5.7"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -378,6 +385,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.3.0"
+  timeline_tile:
+    dependency: "direct main"
+    description:
+      name: timeline_tile
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.0"
   timezone:
     dependency: transitive
     description:

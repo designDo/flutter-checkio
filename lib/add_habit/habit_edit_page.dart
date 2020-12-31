@@ -15,6 +15,7 @@ import 'package:timefly/models/habit_color.dart';
 import 'package:timefly/models/habit_icon.dart';
 import 'package:timefly/models/habit_peroid.dart';
 import 'package:timefly/utils/uuid.dart';
+import 'package:timefly/widget/custom_edit_field.dart';
 
 class HabitEditPage extends StatefulWidget {
   @override
@@ -129,10 +130,37 @@ class _HabitEditPageState extends State<HabitEditPage>
                   SizedBox(
                     height: 16,
                   ),
-                  EditFiledContainer(
-                    editType: 1,
+                  CustomEditField(
+                    maxLines: 1,
+                    maxLength: 10,
                     initValue: '',
-                    hintValue: '名字 ...',
+                    hintText: '名字 ...',
+                    hintTextStyle: AppTheme.appTheme.textStyle(
+                        textColor: Colors.black.withOpacity(0.5),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18),
+                    textStyle: AppTheme.appTheme.textStyle(
+                        textColor: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18),
+                    containerDecoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        color: AppTheme.appTheme.containerBackgroundColor()),
+                    numDecoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                              color: Colors.black26,
+                              offset: Offset(3, 3),
+                              blurRadius: 6)
+                        ]),
+                    numTextStyle: TextStyle(
+                        color: AppTheme.appTheme.gradientColorLight(),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15),
                     onValueChanged: (value) {
                       _name = value;
                     },
@@ -199,10 +227,37 @@ class _HabitEditPageState extends State<HabitEditPage>
                           fontSize: 16),
                     ),
                   ),
-                  EditFiledContainer(
-                    editType: 2,
-                    initValue: '',
-                    hintValue: '千里之行，始于足下 ...',
+                  CustomEditField(
+                    maxLength: 50,
+                    initValue: _mark,
+                    hintText: '千里之行，始于足下 ...',
+                    hintTextStyle: AppTheme.appTheme.textStyle(
+                        textColor: Colors.black.withOpacity(0.5),
+                        fontWeight: FontWeight.normal,
+                        fontSize: 16),
+                    textStyle: AppTheme.appTheme.textStyle(
+                        textColor: Colors.black,
+                        fontWeight: FontWeight.normal,
+                        fontSize: 16),
+                    minHeight: 100,
+                    containerDecoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        color: AppTheme.appTheme.containerBackgroundColor()),
+                    numDecoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                              color: Colors.black26,
+                              offset: Offset(3, 3),
+                              blurRadius: 6)
+                        ]),
+                    numTextStyle: TextStyle(
+                        color: AppTheme.appTheme.gradientColorLight(),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15),
                     onValueChanged: (value) {
                       _mark = value;
                     },

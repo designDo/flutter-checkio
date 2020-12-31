@@ -120,6 +120,7 @@ class _EditFiledContainerState extends State<EditFiledContainer>
                   numAnimationController.reverse(from: 0.3);
                 }
               },
+              keyboardType: TextInputType.multiline,
               onSubmitted: (value) async {},
               cursorColor: AppTheme.appTheme.gradientColorDark(),
               style: AppTheme.appTheme.textStyle(

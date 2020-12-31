@@ -3,7 +3,7 @@ import 'package:timefly/app_theme.dart';
 import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_peroid.dart';
-import 'package:timefly/one_day/habit_check_bottom_sheet.dart';
+import 'package:timefly/one_day/habit_check_bottom_sheet_2.dart';
 import 'package:timefly/utils/date_util.dart';
 import 'package:timefly/widget/circle_progress_bar.dart';
 import 'package:timefly/widget/float_modal.dart';
@@ -156,9 +156,10 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
         builder: (context, scroller) {
           return HabitCheckView(
             habit: widget.habit,
+            isToday: true,
           );
         });
-
+    print(widget.habit.todayCheck.length);
     /// There is the modified habit
     /// save to db
     if (data == null) {
