@@ -140,6 +140,11 @@ class DateUtil {
     return '${_twoDigits(dateTime.hour)}:${_twoDigits(dateTime.minute)}';
   }
 
+  static String parseHourAndMinAndSecond(int time) {
+    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(time);
+    return '${_twoDigits(dateTime.hour)}:${_twoDigits(dateTime.minute)}:${_twoDigits(dateTime.second)}';
+  }
+
   static String _twoDigits(int n) {
     if (n >= 10) return '$n';
     return '0$n';

@@ -3,6 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:timefly/add_habit/edit_name.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/models/habit.dart';
+import 'package:timefly/utils/date_util.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class HabitCheckView extends StatefulWidget {
@@ -57,8 +58,7 @@ class _HabitCheckViewState extends State<HabitCheckView> {
           todayChecks.insert(
               0,
               HabitRecord(
-                  time: DateTime.now().millisecondsSinceEpoch,
-                  content: "aaaa"));
+                  time: DateTime.now().millisecondsSinceEpoch, content: ''));
           scrollController.animateTo(0,
               duration: Duration(milliseconds: 500),
               curve: Curves.fastOutSlowIn);
@@ -80,7 +80,7 @@ class _HabitCheckViewState extends State<HabitCheckView> {
       child: TimelineTile(
         beforeLineStyle: LineStyle(thickness: 2, color: Colors.black26),
         indicatorStyle: IndicatorStyle(
-          width: 30,
+          width: 35,
           color: AppTheme.appTheme.containerBackgroundColor(),
           indicatorXY: 0.5,
           iconStyle: IconStyle(
@@ -113,8 +113,8 @@ class _HabitCheckViewState extends State<HabitCheckView> {
                     alignment: Alignment.center,
                     child: Container(
                       alignment: Alignment.center,
-                      width: 50,
-                      height: 50,
+                      width: 48,
+                      height: 48,
                       decoration: BoxDecoration(
                           boxShadow: <BoxShadow>[
                             BoxShadow(
@@ -145,11 +145,13 @@ class _HabitCheckViewState extends State<HabitCheckView> {
                       Container(
                         margin: EdgeInsets.only(left: 16, top: 16),
                         child: Text(
-                          'AAAAAAAA',
-                          style: AppTheme.appTheme.textStyle(
-                              textColor: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
+                          '${DateUtil.parseHourAndMinAndSecond(record.time)}',
+                          style: AppTheme.appTheme
+                              .textStyle(
+                                  textColor: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18)
+                              .copyWith(fontFamily: 'Montserrat'),
                         ),
                       ),
                       GestureDetector(
@@ -170,9 +172,11 @@ class _HabitCheckViewState extends State<HabitCheckView> {
                           width: double.infinity,
                           constraints: BoxConstraints(minHeight: 80),
                           child: Text(
-                            '${record.content}',
+                            '${record.content.length == 0 ? '记录写什么...' : record.content}',
                             style: AppTheme.appTheme.textStyle(
-                                textColor: Colors.black54,
+                                textColor: record.content.length == 0
+                                    ? Colors.black54
+                                    : Colors.black,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500),
                           ),
