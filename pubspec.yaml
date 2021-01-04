@@ -37,6 +37,7 @@ dependencies:
   shared_preferences: ^0.5.12+4
   timeline_tile: ^1.0.0
   flutter_slidable: ^0.5.7
+  flash: ^1.2.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

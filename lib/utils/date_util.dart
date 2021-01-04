@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:time/time.dart';
 import 'package:timefly/models/habit.dart';
 
@@ -23,6 +22,7 @@ class DateUtil {
     return tomorrow.millisecondsSinceEpoch - now.millisecondsSinceEpoch;
   }
 
+  ///获取'周'周期内签到次数，包含今天和过去几天的
   static int getWeekCheckNum(
       List<HabitRecord> todayCheck, Map<String, List<HabitRecord>> totalCheck) {
     int num = 0;
@@ -44,6 +44,29 @@ class DateUtil {
       num += todayCheck.length;
     }
     return num;
+  }
+
+  static List<HabitRecord> getWeekCheckRecords(List<HabitRecord> todayCheck,
+      Map<String, List<HabitRecord>> totalCheck) {
+
+    int num = 0;
+    if (totalCheck != null) {
+      DateTime now = DateTime.now();
+      //周三 2020-10-10
+      int today = now.weekday;
+      for (int i = 1; i < today - 1; i++) {
+        DateTime oldDay = now - i.days;
+        List<HabitRecord> checks =
+        totalCheck['${oldDay.year}-${oldDay.month}-${oldDay.day}'];
+        if (checks != null) {
+          num += checks.length;
+        }
+      }
+    }
+
+    if (todayCheck != null) {
+      num += todayCheck.length;
+    }
   }
 
   static int getMonthCheckNum(
