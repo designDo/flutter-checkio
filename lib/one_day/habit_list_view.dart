@@ -143,13 +143,15 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
     DatabaseProvider.db
         .getHabitRecords(widget.habit.id, start: start, end: end)
         .then((value) {
-      setState(() {
-        _initValue = value.length;
-        _maxValue = widget.habit.doNum;
-        if (_initValue > _maxValue) {
-          _maxValue = _initValue;
-        }
-      });
+          if(mounted) {
+            setState(() {
+              _initValue = value.length;
+              _maxValue = widget.habit.doNum;
+              if (_initValue > _maxValue) {
+                _maxValue = _initValue;
+              }
+            });
+          }
     });
   }
 
