@@ -71,6 +71,7 @@ class _HabitListViewState extends State<HabitListView>
                     animationController.forward();
 
                     return HabitView(
+                      key: GlobalKey(),
                       habit: widget.habits[index],
                       animationController: animationController,
                       animation: animation,
@@ -117,30 +118,39 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
     });
     tapAnimation = Tween<double>(begin: 1, end: 0.9).animate(CurvedAnimation(
         parent: tapAnimationController, curve: Curves.fastOutSlowIn));
-    setCheckValue();
+    Future.delayed(Duration(milliseconds: 500), () => setCheckValue());
     super.initState();
   }
 
   void setCheckValue() {
-    /*switch (widget.habit.period) {
+    DateTime start;
+    DateTime end;
+    DateTime now = DateTime.now();
+    switch (widget.habit.period) {
       case HabitPeroid.day:
-        _initValue = widget.habit.todayCheck == null
-            ? 0
-            : widget.habit.todayCheck.length;
+        start = DateUtil.startOfDay(now);
+        end = DateUtil.endOfDay(now);
         break;
       case HabitPeroid.week:
-        _initValue = DateUtil.getWeekCheckNum(
-            widget.habit.todayCheck, widget.habit.totalCheck);
+        start = DateUtil.firstDayOfWeekend(DateTime.now());
+        end = DateUtil.endOfDay(DateTime.now());
         break;
       case HabitPeroid.month:
-        _initValue = DateUtil.getMonthCheckNum(
-            widget.habit.todayCheck, widget.habit.totalCheck);
+        start = DateUtil.firstDayOfMonth(now);
+        end = DateUtil.endOfDay(now);
         break;
-    }*/
-    _maxValue = widget.habit.doNum;
-    if (_initValue > _maxValue) {
-      _maxValue = _initValue;
     }
+    DatabaseProvider.db
+        .getHabitRecords(widget.habit.id, start: start, end: end)
+        .then((value) {
+      setState(() {
+        _initValue = value.length;
+        _maxValue = widget.habit.doNum;
+        if (_initValue > _maxValue) {
+          _maxValue = _initValue;
+        }
+      });
+    });
   }
 
   @override
@@ -150,7 +160,7 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
   }
 
   _showCheckBottomSheet() async {
-    Map data = await showFloatingModalBottomSheet(
+    await showFloatingModalBottomSheet(
         barrierColor: Colors.black87,
         context: context,
         builder: (context, scroller) {
@@ -159,16 +169,8 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
             isToday: true,
           );
         });
-    /// There is the modified habit
-    /// save to db
-    if (data == null) {
-      return;
-    }
-
     Future.delayed(Duration(milliseconds: 500), () async {
-      setState(() {
-        setCheckValue();
-      });
+      setCheckValue();
     });
   }
 
