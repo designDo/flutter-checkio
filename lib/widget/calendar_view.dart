@@ -25,6 +25,8 @@ class _CalendarViewState extends State<CalendarView> {
   void initState() {
     days = DateUtil.getMonthDays(
         DateTime(widget.currentDay.year, widget.currentDay.month, 1));
+    print(days);
+    print(days.length);
     super.initState();
   }
 
@@ -74,7 +76,7 @@ class _CalendarViewState extends State<CalendarView> {
 
   BoxDecoration getBox(DateTime day, int index) {
     DateTime lastDay = days[index - 1];
-    DateTime nextDay = days.length > index ? days[index + 1] : null;
+    DateTime nextDay = days.length - 1 > index ? days[index + 1] : null;
 
     if (containsDay(day)) {
       bool containLastDay = containsDay(lastDay);
