@@ -122,7 +122,7 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
   }
 
   void setCheckValue() {
-    switch (widget.habit.period) {
+    /*switch (widget.habit.period) {
       case HabitPeroid.day:
         _initValue = widget.habit.todayCheck == null
             ? 0
@@ -136,7 +136,7 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
         _initValue = DateUtil.getMonthCheckNum(
             widget.habit.todayCheck, widget.habit.totalCheck);
         break;
-    }
+    }*/
     _maxValue = widget.habit.doNum;
     if (_initValue > _maxValue) {
       _maxValue = _initValue;
@@ -159,7 +159,6 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
             isToday: true,
           );
         });
-    print(widget.habit.todayCheck.length);
     /// There is the modified habit
     /// save to db
     if (data == null) {
@@ -167,17 +166,9 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
     }
 
     Future.delayed(Duration(milliseconds: 500), () async {
-      List<HabitRecord> times = data['times'];
-      if (widget.habit.todayCheck == null) {
-        widget.habit.todayCheck = List();
-      }
-      widget.habit.todayCheck.clear();
-      widget.habit.todayCheck.addAll(times);
       setState(() {
         setCheckValue();
       });
-      await DatabaseProvider.db
-          .update(widget.habit.copyWith(todayCheck: times));
     });
   }
 

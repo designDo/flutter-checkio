@@ -40,7 +40,7 @@ class HabitUtil {
 
   static int getMostStreaks(Habit habit) {
     int num = 0;
-    Map<String, List<HabitRecord>> totalCheck = habit.totalCheck;
+    Map<String, List<HabitRecord>> totalCheck = null;
     if (totalCheck == null) {
       return num;
     }
@@ -69,30 +69,11 @@ class HabitUtil {
 
   static int getDoNums(Habit habit) {
     int num = 0;
-    Map<String, List<HabitRecord>> totalCheck = habit.totalCheck;
-    if (habit.todayCheck != null) {
-      num += habit.todayCheck.length;
-    }
-    if (totalCheck != null) {
-      totalCheck.forEach((key, value) {
-        if (value != null) {
-          num += value.length;
-        }
-      });
-    }
     return num;
   }
 
   static int getDoDays(Habit habit) {
     int num = 0;
-    Map<String, List<HabitRecord>> totalCheck = habit.totalCheck;
-    if (totalCheck != null) {
-      totalCheck.forEach((key, value) {
-        if (value != null) {
-          num += 1;
-        }
-      });
-    }
     return num;
   }
 

@@ -3,6 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:timefly/add_habit/edit_name.dart';
 import 'package:timefly/app_theme.dart';
+import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/utils/date_util.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -27,12 +28,19 @@ class _HabitCheckViewState extends State<HabitCheckView> {
   final SlidableController slidableController = SlidableController();
   final ScrollController scrollController = ScrollController();
 
+  var _future;
+  List<HabitRecord> habitRecords = [];
+
   @override
   void initState() {
-    if (widget.habit.todayCheck == null) {
-      widget.habit.todayCheck = [];
-    }
+    _future = _getFuture();
     super.initState();
+  }
+
+  Future<List<HabitRecord>> _getFuture() async {
+    return DatabaseProvider.db.getHabitRecords(widget.habit.id,
+        start: DateUtil.startOfDay(DateTime.now()),
+        end: DateUtil.endOfDay(DateTime.now()));
   }
 
   @override
@@ -41,17 +49,27 @@ class _HabitCheckViewState extends State<HabitCheckView> {
       backgroundColor: AppTheme.appTheme.containerBackgroundColor(),
       body: Stack(
         children: [
-          Container(
-            child: AnimatedList(
-              key: listKey,
-              padding: EdgeInsets.only(top: 50, bottom: 16),
-              controller: scrollController,
-              initialItemCount: widget.habit.todayCheck.length,
-              itemBuilder: (context, index, animation) {
-                return getCheckItemView(
-                    context, widget.habit.todayCheck[index], animation);
-              },
-            ),
+          FutureBuilder<List<HabitRecord>>(
+            future: _future,
+            builder: (BuildContext context,
+                AsyncSnapshot<List<HabitRecord>> snapshot) {
+              if (snapshot.hasData) {
+                habitRecords = snapshot.data;
+                return Container(
+                  child: AnimatedList(
+                    key: listKey,
+                    padding: EdgeInsets.only(top: 50, bottom: 16),
+                    controller: scrollController,
+                    initialItemCount: habitRecords.length,
+                    itemBuilder: (context, index, animation) {
+                      return getCheckItemView(
+                          context, habitRecords[index], animation);
+                    },
+                  ),
+                );
+              }
+              return Container();
+            },
           ),
           Container(
             width: double.infinity,
@@ -72,16 +90,20 @@ class _HabitCheckViewState extends State<HabitCheckView> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          listKey.currentState
-              .insertItem(0, duration: const Duration(milliseconds: 500));
-          widget.habit.todayCheck.insert(
-              0,
-              HabitRecord(
-                  time: DateTime.now().millisecondsSinceEpoch, content: ''));
-          scrollController.animateTo(0,
-              duration: Duration(milliseconds: 500),
-              curve: Curves.fastOutSlowIn);
+        onPressed: () async {
+          HabitRecord record = HabitRecord(
+              habitId: widget.habit.id,
+              time: DateTime.now().millisecondsSinceEpoch,
+              content: '');
+          bool success = await DatabaseProvider.db.insertHabitRecord(record);
+          if (success) {
+            listKey.currentState
+                .insertItem(0, duration: const Duration(milliseconds: 500));
+            habitRecords.insert(0, record);
+            scrollController.animateTo(0,
+                duration: Duration(milliseconds: 500),
+                curve: Curves.fastOutSlowIn);
+          }
         },
         backgroundColor: Colors.blueAccent,
         child: SvgPicture.asset(
@@ -112,9 +134,8 @@ class _HabitCheckViewState extends State<HabitCheckView> {
         ),
         alignment: TimelineAlign.manual,
         lineXY: 0.1,
-        isFirst: widget.habit.todayCheck.indexOf(record) == 0,
-        isLast: widget.habit.todayCheck.indexOf(record) ==
-            widget.habit.todayCheck.length - 1,
+        isFirst: habitRecords.indexOf(record) == 0,
+        isLast: habitRecords.indexOf(record) == habitRecords.length - 1,
         endChild: SlideTransition(
           position: Tween<Offset>(
             begin: const Offset(1, 0),
@@ -129,7 +150,7 @@ class _HabitCheckViewState extends State<HabitCheckView> {
               actionPane: SlidableDrawerActionPane(),
               secondaryActions: [
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     removeItem(record);
                   },
                   child: Container(
@@ -223,12 +244,15 @@ class _HabitCheckViewState extends State<HabitCheckView> {
     );
   }
 
-  void removeItem(HabitRecord record) {
-    int index = widget.habit.todayCheck.indexOf(record);
-    listKey.currentState.removeItem(
-        index, (_, animation) => getCheckItemView(_, record, animation),
-        duration: const Duration(milliseconds: 500));
-    widget.habit.todayCheck.removeAt(index);
+  void removeItem(HabitRecord record) async {
+    bool success = await DatabaseProvider.db.deleteHabitrecord(record);
+    if (success) {
+      int index = habitRecords.indexOf(record);
+      listKey.currentState.removeItem(
+          index, (_, animation) => getCheckItemView(_, record, animation),
+          duration: const Duration(milliseconds: 500));
+      habitRecords.removeAt(index);
+    }
   }
 
   void editNote(BuildContext context, HabitRecord record) async {
@@ -254,5 +278,11 @@ class _HabitCheckViewState extends State<HabitCheckView> {
             ),
           );
         }));
+
+    bool success = await DatabaseProvider.db.updateHabitRecord(record.copyWith(
+        habitId: record.habitId, time: record.time, content: record.content));
+    if (success) {
+      setState(() {});
+    }
   }
 }

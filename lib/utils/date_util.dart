@@ -46,9 +46,8 @@ class DateUtil {
     return num;
   }
 
-  static List<HabitRecord> getWeekCheckRecords(List<HabitRecord> todayCheck,
-      Map<String, List<HabitRecord>> totalCheck) {
-
+  static List<HabitRecord> getWeekCheckRecords(
+      List<HabitRecord> todayCheck, Map<String, List<HabitRecord>> totalCheck) {
     int num = 0;
     if (totalCheck != null) {
       DateTime now = DateTime.now();
@@ -57,7 +56,7 @@ class DateUtil {
       for (int i = 1; i < today - 1; i++) {
         DateTime oldDay = now - i.days;
         List<HabitRecord> checks =
-        totalCheck['${oldDay.year}-${oldDay.month}-${oldDay.day}'];
+            totalCheck['${oldDay.year}-${oldDay.month}-${oldDay.day}'];
         if (checks != null) {
           num += checks.length;
         }
@@ -171,5 +170,13 @@ class DateUtil {
   static String _twoDigits(int n) {
     if (n >= 10) return '$n';
     return '0$n';
+  }
+
+  static DateTime startOfDay(DateTime now) {
+    return DateTime(now.year, now.month, now.day);
+  }
+
+  static DateTime endOfDay(DateTime now) {
+    return startOfDay(now) + 1.days - 1.milliseconds;
   }
 }

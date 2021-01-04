@@ -1,14 +1,13 @@
-import 'dart:convert';
-
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:timefly/models/habit.dart';
-import 'package:timefly/utils/date_util.dart';
 
 class DatabaseProvider {
   DatabaseProvider._();
 
   static final DatabaseProvider db = DatabaseProvider._();
+
+  static const String RECORDS = 'records';
 
   ///my database
   Database _database;
@@ -50,6 +49,11 @@ class DatabaseProvider {
           "totalCheck TEXT"
           ")",
         );
+        await database.execute("CREATE TABLE records ("
+            "time INTEGER,"
+            "habitId TEXT,"
+            "content TEXT"
+            ")");
       },
     );
   }
@@ -57,34 +61,36 @@ class DatabaseProvider {
   Future<List<Habit>> getHabits() async {
     final db = await database;
     var habits = await db.query('habits');
-    habits.forEach((element) async {
-      Habit habit = Habit.fromJson(element);
-      if (habit.todayCheck != null && habit.todayCheck.length > 0) {
-        HabitRecord time = habit.todayCheck.last;
-        if (!DateUtil.isToday(time.time)) {
-          Map totalCheck;
-          if (habit.totalCheck == null) {
-            totalCheck = Map<String, List<HabitRecord>>();
-          } else {
-            totalCheck = habit.totalCheck;
-          }
-          totalCheck[DateUtil.getDayString(time.time)] = habit.todayCheck;
-          var temp = List<String>();
-          totalCheck.forEach((key, value) {
-            temp.add('$key::${jsonEncode(value)}');
-          });
-          await db.update('habits',
-              {'todayCheck': jsonEncode([]), 'totalCheck': jsonEncode(temp)},
-              where: 'id = ?', whereArgs: [habit.id]);
-        }
-      }
-    });
-    var newHabits = await db.query('habits');
     List<Habit> newHabitList = [];
-    newHabits.forEach((element) {
+    habits.forEach((element) {
       newHabitList.add(Habit.fromJson(element));
     });
     return newHabitList;
+  }
+
+  /// 根据 habitId和时间范围筛选出符合条件的记录
+  Future<List<HabitRecord>> getHabitRecords(String habitId,
+      {DateTime start, DateTime end}) async {
+    final db = await database;
+    var records = List.from(
+        await db.query(RECORDS, where: 'habitId = ?', whereArgs: [habitId]));
+    List<HabitRecord> habitRecords = [];
+    if (records != null && records.length > 0) {
+      if (start != null && end != null) {
+        records
+            .where((element) =>
+                element['time'] > start.millisecondsSinceEpoch &&
+                element['time'] < end.millisecondsSinceEpoch)
+            .toList();
+        records.sort((a, b) => b['time'] - a['time']);
+      } else {
+        records.sort((a, b) => b['time'] - a['time']);
+      }
+      records.forEach((element) {
+        habitRecords.add(HabitRecord.fromJson(element));
+      });
+    }
+    return habitRecords;
   }
 
   ///获取天数分类习惯个数，用于’我的一天‘页面分类
@@ -111,6 +117,26 @@ class DatabaseProvider {
     }
     await db.insert('habits', habit.toJson());
     return habit;
+  }
+
+  Future<bool> insertHabitRecord(HabitRecord record) async {
+    final db = await database;
+    int index = await db.insert(RECORDS, record.toJson());
+    return index > 0;
+  }
+
+  Future<bool> deleteHabitrecord(HabitRecord record) async {
+    final db = await database;
+    int index =
+        await db.delete(RECORDS, where: 'time = ?', whereArgs: [record.time]);
+    return index > 0;
+  }
+
+  Future<bool> updateHabitRecord(HabitRecord habitRecord) async {
+    final db = await database;
+    int change = await db.update(RECORDS, habitRecord.toJson(),
+        where: 'time = ?', whereArgs: [habitRecord.time]);
+    return change > 0;
   }
 
   ///更新

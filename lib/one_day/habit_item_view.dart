@@ -19,7 +19,7 @@ class HabitItemView extends StatelessWidget {
   Widget build(BuildContext context) {
     int _initValue = 0;
     int _maxValue = 1;
-    switch (habit.period) {
+    /*switch (habit.period) {
       case HabitPeroid.day:
         _initValue = habit.todayCheck == null ? 0 : habit.todayCheck.length;
         break;
@@ -31,7 +31,7 @@ class HabitItemView extends StatelessWidget {
         _initValue =
             DateUtil.getMonthCheckNum(habit.todayCheck, habit.totalCheck);
         break;
-    }
+    }*/
     _maxValue = habit.doNum;
     if (_initValue > _maxValue) {
       _maxValue = _initValue;
@@ -80,16 +80,7 @@ class HabitItemView extends StatelessWidget {
                         });
                     if (log == null) {
                       return;
-                    }
-                    Future.delayed(Duration(milliseconds: 500), () {
-                      List<HabitRecord> times = List();
-                      if (habit.todayCheck != null) {
-                        times.addAll(habit.todayCheck);
-                      }
-                      times.add(HabitRecord(time: DateTime.now().millisecondsSinceEpoch));
-                      BlocProvider.of<HabitsBloc>(context)
-                          .add(HabitUpdate(habit.copyWith(todayCheck: times)));
-                    });
+                    };
                   },
                   child: Image.asset(habit.iconPath),
                 ),
@@ -218,6 +209,6 @@ class HabitItemView extends StatelessWidget {
   }
 
   int getTodayCheckNum() {
-    return habit.todayCheck != null ? habit.todayCheck.length : 0;
+    return  0;
   }
 }
