@@ -25,8 +25,6 @@ class _CalendarViewState extends State<CalendarView> {
   void initState() {
     days = DateUtil.getMonthDays(
         DateTime(widget.currentDay.year, widget.currentDay.month, 1));
-    print(days);
-    print(days.length);
     super.initState();
   }
 
