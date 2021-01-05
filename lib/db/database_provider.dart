@@ -77,7 +77,7 @@ class DatabaseProvider {
     List<HabitRecord> habitRecords = [];
     if (records != null && records.length > 0) {
       if (start != null && end != null) {
-        records
+        records = records
             .where((element) =>
                 element['time'] > start.millisecondsSinceEpoch &&
                 element['time'] < end.millisecondsSinceEpoch)
