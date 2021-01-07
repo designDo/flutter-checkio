@@ -22,8 +22,17 @@ class _AllHabitScreenState extends State<AllHabitScreen> {
         ClipPath(
           clipper: BottomClipper(),
           child: Container(
-            height: 200,
-            color: Colors.red,
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: <Color>[
+                    Color(0xFF738AE6),
+                    Color(0xFF5C5EDD),
+                  ],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                )
+            ),
+            height: 250,
           ),
         ),
         Container(
@@ -33,40 +42,46 @@ class _AllHabitScreenState extends State<AllHabitScreen> {
               SizedBox(
                 height: MediaQuery.of(context).viewPadding.top + 10,
               ),
-              Text(
-                'BA',
-                style: AppTheme.appTheme.textStyle(
-                    textColor: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+              Container(
+                margin: EdgeInsets.only(left: 16, top: 8, bottom: 16),
+                child: Text(
+                  '所有习惯',
+                  style: AppTheme.appTheme.textStyle(
+                      textColor: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
               Expanded(
                 child: DefaultTabController(
                   length: tabs.length,
                   child: Column(
                     children: [
-                      TabBar(
-                        tabs: tabs
-                            .map((time) => Container(
-                                  alignment: Alignment.center,
-                                  width: 60,
-                                  height: 38,
-                                  child: Text(
-                                      '${CompleteTime.getTime(time.time)}'),
-                                ))
-                            .toList(),
-                        labelColor: Colors.white,
-                        labelStyle: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                        unselectedLabelColor: Colors.black45,
-                        unselectedLabelStyle: TextStyle(
-                            fontWeight: FontWeight.normal, fontSize: 16),
-                        indicator: BorderTabIndicator(
-                            indicatorHeight: 36, textScaleFactor: 0.8),
-                        isScrollable: true,
+                      Container(
+                        margin: EdgeInsets.only(left: 16),
+                        child: TabBar(
+                          tabs: tabs
+                              .map((time) => Container(
+                                    alignment: Alignment.center,
+                                    width: 60,
+                                    height: 38,
+                                    child: Text(
+                                        '${CompleteTime.getTime(time.time)}'),
+                                  ))
+                              .toList(),
+                          labelColor: Colors.white,
+                          labelStyle: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                          unselectedLabelColor: Colors.white70,
+                          unselectedLabelStyle: TextStyle(
+                              fontWeight: FontWeight.normal, fontSize: 16),
+                          indicator: BorderTabIndicator(
+                              indicatorHeight: 36, textScaleFactor: 0.8),
+                          isScrollable: true,
+                        ),
                       ),
                       SizedBox(
-                        height: 6,
+                        height: 3,
                       ),
                       Expanded(
                         child: TabBarView(

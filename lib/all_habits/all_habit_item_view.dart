@@ -48,40 +48,49 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
       onTap: _handleTap,
       child: AnimatedContainer(
         height: cardHeight,
-        curve: !_wasOpen ? ElasticOutCurve(.9) : Curves.elasticOut,
+        curve: !_wasOpen ? ElasticOutCurve(1) : Curves.elasticOut,
         duration: Duration(milliseconds: !_wasOpen ? 1200 : 1500),
-        child: Container(
-          decoration: BoxDecoration(
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                    color: Colors.black12.withOpacity(0.2),
-                    offset: const Offset(10, 19.0),
-                    blurRadius: 20),
-              ],
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(15)),
-              color: AppTheme.appTheme.cardBackgroundColor()),
+        child: Padding(
+          padding: EdgeInsets.only(left: 24, right: 24),
           child: Container(
-            child: SingleChildScrollView(
-              physics: NeverScrollableScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  getTopContent(),
-                  AnimatedOpacity(
-                    duration:
-                        Duration(milliseconds: widget.isOpen ? 1000 : 500),
-                    opacity: widget.isOpen ? 1 : 0,
-                    curve: Curves.easeOut,
-                    child: CalendarView(
-                      currentDay: DateTime.now(),
-                      caculatorHeight: () {
-                        return calendarHeight;
-                      },
-                      habit: widget.habit,
-                    ),
-                  ),
+            decoration: BoxDecoration(
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      offset: const Offset(10, 5.0),
+                      blurRadius: 16.0),
                 ],
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.only(
+                    topLeft:
+                        _wasOpen ? Radius.circular(15) : Radius.circular(50),
+                    topRight: Radius.circular(15),
+                    bottomLeft:
+                        _wasOpen ? Radius.circular(15) : Radius.circular(50),
+                    bottomRight: Radius.circular(15)),
+                color: AppTheme.appTheme.cardBackgroundColor()),
+            child: Container(
+              child: SingleChildScrollView(
+                physics: NeverScrollableScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    getTopContent(),
+                    AnimatedOpacity(
+                      duration:
+                          Duration(milliseconds: widget.isOpen ? 1000 : 500),
+                      opacity: widget.isOpen ? 1 : 0,
+                      curve: Curves.easeOut,
+                      child: CalendarView(
+                        currentDay: DateTime.now(),
+                        caculatorHeight: () {
+                          return calendarHeight;
+                        },
+                        habit: widget.habit,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

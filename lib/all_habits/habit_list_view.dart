@@ -32,7 +32,7 @@ class _AllHabitListViewState extends State<AllHabitListView>
     return ClipPath(
       clipper: TopClipper(),
       child: Container(
-        margin: EdgeInsets.only(top: 6, left: 16, right: 16),
+        margin: EdgeInsets.only(top: 6),
         child: FutureBuilder<List<Habit>>(
           future: DatabaseProvider.db
               .getHabitsWithCompleteTime(widget.completeTime),
@@ -43,7 +43,7 @@ class _AllHabitListViewState extends State<AllHabitListView>
                   itemBuilder: (context, index) {
                     return Container(
                       margin: EdgeInsets.symmetric(
-                          vertical: _listPadding / 2, horizontal: 8),
+                          vertical: _listPadding / 2,),
                       child: AllHabitItemView(
                         habit: habits[index],
                         isOpen: habits[index] == _selectedHabit,
