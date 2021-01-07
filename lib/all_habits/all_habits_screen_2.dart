@@ -63,7 +63,7 @@ class _AllHabitScreenState extends State<AllHabitScreen> {
                         isScrollable: true,
                       ),
                       SizedBox(
-                        height: 15,
+                        height: 6,
                       ),
                       Expanded(
                         child: TabBarView(
