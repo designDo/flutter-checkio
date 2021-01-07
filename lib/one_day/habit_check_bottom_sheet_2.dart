@@ -5,6 +5,7 @@ import 'package:timefly/add_habit/edit_name.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/models/habit.dart';
+import 'package:timefly/models/habit_peroid.dart';
 import 'package:timefly/utils/date_util.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
@@ -38,9 +39,25 @@ class _HabitCheckViewState extends State<HabitCheckView> {
   }
 
   Future<List<HabitRecord>> _getFuture() async {
-    return DatabaseProvider.db.getHabitRecords(widget.habit.id,
-        start: DateUtil.startOfDay(DateTime.now()),
-        end: DateUtil.endOfDay(DateTime.now()));
+    DateTime start;
+    DateTime end;
+    DateTime now = DateTime.now();
+    switch (widget.habit.period) {
+      case HabitPeroid.day:
+        start = DateUtil.startOfDay(now);
+        end = DateUtil.endOfDay(now);
+        break;
+      case HabitPeroid.week:
+        start = DateUtil.firstDayOfWeekend(DateTime.now());
+        end = DateUtil.endOfDay(DateTime.now());
+        break;
+      case HabitPeroid.month:
+        start = DateUtil.firstDayOfMonth(now);
+        end = DateUtil.endOfDay(now);
+        break;
+    }
+    return DatabaseProvider.db
+        .getHabitRecords(widget.habit.id, start: start, end: end);
   }
 
   @override
@@ -220,7 +237,7 @@ class _HabitCheckViewState extends State<HabitCheckView> {
                                   AppTheme.appTheme.containerBackgroundColor()),
                           alignment: Alignment.topLeft,
                           width: double.infinity,
-                          constraints: BoxConstraints(minHeight: 80),
+                          constraints: BoxConstraints(minHeight: 60),
                           child: Text(
                             '${record.content.length == 0 ? '记录些什么...' : record.content}',
                             style: AppTheme.appTheme.textStyle(
@@ -233,7 +250,7 @@ class _HabitCheckViewState extends State<HabitCheckView> {
                         ),
                       ),
                       SizedBox(
-                        height: 16,
+                        height: 10,
                       )
                     ],
                   )),

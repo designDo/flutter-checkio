@@ -317,6 +317,7 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
                                     child: Padding(
                                   padding: EdgeInsets.all(5),
                                   child: CircleProgressBar(
+                                    backgroundColor: AppTheme.appTheme.containerBackgroundColor(),
                                       foregroundColor:
                                           Color(widget.habit.mainColor),
                                       value: _initValue / _maxValue),
