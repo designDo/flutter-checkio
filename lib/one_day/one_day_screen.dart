@@ -10,6 +10,7 @@ import 'package:timefly/models/habit_list_model.dart';
 import 'package:timefly/notification/notification_plugin.dart';
 import 'package:timefly/one_day/habit_list_view.dart';
 import 'package:timefly/utils/habit_util.dart';
+import 'package:timefly/utils/system_util.dart';
 
 class OneDayScreen extends StatefulWidget {
   @override
@@ -39,6 +40,7 @@ class _OneDayScreenState extends State<OneDayScreen>
 
   @override
   Widget build(BuildContext context) {
+    SystemUtil.changeStateBarMode(Brightness.dark);
     return Container(
       child: BlocBuilder<HabitsBloc, HabitsState>(
         builder: (context, state) {

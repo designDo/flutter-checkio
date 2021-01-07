@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:timefly/all_habits/habit_list_view.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/models/complete_time.dart';
+import 'package:timefly/utils/system_util.dart';
 import 'package:timefly/widget/tab_indicator.dart';
 
 class AllHabitScreen extends StatefulWidget {
@@ -14,6 +16,7 @@ class _AllHabitScreenState extends State<AllHabitScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemUtil.changeStateBarMode(Brightness.light);
     return Stack(
       children: [
         ClipPath(
