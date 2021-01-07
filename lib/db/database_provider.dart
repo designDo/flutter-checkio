@@ -68,6 +68,18 @@ class DatabaseProvider {
     return newHabitList;
   }
 
+  Future<List<Habit>> getHabitsWithCompleteTime(int completeTime) async {
+    final db = await database;
+    var habits = await db
+        .query('habits', where: 'completeTime = ?', whereArgs: [completeTime]);
+    List<Habit> newHabitList = [];
+    habits.forEach((element) {
+      newHabitList.add(Habit.fromJson(element));
+    });
+    newHabitList.sort((a, b) => b.createTime - a.createTime);
+    return newHabitList;
+  }
+
   /// 根据 habitId和时间范围筛选出符合条件的记录
   Future<List<HabitRecord>> getHabitRecords(String habitId,
       {DateTime start, DateTime end}) async {

@@ -5,6 +5,8 @@ import 'package:timefly/habit_progress/habit_progress_screen.dart';
 import 'package:timefly/mine/mine_screen.dart';
 import 'package:timefly/one_day/one_day_screen.dart';
 import 'package:timefly/widget/appbar/fluid_nav_bar.dart';
+
+import 'all_habits/all_habits_screen_2.dart';
 class HomeScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -45,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           _child = OneDayScreen();
           break;
         case 1:
-          _child = AllHabitsScreen();
+          _child = AllHabitScreen();
           break;
         case 2:
           _child = HabitProgressScreen();
