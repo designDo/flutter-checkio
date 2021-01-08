@@ -29,6 +29,7 @@ class _AllHabitListViewState extends State<AllHabitListView>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return ClipPath(
       clipper: TopClipper(),
       child: Container(

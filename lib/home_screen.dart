@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:timefly/all_habits/all_habits_screen.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/habit_progress/habit_progress_screen.dart';
 import 'package:timefly/mine/mine_screen.dart';
