@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:timefly/all_habits/habit_list_view.dart';
+import 'package:timefly/all_habits/all_habit_list_view.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/models/complete_time.dart';
 import 'package:timefly/utils/system_util.dart';

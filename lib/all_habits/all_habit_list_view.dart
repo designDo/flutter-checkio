@@ -20,7 +20,7 @@ class _AllHabitListViewState extends State<AllHabitListView>
 
   List<Habit> habits;
 
-  double _listPadding = 30;
+  double _listPadding = 24;
 
   @override
   void initState() {
@@ -43,7 +43,8 @@ class _AllHabitListViewState extends State<AllHabitListView>
                   itemBuilder: (context, index) {
                     return Container(
                       margin: EdgeInsets.symmetric(
-                          vertical: _listPadding / 2,),
+                        vertical: _listPadding / 2,
+                      ),
                       child: AllHabitItemView(
                         habit: habits[index],
                         isOpen: habits[index] == _selectedHabit,
@@ -54,6 +55,7 @@ class _AllHabitListViewState extends State<AllHabitListView>
                   itemCount: habits.length,
                   controller: scrollController,
                   padding: EdgeInsets.only(
+                    top: 3,
                     bottom: MediaQuery.of(context).padding.bottom,
                   ));
             }
@@ -77,7 +79,7 @@ class _AllHabitListViewState extends State<AllHabitListView>
         var closedHeight = AllHabitItemView.nominalHeightClosed;
         //Calculate scrollTo offset, subtract a bit so we don't end up perfectly at the top
         var offset =
-            selectedIndex * (closedHeight + _listPadding) - closedHeight * .35;
+            selectedIndex * (closedHeight + _listPadding) - closedHeight * .3;
         scrollController.animateTo(offset,
             duration: Duration(milliseconds: 700), curve: Curves.easeOutQuad);
       }
