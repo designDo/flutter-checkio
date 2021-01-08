@@ -24,14 +24,13 @@ class _AllHabitScreenState extends State<AllHabitScreen> {
           child: Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: <Color>[
-                    Color(0xFF738AE6),
-                    Color(0xFF5C5EDD),
-                  ],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                )
-            ),
+              colors: <Color>[
+                Color(0xFF738AE6),
+                Color(0xFF5C5EDD),
+              ],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            )),
             height: 250,
           ),
         ),
@@ -58,7 +57,7 @@ class _AllHabitScreenState extends State<AllHabitScreen> {
                   child: Column(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(left: 16),
+                        margin: EdgeInsets.only(left: 16, right: 16),
                         child: TabBar(
                           tabs: tabs
                               .map((time) => Container(
