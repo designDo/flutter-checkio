@@ -4,9 +4,9 @@ import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/models/habit.dart';
 
 class AllHabitListView extends StatefulWidget {
-  final int completeTime;
+  final List<Habit> habits;
 
-  const AllHabitListView({Key key, this.completeTime}) : super(key: key);
+  const AllHabitListView({Key key, this.habits}) : super(key: key);
 
   @override
   _AllHabitListViewState createState() => _AllHabitListViewState();
@@ -17,8 +17,6 @@ class _AllHabitListViewState extends State<AllHabitListView>
   final ScrollController scrollController = ScrollController();
 
   Habit _selectedHabit;
-
-  List<Habit> habits;
 
   double _listPadding = 24;
 
@@ -34,35 +32,25 @@ class _AllHabitListViewState extends State<AllHabitListView>
       clipper: TopClipper(),
       child: Container(
         margin: EdgeInsets.only(top: 6),
-        child: FutureBuilder<List<Habit>>(
-          future: DatabaseProvider.db
-              .getHabitsWithCompleteTime(widget.completeTime),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              habits = snapshot.data;
-              return ListView.builder(
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: EdgeInsets.symmetric(
-                        vertical: _listPadding / 2,
-                      ),
-                      child: AllHabitItemView(
-                        habit: habits[index],
-                        isOpen: habits[index] == _selectedHabit,
-                        onTap: _handleHabitTapped,
-                      ),
-                    );
-                  },
-                  itemCount: habits.length,
-                  controller: scrollController,
-                  padding: EdgeInsets.only(
-                    top: 3,
-                    bottom: MediaQuery.of(context).padding.bottom,
-                  ));
-            }
-            return Container();
-          },
-        ),
+        child: ListView.builder(
+            itemBuilder: (context, index) {
+              return Container(
+                margin: EdgeInsets.symmetric(
+                  vertical: _listPadding / 2,
+                ),
+                child: AllHabitItemView(
+                  habit: widget.habits[index],
+                  isOpen: widget.habits[index] == _selectedHabit,
+                  onTap: _handleHabitTapped,
+                ),
+              );
+            },
+            itemCount: widget.habits.length,
+            controller: scrollController,
+            padding: EdgeInsets.only(
+              top: 3,
+              bottom: MediaQuery.of(context).padding.bottom,
+            )),
       ),
     );
   }
@@ -76,7 +64,7 @@ class _AllHabitListViewState extends State<AllHabitListView>
       //Open tapped habit card and scroll to it
       else {
         _selectedHabit = data;
-        var selectedIndex = habits.indexOf(_selectedHabit);
+        var selectedIndex = widget.habits.indexOf(_selectedHabit);
         var closedHeight = AllHabitItemView.nominalHeightClosed;
         //Calculate scrollTo offset, subtract a bit so we don't end up perfectly at the top
         var offset =

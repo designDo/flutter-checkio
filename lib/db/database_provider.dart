@@ -65,6 +65,7 @@ class DatabaseProvider {
     habits.forEach((element) {
       newHabitList.add(Habit.fromJson(element));
     });
+    newHabitList.sort((a, b) => b.createTime - a.createTime);
     return newHabitList;
   }
 

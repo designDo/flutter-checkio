@@ -1,4 +1,5 @@
 class CompleteTime {
+  ///-1 全部
   ///0 任意
   ///1 早上
   ///2 上午
@@ -21,6 +22,9 @@ class CompleteTime {
   static String getTime(int time) {
     String timeString = '任意';
     switch (time) {
+      case -1:
+        timeString = '全部';
+        break;
       case 1:
         timeString = '早上';
         break;
