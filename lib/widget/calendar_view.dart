@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/utils/date_util.dart';
+import 'package:timefly/utils/habit_util.dart';
 
 class CalendarView extends StatefulWidget {
   final DateTime currentDay;
@@ -21,10 +22,13 @@ class CalendarView extends StatefulWidget {
 class _CalendarViewState extends State<CalendarView> {
   List<DateTime> days;
 
+  Map<String, List<HabitRecord>> records;
+
   @override
   void initState() {
     days = DateUtil.getMonthDays(
         DateTime(widget.currentDay.year, widget.currentDay.month, 1));
+    records = HabitUtil.combinationRecords(widget.habit.records);
     super.initState();
   }
 
@@ -135,11 +139,9 @@ class _CalendarViewState extends State<CalendarView> {
       return false;
     }
     bool contain = false;
-    Map<String, List<HabitRecord>> totalCheck = {};
-    if (totalCheck == null) {
+    if (records == null || records.length == 0) {
       contain = false;
-    } else if (totalCheck
-        .containsKey('${date.year}-${date.month}-${date.day}')) {
+    } else if (records.containsKey('${date.year}-${date.month}-${date.day}')) {
       contain = true;
     }
     return contain;

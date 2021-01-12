@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:timefly/all_habits/all_habit_list_view.dart';
@@ -57,10 +58,14 @@ class _AllHabitScreenState extends State<AllHabitScreen> {
               ),
               Expanded(
                 child: FutureBuilder<List<Habit>>(
-                  future: DatabaseProvider.db.getHabits(),
+                  future: DatabaseProvider.db.getHabitsWithRecords(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
-                      return Container();
+                      return Container(
+                        child: Center(
+                          child: CupertinoActivityIndicator(),
+                        ),
+                      );
                     }
                     _habits = snapshot.data;
                     tabs = filterCompleteTime();

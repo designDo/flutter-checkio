@@ -85,4 +85,19 @@ class HabitUtil {
     habits.sort((a, b) => b.createTime.compareTo(a.createTime));
     return habits;
   }
+
+  static Map<String, List<HabitRecord>> combinationRecords(
+      List<HabitRecord> records) {
+    Map<String, List<HabitRecord>> recordsMap = {};
+    records.forEach((record) {
+      DateTime time = DateTime.fromMillisecondsSinceEpoch(record.time);
+      String timeStr = '${time.year}-${time.month}-${time.day}';
+      if (recordsMap.containsKey(timeStr)) {
+        recordsMap[timeStr].add(record);
+      } else {
+        recordsMap[timeStr] = [record];
+      }
+    });
+    return recordsMap;
+  }
 }

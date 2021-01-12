@@ -80,6 +80,8 @@ class Habit extends Equatable {
   ///次数
   int doNum;
 
+  List<HabitRecord> records;
+
   Habit(
       {this.id,
       this.name,
@@ -93,7 +95,8 @@ class Habit extends Equatable {
       this.createTime,
       this.modifyTime,
       this.completed,
-      this.doNum});
+      this.doNum,
+      this.records});
 
   @override
   String toString() {
@@ -197,37 +200,38 @@ class Habit extends Equatable {
         this.modifyTime,
         this.completed,
         this.doNum,
+        this.records
       ];
 
-  Habit copyWith({
-    String id,
-    String name,
-    String iconPath,
-    int mainColor,
-    String mark,
-    List<String> remindTimes,
-    List<int> completeDays,
-    int completeTime,
-    int period,
-    int createTime,
-    int modifyTime,
-    bool completed,
-    int doNum,
-  }) {
+  Habit copyWith(
+      {String id,
+      String name,
+      String iconPath,
+      int mainColor,
+      String mark,
+      List<String> remindTimes,
+      List<int> completeDays,
+      int completeTime,
+      int period,
+      int createTime,
+      int modifyTime,
+      bool completed,
+      int doNum,
+      List<HabitRecord> records}) {
     return Habit(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      iconPath: iconPath ?? this.iconPath,
-      mainColor: mainColor ?? this.mainColor,
-      mark: mark ?? this.mark,
-      remindTimes: remindTimes ?? this.remindTimes,
-      completeDays: completeDays ?? this.completeDays,
-      completeTime: completeTime ?? this.completeTime,
-      period: period ?? this.period,
-      createTime: createTime ?? this.createTime,
-      modifyTime: modifyTime ?? this.modifyTime,
-      completed: completed ?? this.completed,
-      doNum: doNum ?? this.doNum,
-    );
+        id: id ?? this.id,
+        name: name ?? this.name,
+        iconPath: iconPath ?? this.iconPath,
+        mainColor: mainColor ?? this.mainColor,
+        mark: mark ?? this.mark,
+        remindTimes: remindTimes ?? this.remindTimes,
+        completeDays: completeDays ?? this.completeDays,
+        completeTime: completeTime ?? this.completeTime,
+        period: period ?? this.period,
+        createTime: createTime ?? this.createTime,
+        modifyTime: modifyTime ?? this.modifyTime,
+        completed: completed ?? this.completed,
+        doNum: doNum ?? this.doNum,
+        records: records ?? this.records);
   }
 }

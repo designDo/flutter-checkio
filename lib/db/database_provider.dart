@@ -69,6 +69,21 @@ class DatabaseProvider {
     return newHabitList;
   }
 
+  ///获取带有打卡记录的所有习惯
+  Future<List<Habit>> getHabitsWithRecords() async {
+    final db = await database;
+    var habits = await db.query('habits');
+    List<Habit> newHabitList = [];
+
+    for (Map<String, dynamic> element in habits) {
+      Habit habit = Habit.fromJson(element);
+      habit.records = await getHabitRecords(habit.id);
+      newHabitList.add(habit);
+    }
+    newHabitList.sort((a, b) => b.createTime - a.createTime);
+    return newHabitList;
+  }
+
   Future<List<Habit>> getHabitsWithCompleteTime(int completeTime) async {
     final db = await database;
     var habits = await db
