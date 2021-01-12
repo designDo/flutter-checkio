@@ -143,15 +143,15 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
     DatabaseProvider.db
         .getHabitRecords(widget.habit.id, start: start, end: end)
         .then((value) {
-          if(mounted) {
-            setState(() {
-              _initValue = value.length;
-              _maxValue = widget.habit.doNum;
-              if (_initValue > _maxValue) {
-                _maxValue = _initValue;
-              }
-            });
+      if (mounted) {
+        setState(() {
+          _initValue = value.length;
+          _maxValue = widget.habit.doNum;
+          if (_initValue > _maxValue) {
+            _maxValue = _initValue;
           }
+        });
+      }
     });
   }
 
@@ -317,7 +317,8 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
                                     child: Padding(
                                   padding: EdgeInsets.all(5),
                                   child: CircleProgressBar(
-                                    backgroundColor: AppTheme.appTheme.containerBackgroundColor(),
+                                      backgroundColor: AppTheme.appTheme
+                                          .containerBackgroundColor(),
                                       foregroundColor:
                                           Color(widget.habit.mainColor),
                                       value: _initValue / _maxValue),
@@ -339,7 +340,8 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
   }
 
   String getReminderTime() {
-    return widget.habit.remindTimes == null
+    return (widget.habit.remindTimes == null ||
+            widget.habit.remindTimes.length == 0)
         ? ''
         : '${widget.habit.remindTimes[0]}';
   }

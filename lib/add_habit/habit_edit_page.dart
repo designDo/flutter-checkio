@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:timefly/add_habit/Icon_color.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/blocs/habit/habit_bloc.dart';
@@ -314,12 +315,13 @@ class _HabitEditPageState extends State<HabitEditPage>
               child: InkWell(
                 onTap: () async {
                   if (_name.length == 0) {
+                    Fluttertoast.showToast(
+                        msg: '请输入名字',
+                        toastLength: Toast.LENGTH_SHORT,
+                        backgroundColor: Color(0xFF738AE6),
+                        gravity: ToastGravity.CENTER);
                     return;
                   }
-                  if (remindTime == null) {
-                    return;
-                  }
-
                   Habit habit = Habit(
                       id: Uuid().generateV4(),
                       name: _name,
@@ -338,9 +340,11 @@ class _HabitEditPageState extends State<HabitEditPage>
                               .map((e) => e.day)
                               .toList()
                           : [],
-                      remindTimes: [
-                        '${_twoDigits(remindTime.hour)}:${_twoDigits(remindTime.minute)}'
-                      ],
+                      remindTimes: remindTime == null
+                          ? []
+                          : [
+                              '${_twoDigits(remindTime.hour)}:${_twoDigits(remindTime.minute)}'
+                            ],
                       createTime: DateTime.now().millisecondsSinceEpoch,
                       completed: false);
                   BlocProvider.of<HabitsBloc>(context).add(HabitsAdd(habit));
