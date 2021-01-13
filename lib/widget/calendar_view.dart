@@ -11,8 +11,14 @@ class CalendarView extends StatefulWidget {
 
   final double Function() caculatorHeight;
 
+  final Map<String, List<HabitRecord>> records;
+
   const CalendarView(
-      {Key key, this.currentDay, this.caculatorHeight, this.habit})
+      {Key key,
+      this.currentDay,
+      this.caculatorHeight,
+      this.habit,
+      this.records})
       : super(key: key);
 
   @override
@@ -22,13 +28,10 @@ class CalendarView extends StatefulWidget {
 class _CalendarViewState extends State<CalendarView> {
   List<DateTime> days;
 
-  Map<String, List<HabitRecord>> records;
-
   @override
   void initState() {
     days = DateUtil.getMonthDays(
         DateTime(widget.currentDay.year, widget.currentDay.month, 1));
-    records = HabitUtil.combinationRecords(widget.habit.records);
     super.initState();
   }
 
@@ -139,9 +142,10 @@ class _CalendarViewState extends State<CalendarView> {
       return false;
     }
     bool contain = false;
-    if (records == null || records.length == 0) {
+    if (widget.records == null || widget.records.length == 0) {
       contain = false;
-    } else if (records.containsKey('${date.year}-${date.month}-${date.day}')) {
+    } else if (widget.records
+        .containsKey('${date.year}-${date.month}-${date.day}')) {
       contain = true;
     }
     return contain;

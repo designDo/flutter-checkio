@@ -1,6 +1,6 @@
 import 'dart:convert';
-
 import 'package:timefly/models/habit.dart';
+import 'package:time/time.dart';
 
 void main() {
   print("object");
@@ -57,6 +57,44 @@ void main() {
 
     print('$i 月天数为 $count');
   }
+
+  List<String> days = [
+    '2020-1-1',
+    '2020-1-2',
+    '2020-1-4',
+    '2020-1-5',
+    '2020-1-6',
+    '2020-1-7',
+    '2020-1-10',
+    '2020-1-11',
+    '2020-1-13',
+    '2020-1-15',
+    '2020-1-16',
+    '2020-1-18',
+  ];
+  print(days);
+  List<int> sort = [];
+  int count = 1;
+  for (int i = days.length - 1; i >= 0; i--) {
+    DateTime dayi = getDay(days[i]);
+    DateTime nextDay = i == 0 ? null : getDay(days[i - 1]);
+    if (isNextDay(dayi, nextDay) && nextDay != null) {
+      count++;
+    } else {
+      sort.add(int.parse('$count'));
+      count = 1;
+    }
+  }
+  print(sort);
+}
+
+DateTime getDay(String day) {
+  List<String> str = day.split('-');
+  return DateTime(int.parse(str[0]), int.parse(str[1]), int.parse(str[2]));
+}
+
+bool isNextDay(DateTime day1, DateTime nextDay) {
+  return nextDay == day1 - 1.days;
 }
 
 class Name {

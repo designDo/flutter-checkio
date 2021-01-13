@@ -38,33 +38,36 @@ class HabitUtil {
     return datas;
   }
 
-  static int getMostStreaks(Habit habit) {
-    int num = 0;
-    Map<String, List<HabitRecord>> totalCheck = null;
-    if (totalCheck == null) {
-      return num;
-    }
-    DateTime now = DateTime.now();
-    DateTime today = DateTime(now.year, now.month, now.day);
-
-    ///昨天 前天 大前天 是否连续包含
-    for (int i = 1; i < 10000; i++) {
-      DateTime lastDay = today - i.days;
-      List<HabitRecord> lastDayCheck =
-          totalCheck['${lastDay.year}-${lastDay.month}-${lastDay.day}'];
-      if (lastDayCheck != null) {
-        if (habit.period == HabitPeroid.day &&
-            lastDayCheck.length != habit.doNum) {
-          return num;
-        } else {
-          num += 1;
-        }
+  /// 获取历史最大连续数量
+  static int getMostStreaks(Map<String, List<HabitRecord>> checks) {
+    List<String> days = checks.keys.toList();
+    List<int> sort = [];
+    int count = 1;
+    for (int i = days.length - 1; i >= 0; i--) {
+      DateTime dayi = getDay(days[i]);
+      ///TODO 按周，排除没有选择的周期，也算连续
+      DateTime nextDay = i == 0 ? null : getDay(days[i - 1]);
+      if (isNextDay(dayi, nextDay) && nextDay != null) {
+        count++;
       } else {
-        return num;
+        sort.add(int.parse('$count'));
+        count = 1;
       }
     }
+    sort.sort((a, b) => b - a);
+    if (sort.length == 0) {
+      return 0;
+    }
+    return sort.first;
+  }
 
-    return num;
+  static DateTime getDay(String day) {
+    List<String> str = day.split('-');
+    return DateTime(int.parse(str[0]), int.parse(str[1]), int.parse(str[2]));
+  }
+
+  static bool isNextDay(DateTime day1, DateTime nextDay) {
+    return nextDay == day1 - 1.days;
   }
 
   static int getDoNums(Habit habit) {
