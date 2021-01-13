@@ -89,7 +89,7 @@ class AppTheme {
   Color gradientColorDark() {
     switch (currentColorMode) {
       case AppThemeColorMode.Blue:
-        return Color(0xFF779BF6);
+        return Color(0xFF5C5EDD);
       case AppThemeColorMode.Purple:
         return Colors.deepPurple;
     }
@@ -99,7 +99,7 @@ class AppTheme {
   Color gradientColorLight() {
     switch (currentColorMode) {
       case AppThemeColorMode.Blue:
-        return Color(0xFF3F9CAD);
+        return Color(0xFF738AE6);
       case AppThemeColorMode.Purple:
         return Colors.purple;
     }
