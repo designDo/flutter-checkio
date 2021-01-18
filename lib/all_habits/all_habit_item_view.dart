@@ -183,7 +183,7 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                   SizedBox(
                     width: 3,
                   ),
-                  Text('${HabitUtil.getDoDays(widget.habit)}',
+                  Text('${HabitUtil.getMonthDoNums(widget.habit.records)}',
                       style: AppTheme.appTheme
                           .textStyle(
                               textColor: AppTheme.appTheme.textColorMain(),
@@ -308,7 +308,7 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                     SizedBox(
                       width: 3,
                     ),
-                    Text('${HabitUtil.getDoDays(widget.habit)}',
+                    Text('${HabitUtil.getMonthDoNums(widget.habit.records)}',
                         style: AppTheme.appTheme
                             .textStyle(
                                 textColor: AppTheme.appTheme.textColorMain(),

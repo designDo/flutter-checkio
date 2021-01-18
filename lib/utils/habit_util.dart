@@ -3,6 +3,7 @@ import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_list_model.dart';
 import 'package:time/time.dart';
 import 'package:timefly/models/habit_peroid.dart';
+import 'package:timefly/utils/date_util.dart';
 
 class HabitUtil {
   ///按completeTime分类，子分类下按时间排序
@@ -95,9 +96,18 @@ class HabitUtil {
     return num;
   }
 
-  static int getDoDays(Habit habit) {
-    int num = 0;
-    return num;
+  ///获取一个月内记录多少次
+  static int getMonthDoNums(List<HabitRecord> checks) {
+    if (checks.length == 0) {
+      return 0;
+    }
+    DateTime now = DateTime.now();
+    DateTime firstDayOfMonth = DateUtil.firstDayOfMonth(now);
+    return checks
+        .where((check) =>
+            check.time >= firstDayOfMonth.millisecondsSinceEpoch &&
+            check.time <= now.millisecondsSinceEpoch)
+        .length;
   }
 
   static List<Habit> sortByCreateTime(List<Habit> habits) {
