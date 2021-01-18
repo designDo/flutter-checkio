@@ -68,7 +68,7 @@ class _AllHabitListViewState extends State<AllHabitListView>
         var closedHeight = AllHabitItemView.nominalHeightClosed;
         //Calculate scrollTo offset, subtract a bit so we don't end up perfectly at the top
         var offset =
-            selectedIndex * (closedHeight + _listPadding) - closedHeight * .3;
+            selectedIndex * (closedHeight + _listPadding) - closedHeight * .8;
         scrollController.animateTo(offset,
             duration: Duration(milliseconds: 700), curve: Curves.easeOutQuad);
       }

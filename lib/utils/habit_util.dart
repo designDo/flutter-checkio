@@ -45,6 +45,7 @@ class HabitUtil {
     int count = 1;
     for (int i = days.length - 1; i >= 0; i--) {
       DateTime dayi = getDay(days[i]);
+
       ///TODO 按周，排除没有选择的周期，也算连续
       DateTime nextDay = i == 0 ? null : getDay(days[i - 1]);
       if (isNextDay(dayi, nextDay) && nextDay != null) {
@@ -59,6 +60,25 @@ class HabitUtil {
       return 0;
     }
     return sort.first;
+  }
+
+  ///获取当前最大连续天数
+  static int getNowStreaks(Map<String, List<HabitRecord>> checks) {
+    List<String> days = checks.keys.toList();
+    int count = 0;
+    if (days.length == 0) {
+      return 0;
+    }
+    DateTime now = DateTime.now();
+    for (int i = 0; i < 10000; i++) {
+      DateTime lastDay = now - i.days;
+      if (days.contains('${lastDay.year}-${lastDay.month}-${lastDay.day}')) {
+        count++;
+      } else {
+        break;
+      }
+    }
+    return count;
   }
 
   static DateTime getDay(String day) {

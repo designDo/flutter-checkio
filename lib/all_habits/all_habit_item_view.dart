@@ -144,6 +144,16 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
               )
             ],
           ),
+          widget.habit.period == 1 ? weekContent() : normalContent()
+        ],
+      ),
+    );
+  }
+
+  Widget normalContent() {
+    return Expanded(
+      child: Row(
+        children: [
           SizedBox(
             width: 16,
           ),
@@ -153,7 +163,7 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                 overflow: TextOverflow.ellipsis,
                 style: AppTheme.appTheme.textStyle(
                     textColor: AppTheme.appTheme.textColorMain(),
-                    fontSize: 18,
+                    fontSize: 22,
                     fontWeight: FontWeight.w600)),
           ),
           SizedBox(
@@ -163,12 +173,13 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Icon(
-                    Icons.star_border,
-                    size: 25,
-                    color: Color(widget.habit.mainColor),
-                  ),
+                  Text('记录',
+                      style: AppTheme.appTheme.textStyle(
+                          textColor: AppTheme.appTheme.textColorSecond(),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600)),
                   SizedBox(
                     width: 3,
                   ),
@@ -176,9 +187,17 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                       style: AppTheme.appTheme
                           .textStyle(
                               textColor: AppTheme.appTheme.textColorMain(),
-                              fontSize: 22,
+                              fontSize: 26,
                               fontWeight: FontWeight.w600)
                           .copyWith(fontFamily: 'Montserrat')),
+                  SizedBox(
+                    width: 3,
+                  ),
+                  Text('次',
+                      style: AppTheme.appTheme.textStyle(
+                          textColor: AppTheme.appTheme.textColorSecond(),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600)),
                 ],
               ),
               SizedBox(
@@ -186,21 +205,29 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
               ),
               Row(
                 children: [
-                  Icon(
-                    Icons.star,
-                    size: 25,
-                    color: Color(widget.habit.mainColor),
-                  ),
+                  Text('连续',
+                      style: AppTheme.appTheme.textStyle(
+                          textColor: AppTheme.appTheme.textColorSecond(),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600)),
                   SizedBox(
                     width: 3,
                   ),
-                  Text('${HabitUtil.getMostStreaks(records)}',
+                  Text('${HabitUtil.getNowStreaks(records)}',
                       style: AppTheme.appTheme
                           .textStyle(
                               textColor: AppTheme.appTheme.textColorMain(),
-                              fontSize: 22,
+                              fontSize: 26,
                               fontWeight: FontWeight.w600)
                           .copyWith(fontFamily: 'Montserrat')),
+                  SizedBox(
+                    width: 3,
+                  ),
+                  Text('天',
+                      style: AppTheme.appTheme.textStyle(
+                          textColor: AppTheme.appTheme.textColorSecond(),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600))
                 ],
               ),
             ],
@@ -209,6 +236,102 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
             width: 18,
           )
         ],
+      ),
+    );
+  }
+
+  Widget weekContent() {
+    return Expanded(
+      child: Container(
+        child: Row(
+          children: [
+            SizedBox(
+              width: 16,
+            ),
+            Text(widget.habit.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTheme.appTheme.textStyle(
+                    textColor: AppTheme.appTheme.textColorMain(),
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600)),
+            Expanded(
+              child: SizedBox(),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Container(
+                  width: 118,
+                  height: 40,
+                  child: ListView.builder(
+                      itemCount: 7,
+                      physics: NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          decoration: BoxDecoration(
+                              color:
+                                  widget.habit.completeDays.contains(index + 1)
+                                      ? Color(widget.habit.mainColor)
+                                      : Colors.white,
+                              shape: BoxShape.rectangle,
+                              border:
+                                  widget.habit.completeDays.contains(index + 1)
+                                      ? null
+                                      : Border.all(
+                                          color: Color(widget.habit.mainColor)
+                                              .withOpacity(0.5),
+                                          width: 1),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(16))),
+                          margin: EdgeInsets.only(
+                              left: index == 0 ? 0 : 4,
+                              right: index == 6 ? 0 : 4),
+                          width: 10,
+                          height: 40,
+                        );
+                      }),
+                ),
+                SizedBox(
+                  height: 6,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text('记录',
+                        style: AppTheme.appTheme.textStyle(
+                            textColor: AppTheme.appTheme.textColorSecond(),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600)),
+                    SizedBox(
+                      width: 3,
+                    ),
+                    Text('${HabitUtil.getDoDays(widget.habit)}',
+                        style: AppTheme.appTheme
+                            .textStyle(
+                                textColor: AppTheme.appTheme.textColorMain(),
+                                fontSize: 26,
+                                fontWeight: FontWeight.w600)
+                            .copyWith(fontFamily: 'Montserrat')),
+                    SizedBox(
+                      width: 3,
+                    ),
+                    Text('次',
+                        style: AppTheme.appTheme.textStyle(
+                            textColor: AppTheme.appTheme.textColorSecond(),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600)),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(
+              width: 18,
+            )
+          ],
+        ),
       ),
     );
   }
