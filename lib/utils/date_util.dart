@@ -155,6 +155,11 @@ class DateUtil {
     return '${_twoDigits(dateTime.hour)}:${_twoDigits(dateTime.minute)}:${_twoDigits(dateTime.second)}';
   }
 
+  static String parseYearAndMonthAndDay(int time) {
+    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(time);
+    return '${dateTime.year} ${_twoDigits(dateTime.month)} ${_twoDigits(dateTime.day)}';
+  }
+
   static String _twoDigits(int n) {
     if (n >= 10) return '$n';
     return '0$n';

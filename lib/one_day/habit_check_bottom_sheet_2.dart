@@ -221,6 +221,18 @@ class _HabitCheckViewState extends State<HabitCheckView> {
                               .copyWith(fontFamily: 'Montserrat'),
                         ),
                       ),
+                      Container(
+                        margin: EdgeInsets.only(left: 24),
+                        child: Text(
+                          '${DateUtil.parseYearAndMonthAndDay(record.time)}',
+                          style: AppTheme.appTheme
+                              .textStyle(
+                                  textColor: Colors.black45,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16)
+                              .copyWith(fontFamily: 'Montserrat'),
+                        ),
+                      ),
                       GestureDetector(
                         onTap: () {
                           editNote(context, record);
