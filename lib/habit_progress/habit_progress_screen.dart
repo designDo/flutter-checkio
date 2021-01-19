@@ -41,6 +41,8 @@ class _HabitProgressScreenState extends State<HabitProgressScreen>
             }
             _habits = data.data;
             return ListView(
+              physics:
+              ClampingScrollPhysics(),
               padding: EdgeInsets.zero,
               children: [
                 WeekMonthChart(
