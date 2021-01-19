@@ -7,6 +7,7 @@ import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/models/complete_time.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/utils/system_util.dart';
+import 'package:timefly/widget/clip/bottom_cliper.dart';
 import 'package:timefly/widget/tab_indicator.dart';
 
 class AllHabitScreen extends StatefulWidget {
@@ -143,26 +144,5 @@ class _AllHabitScreenState extends State<AllHabitScreen> {
     return List<Habit>.from(_habits)
         .where((habit) => habit.completeTime == complete)
         .toList();
-  }
-}
-
-class BottomClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    var path = Path();
-    path.lineTo(0, 0);
-    path.lineTo(0, size.height - 50.0);
-    var firstControlPoint = Offset(size.width / 2, size.height);
-    var firstEdnPoint = Offset(size.width, size.height - 50.0);
-    path.quadraticBezierTo(firstControlPoint.dx, firstControlPoint.dy,
-        firstEdnPoint.dx, firstEdnPoint.dy);
-    path.lineTo(size.width, size.height - 50.0);
-    path.lineTo(size.width, 0);
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) {
-    return false;
   }
 }
