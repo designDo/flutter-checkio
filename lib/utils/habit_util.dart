@@ -133,4 +133,33 @@ class HabitUtil {
     });
     return recordsMap;
   }
+
+  ///一天内所有完成次数
+  static int getTotalDoNumsOfDay(List<Habit> habits, DateTime now) {
+    int num = 0;
+    DateTime start = DateUtil.startOfDay(now);
+    DateTime end = DateUtil.endOfDay(now);
+    habits.forEach((habit) {
+      num += habit.records
+          .where((record) =>
+              record.time >= start.millisecondsSinceEpoch &&
+              record.time <= end.millisecondsSinceEpoch)
+          .length;
+    });
+    return num;
+  }
+
+  ///一周内所有完成次数
+  static int getTotalDoNumsOfWeek(List<Habit> habits, DateTime now) {
+    int num = 0;
+    DateTime firstDayOfWeek = DateUtil.firstDayOfWeekend(now);
+    habits.forEach((habit) {
+      num += habit.records
+          .where((record) =>
+              record.time >= firstDayOfWeek.millisecondsSinceEpoch &&
+              record.time <= now.millisecondsSinceEpoch)
+          .length;
+    });
+    return num;
+  }
 }

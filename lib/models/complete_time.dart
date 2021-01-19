@@ -87,4 +87,32 @@ class CompleteDay {
     }
     return dayString;
   }
+
+  static String getSimpleDay(int day) {
+    String dayString = '';
+    switch (day) {
+      case 1:
+        dayString = '一';
+        break;
+      case 2:
+        dayString = '二';
+        break;
+      case 3:
+        dayString = '三';
+        break;
+      case 4:
+        dayString = '四';
+        break;
+      case 5:
+        dayString = '五';
+        break;
+      case 6:
+        dayString = '六';
+        break;
+      case 7:
+        dayString = '日';
+        break;
+    }
+    return dayString;
+  }
 }
