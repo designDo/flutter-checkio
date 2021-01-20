@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:timefly/models/complete_time.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/utils/habit_util.dart';
+import 'package:timefly/utils/pair.dart';
 import 'package:timefly/widget/clip/bottom_cliper.dart';
 import 'package:timefly/widget/tab_indicator.dart';
 import 'package:time/time.dart';
@@ -56,7 +57,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
             Container(
               alignment: Alignment.center,
               margin: EdgeInsets.only(
-                  top: MediaQuery.of(context).padding.top + 8,
+                  top: MediaQuery.of(context).padding.top + 24,
                   left: 16,
                   right: 16),
               child: TabBar(
@@ -92,7 +93,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
               height: 230,
               child: BarChart(
                 mainBarData(),
-                swapAnimationDuration: Duration(milliseconds: 300),
+                swapAnimationDuration: Duration(milliseconds: 250),
               ),
             ),
           ],
@@ -102,19 +103,34 @@ class _WeekMonthChartState extends State<WeekMonthChart>
   }
 
   BarChartData mainBarData() {
-    List<double> checks = List.generate(7, (i) => doNumsOfday(i));
-    List<double> temp = List.from(checks)..sort((a, b) => b.compareTo(a));
-    double maxY = temp.first;
+    List<Pair<double>> checks = List.generate(7, (i) => doNumsOfday(i));
+    double maxY = 0;
+    checks.forEach((pair) {
+      if (pair.x0 > maxY) {
+        maxY = pair.x0;
+      }
+      if (pair.x1 > maxY) {
+        maxY = pair.x1;
+      }
+    });
     return BarChartData(
+      maxY: maxY + 1,
       barTouchData: BarTouchData(
         touchTooltipData: BarTouchTooltipData(
+            fitInsideHorizontally: true,
+            fitInsideVertically: true,
+            tooltipRoundedRadius: 16,
+            tooltipBottomMargin: 8,
+            tooltipPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             tooltipBgColor: Colors.white,
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
               return BarTooltipItem(
-                  CompleteDay.getDay(group.x.toInt() + 1) +
-                      '\n' +
-                      (rod.y - 1).toString(),
-                  TextStyle(color: Colors.black));
+                  (rod.y - 1).toInt().toString(),
+                  TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Montserrat'));
             }),
         touchCallback: (barTouchResponse) {
           setState(() {
@@ -150,37 +166,49 @@ class _WeekMonthChartState extends State<WeekMonthChart>
     );
   }
 
-  List<BarChartGroupData> showingGroups(List<double> checks, double maxY) =>
+  List<BarChartGroupData> showingGroups(
+          List<Pair<double>> checks, double maxY) =>
       List.generate(7, (i) {
-        return makeGroupData(i, checks[i],
-            isTouched: i == touchedIndex, maxY: maxY + 1);
+        return makeGroupData(i, checks[i], isTouched: i == touchedIndex);
       });
 
-  double doNumsOfday(int index) {
-    return HabitUtil.getTotalDoNumsOfDay(
-            widget.habits, _now - (_now.weekday - (index + 1)).days)
-        .toDouble();
+  Pair<double> doNumsOfday(int index) {
+    return Pair<double>(
+        HabitUtil.getTotalDoNumsOfDay(
+                widget.habits, _now - (_now.weekday - (index + 1)).days)
+            .toDouble(),
+        HabitUtil.getTotalDoNumsOfDay(
+                widget.habits, _now - (_now.weekday - (index + 1) + 7).days)
+            .toDouble());
   }
 
-  BarChartGroupData makeGroupData(int x, double y,
-      {bool isTouched = false,
-      Color barColor = Colors.white,
-      double width = 22,
-      List<int> showTooltips = const [],
-      double maxY = 10}) {
+  BarChartGroupData makeGroupData(
+    int x,
+    Pair<double> y, {
+    bool isTouched = false,
+    double width = 12,
+    List<int> showTooltips = const [],
+  }) {
     return BarChartGroupData(
+      barsSpace: 6,
       x: x,
       barRods: [
         BarChartRodData(
-          y: isTouched ? y + 1 : y,
-          colors: isTouched ? [Colors.deepPurpleAccent] : [barColor],
+          y: isTouched ? (y.x0 > 0 ? y.x0 + 1 : 1) : (y.x0 > 0 ? y.x0 : 1),
+          colors: [Colors.white],
           width: width,
           backDrawRodData: BackgroundBarChartRodData(
-            show: true,
-            y: maxY,
-            colors: [Colors.white10],
+            show: false,
           ),
         ),
+        BarChartRodData(
+          y: isTouched ? (y.x1 > 0 ? y.x1 + 1 : 1) : (y.x1 > 0 ? y.x1 : 1),
+          colors: [Colors.indigo],
+          width: width,
+          backDrawRodData: BackgroundBarChartRodData(
+            show: false,
+          ),
+        )
       ],
       showingTooltipIndicators: showTooltips,
     );
