@@ -25,6 +25,10 @@ class _WeekMonthChartState extends State<WeekMonthChart>
 
   int touchedIndex;
 
+  ///当前周标示
+  ///0 当前周，1，上一周
+  int currentWeekIndex = 0;
+
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
@@ -165,30 +169,57 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                     children: [
                       Text(
                         'This Week',
-                        style: AppTheme.appTheme.textStyle(
-                            textColor: Color(0xFF5C5EDD),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22).copyWith(fontFamily: 'Montserrat'),
+                        style: AppTheme.appTheme
+                            .textStyle(
+                                textColor: Color(0xFF5C5EDD),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22)
+                            .copyWith(fontFamily: 'Montserrat'),
                       ),
                       SizedBox(
                         height: 8,
                       ),
                       Text('19-22 - 11-22',
-                          style: AppTheme.appTheme.textStyle(
-                              textColor: Color(0xFF5C5EDD).withOpacity(0.7),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18).copyWith(fontFamily: 'Montserrat'))
+                          style: AppTheme.appTheme
+                              .textStyle(
+                                  textColor: Color(0xFF5C5EDD).withOpacity(0.7),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18)
+                              .copyWith(fontFamily: 'Montserrat'))
                     ],
                   ),
                   SizedBox(
                     width: 60,
                   ),
                   InkWell(
-                    child: Icon(Icons.navigate_before,size: 40,color: Colors.indigo,),
+                    onTap: () {
+                      setState(() {
+                        currentWeekIndex += 1;
+                      });
+                    },
+                    child: Icon(
+                      Icons.navigate_before,
+                      size: 40,
+                      color: Colors.indigo,
+                    ),
                   ),
-                  SizedBox(width: 32,),
+                  SizedBox(
+                    width: 32,
+                  ),
                   InkWell(
-                    child: Icon(Icons.navigate_next,size: 40,color: Colors.indigo),
+                    onTap: () {
+                      if (currentWeekIndex == 0) {
+                        return;
+                      }
+                      setState(() {
+                        currentWeekIndex -= 1;
+                      });
+                    },
+                    child: Icon(Icons.navigate_next,
+                        size: 40,
+                        color: currentWeekIndex == 0
+                            ? Colors.grey
+                            : Colors.indigo),
                   )
                 ],
               ),
@@ -211,7 +242,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
       }
     });
     return BarChartData(
-      maxY: maxY + 1,
+      maxY: maxY > 5 ? maxY + 1 : 5,
       barTouchData: BarTouchData(
         touchTooltipData: BarTouchTooltipData(
             fitInsideHorizontally: true,
@@ -271,11 +302,14 @@ class _WeekMonthChartState extends State<WeekMonthChart>
 
   Pair<double> doNumsOfday(int index) {
     return Pair<double>(
-        HabitUtil.getTotalDoNumsOfDay(
-                widget.habits, _now - (_now.weekday - (index + 1)).days)
+        HabitUtil.getTotalDoNumsOfDay(widget.habits,
+                _now - (_now.weekday - (index + 1) + 7 * currentWeekIndex).days)
             .toDouble(),
         HabitUtil.getTotalDoNumsOfDay(
-                widget.habits, _now - (_now.weekday - (index + 1) + 7).days)
+                widget.habits,
+                _now -
+                    (_now.weekday - (index + 1) + 7 * (currentWeekIndex + 1))
+                        .days)
             .toDouble());
   }
 
