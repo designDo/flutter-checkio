@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:timefly/app_theme.dart';
 import 'package:timefly/models/complete_time.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/utils/habit_util.dart';
@@ -49,7 +50,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
             )),
-            height: 450,
+            height: 500,
           ),
         ),
         Column(
@@ -94,6 +95,102 @@ class _WeekMonthChartState extends State<WeekMonthChart>
               child: BarChart(
                 mainBarData(),
                 swapAnimationDuration: Duration(milliseconds: 250),
+              ),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: Colors.white),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  'Current Week',
+                  style: AppTheme.appTheme.textStyle(
+                    textColor: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                SizedBox(
+                  width: 16,
+                ),
+                Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: Colors.indigo),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  'Privouse Week',
+                  style: AppTheme.appTheme.textStyle(
+                    textColor: Colors.indigo,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                )
+              ],
+            ),
+
+            Container(
+              margin: EdgeInsets.only(left: 24, right: 24, top: 16, bottom: 16),
+              height: 100,
+              decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 18,
+                        offset: Offset(8, 4))
+                  ],
+                  color: Colors.white,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.all(Radius.circular(16))),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'This Week',
+                        style: AppTheme.appTheme.textStyle(
+                            textColor: Color(0xFF5C5EDD),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22).copyWith(fontFamily: 'Montserrat'),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Text('19-22 - 11-22',
+                          style: AppTheme.appTheme.textStyle(
+                              textColor: Color(0xFF5C5EDD).withOpacity(0.7),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18).copyWith(fontFamily: 'Montserrat'))
+                    ],
+                  ),
+                  SizedBox(
+                    width: 60,
+                  ),
+                  InkWell(
+                    child: Icon(Icons.navigate_before,size: 40,color: Colors.indigo,),
+                  ),
+                  SizedBox(width: 32,),
+                  InkWell(
+                    child: Icon(Icons.navigate_next,size: 40,color: Colors.indigo),
+                  )
+                ],
               ),
             ),
           ],
