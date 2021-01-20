@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/models/complete_time.dart';
 import 'package:timefly/models/habit.dart';
+import 'package:timefly/utils/date_util.dart';
 import 'package:timefly/utils/habit_util.dart';
 import 'package:timefly/utils/pair.dart';
 import 'package:timefly/widget/clip/bottom_cliper.dart';
@@ -117,7 +118,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                   width: 8,
                 ),
                 Text(
-                  'Current Week',
+                  '当前周',
                   style: AppTheme.appTheme.textStyle(
                     textColor: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -125,7 +126,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                   ),
                 ),
                 SizedBox(
-                  width: 16,
+                  width: 32,
                 ),
                 Container(
                   width: 8,
@@ -137,7 +138,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                   width: 8,
                 ),
                 Text(
-                  'Privouse Week',
+                  '上周',
                   style: AppTheme.appTheme.textStyle(
                     textColor: Colors.indigo,
                     fontWeight: FontWeight.bold,
@@ -168,7 +169,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'This Week',
+                        getWeekStr(),
                         style: AppTheme.appTheme
                             .textStyle(
                                 textColor: Color(0xFF5C5EDD),
@@ -179,7 +180,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                       SizedBox(
                         height: 8,
                       ),
-                      Text('19-22 - 11-22',
+                      Text(DateUtil.getWeekPeriodString(_now, currentWeekIndex),
                           style: AppTheme.appTheme
                               .textStyle(
                                   textColor: Color(0xFF5C5EDD).withOpacity(0.7),
@@ -230,8 +231,18 @@ class _WeekMonthChartState extends State<WeekMonthChart>
     );
   }
 
+  String getWeekStr() {
+    if (currentWeekIndex == 0) {
+      return '本周';
+    } else if (currentWeekIndex == 1) {
+      return '上周';
+    } else {
+      return '$currentWeekIndex周前';
+    }
+  }
+
   BarChartData mainBarData() {
-    List<Pair<double>> checks = List.generate(7, (i) => doNumsOfday(i));
+    List<Pair<double>> checks = List.generate(7, (i) => doNumsOfDay(i));
     double maxY = 0;
     checks.forEach((pair) {
       if (pair.x0 > maxY) {
@@ -300,7 +311,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
         return makeGroupData(i, checks[i], isTouched: i == touchedIndex);
       });
 
-  Pair<double> doNumsOfday(int index) {
+  Pair<double> doNumsOfDay(int index) {
     return Pair<double>(
         HabitUtil.getTotalDoNumsOfDay(widget.habits,
                 _now - (_now.weekday - (index + 1) + 7 * currentWeekIndex).days)
