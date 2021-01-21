@@ -123,7 +123,7 @@ class DateUtil {
     DateTime start = now - (weekend - 1 + 7 * weekIndex).days;
     DateTime end = start + 6.days;
 
-    return '${start.month},${start.day} - ${end.month},${end.day}';
+    return '${start.month}.${start.day} - ${end.month}.${end.day}';
   }
 
   static String getWeekendString(int weekday) {

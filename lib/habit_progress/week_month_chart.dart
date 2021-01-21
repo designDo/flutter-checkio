@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/models/complete_time.dart';
 import 'package:timefly/models/habit.dart';
@@ -103,46 +104,46 @@ class _WeekMonthChartState extends State<WeekMonthChart>
               ),
             ),
             SizedBox(
-              height: 16,
+              height: 12,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  width: 8,
-                  height: 8,
+                  width: 6,
+                  height: 6,
                   decoration: BoxDecoration(
                       shape: BoxShape.circle, color: Colors.white),
                 ),
                 SizedBox(
-                  width: 8,
+                  width: 5,
                 ),
                 Text(
                   '当前周',
                   style: AppTheme.appTheme.textStyle(
                     textColor: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 12,
                   ),
                 ),
                 SizedBox(
                   width: 32,
                 ),
                 Container(
-                  width: 8,
-                  height: 8,
+                  width: 6,
+                  height: 6,
                   decoration: BoxDecoration(
                       shape: BoxShape.circle, color: Colors.indigo),
                 ),
                 SizedBox(
-                  width: 8,
+                  width: 5,
                 ),
                 Text(
                   '上周',
                   style: AppTheme.appTheme.textStyle(
                     textColor: Colors.indigo,
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 12,
                   ),
                 )
               ],
@@ -150,6 +151,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
 
             Container(
               margin: EdgeInsets.only(left: 24, right: 24, top: 16, bottom: 16),
+              padding: EdgeInsets.only(left: 32, right: 32),
               height: 100,
               decoration: BoxDecoration(
                   boxShadow: [
@@ -174,11 +176,11 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                             .textStyle(
                                 textColor: Color(0xFF5C5EDD),
                                 fontWeight: FontWeight.bold,
-                                fontSize: 22)
+                                fontSize: 18)
                             .copyWith(fontFamily: 'Montserrat'),
                       ),
                       SizedBox(
-                        height: 8,
+                        height: 6,
                       ),
                       Text(DateUtil.getWeekPeriodString(_now, currentWeekIndex),
                           style: AppTheme.appTheme
@@ -189,8 +191,8 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                               .copyWith(fontFamily: 'Montserrat'))
                     ],
                   ),
-                  SizedBox(
-                    width: 60,
+                  Expanded(
+                    child: SizedBox(),
                   ),
                   InkWell(
                     onTap: () {
@@ -198,30 +200,32 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                         currentWeekIndex += 1;
                       });
                     },
-                    child: Icon(
-                      Icons.navigate_before,
-                      size: 40,
+                    child: SvgPicture.asset(
+                      'assets/images/navigation_left.svg',
                       color: Colors.indigo,
+                      width: 30,
+                      height: 30,
                     ),
                   ),
                   SizedBox(
                     width: 32,
                   ),
                   InkWell(
-                    onTap: () {
-                      if (currentWeekIndex == 0) {
-                        return;
-                      }
-                      setState(() {
-                        currentWeekIndex -= 1;
-                      });
-                    },
-                    child: Icon(Icons.navigate_next,
-                        size: 40,
-                        color: currentWeekIndex == 0
-                            ? Colors.grey
-                            : Colors.indigo),
-                  )
+                      onTap: () {
+                        if (currentWeekIndex == 0) {
+                          return;
+                        }
+                        setState(() {
+                          currentWeekIndex -= 1;
+                        });
+                      },
+                      child: SvgPicture.asset(
+                        'assets/images/navigation_right.svg',
+                        color:
+                            currentWeekIndex == 0 ? Colors.grey : Colors.indigo,
+                        width: 30,
+                        height: 30,
+                      ))
                 ],
               ),
             ),
@@ -253,7 +257,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
       }
     });
     return BarChartData(
-      maxY: maxY > 5 ? maxY + 1 : 5,
+      maxY: maxY >= 5 ? maxY + 1 : 5,
       barTouchData: BarTouchData(
         touchTooltipData: BarTouchTooltipData(
             fitInsideHorizontally: true,
