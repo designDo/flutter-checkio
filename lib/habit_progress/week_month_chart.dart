@@ -64,7 +64,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
             )),
-            height: 500,
+            height: 480,
           ),
         ),
         Column(
