@@ -120,7 +120,12 @@ class DateUtil {
 
   static String getWeekPeriodString(DateTime now, int weekIndex) {
     Pair<DateTime> peroid = getWeekStartAndEnd(now, weekIndex);
-    return '${peroid.x0.month}.${peroid.x0.day} - ${peroid.x1.month}.${peroid.x1.day}';
+    return '${twoDigits(peroid.x0.month)}.${twoDigits(peroid.x0.day)} - ${twoDigits(peroid.x1.month)}.${twoDigits(peroid.x1.day)}';
+  }
+
+  static String getMonthPeriodString(DateTime now, int monthIndex) {
+    Pair<DateTime> peroid = getMonthStartAndEnd(now, monthIndex);
+    return '${twoDigits(peroid.x0.month)}.${twoDigits(peroid.x0.day)} - ${twoDigits(peroid.x1.month)}.${twoDigits(peroid.x1.day)}';
   }
 
   ///根据当前时间获取，[monthIndex]个月的开始结束日期
@@ -168,20 +173,20 @@ class DateUtil {
 
   static String parseHourAndMin(int time) {
     DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(time);
-    return '${_twoDigits(dateTime.hour)}:${_twoDigits(dateTime.minute)}';
+    return '${twoDigits(dateTime.hour)}:${twoDigits(dateTime.minute)}';
   }
 
   static String parseHourAndMinAndSecond(int time) {
     DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(time);
-    return '${_twoDigits(dateTime.hour)}:${_twoDigits(dateTime.minute)}:${_twoDigits(dateTime.second)}';
+    return '${twoDigits(dateTime.hour)}:${twoDigits(dateTime.minute)}:${twoDigits(dateTime.second)}';
   }
 
   static String parseYearAndMonthAndDay(int time) {
     DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(time);
-    return '${dateTime.year} ${_twoDigits(dateTime.month)} ${_twoDigits(dateTime.day)}';
+    return '${dateTime.year} ${twoDigits(dateTime.month)} ${twoDigits(dateTime.day)}';
   }
 
-  static String _twoDigits(int n) {
+  static String twoDigits(int n) {
     if (n >= 10) return '$n';
     return '0$n';
   }

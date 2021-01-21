@@ -31,11 +31,19 @@ class _WeekMonthChartState extends State<WeekMonthChart>
   ///0 当前周，1，上一周
   int currentWeekIndex = 0;
 
+  ///当前月标示 0 当前月 1 上个月
+  int currentMonthIndex = 0;
+
+  ///当前Chart类型 0 周 1 月
+  int currentChart = 0;
+
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
-      print(_tabController.index);
+      setState(() {
+        currentChart = _tabController.index;
+      });
     });
     super.initState();
   }
@@ -98,10 +106,15 @@ class _WeekMonthChartState extends State<WeekMonthChart>
               padding: EdgeInsets.only(left: 32, right: 32),
               width: MediaQuery.of(context).size.width,
               height: 230,
-              child: BarChart(
-                weekBarData(),
-                swapAnimationDuration: Duration(milliseconds: 250),
-              ),
+              child: currentChart == 0
+                  ? BarChart(
+                      weekBarData(),
+                      swapAnimationDuration: Duration(milliseconds: 250),
+                    )
+                  : LineChart(
+                      monthLineData(),
+                      swapAnimationDuration: Duration(milliseconds: 250),
+                    ),
             ),
             SizedBox(
               height: 12,
@@ -119,7 +132,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                   width: 5,
                 ),
                 Text(
-                  '当前周',
+                  currentChart == 0 ? '当前周' : ' 当前月',
                   style: AppTheme.appTheme.textStyle(
                     textColor: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -139,7 +152,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                   width: 5,
                 ),
                 Text(
-                  '上周',
+                  currentChart == 0 ? '上一周' : '上一月',
                   style: AppTheme.appTheme.textStyle(
                     textColor: Colors.indigo,
                     fontWeight: FontWeight.bold,
@@ -151,7 +164,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
 
             Container(
               margin: EdgeInsets.only(left: 24, right: 24, top: 16, bottom: 16),
-              padding: EdgeInsets.only(left: 32, right: 32),
+              padding: EdgeInsets.only(left: 32, right: 24),
               height: 100,
               decoration: BoxDecoration(
                   boxShadow: [
@@ -171,7 +184,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        getWeekStr(),
+                        getWeekOrMonthStr(),
                         style: AppTheme.appTheme
                             .textStyle(
                                 textColor: Color(0xFF5C5EDD),
@@ -182,7 +195,12 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                       SizedBox(
                         height: 6,
                       ),
-                      Text(DateUtil.getWeekPeriodString(_now, currentWeekIndex),
+                      Text(
+                          currentChart == 0
+                              ? DateUtil.getWeekPeriodString(
+                                  _now, currentWeekIndex)
+                              : DateUtil.getMonthPeriodString(
+                                  _now, currentMonthIndex),
                           style: AppTheme.appTheme
                               .textStyle(
                                   textColor: Color(0xFF5C5EDD).withOpacity(0.7),
@@ -196,15 +214,21 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                   ),
                   InkWell(
                     onTap: () {
-                      setState(() {
-                        currentWeekIndex += 1;
-                      });
+                      if (currentChart == 0) {
+                        setState(() {
+                          currentWeekIndex += 1;
+                        });
+                      } else {
+                        setState(() {
+                          currentMonthIndex += 1;
+                        });
+                      }
                     },
                     child: SvgPicture.asset(
                       'assets/images/navigation_left.svg',
                       color: Colors.indigo,
-                      width: 30,
-                      height: 30,
+                      width: 28,
+                      height: 28,
                     ),
                   ),
                   SizedBox(
@@ -212,19 +236,28 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                   ),
                   InkWell(
                       onTap: () {
-                        if (currentWeekIndex == 0) {
-                          return;
+                        if (currentChart == 0) {
+                          if (currentWeekIndex == 0) {
+                            return;
+                          }
+                          setState(() {
+                            currentWeekIndex -= 1;
+                          });
+                        } else {
+                          if (currentMonthIndex == 0) {
+                            return;
+                          }
+                          setState(() {
+                            currentMonthIndex -= 1;
+                          });
                         }
-                        setState(() {
-                          currentWeekIndex -= 1;
-                        });
                       },
                       child: SvgPicture.asset(
                         'assets/images/navigation_right.svg',
                         color:
                             currentWeekIndex == 0 ? Colors.grey : Colors.indigo,
-                        width: 30,
-                        height: 30,
+                        width: 28,
+                        height: 28,
                       ))
                 ],
               ),
@@ -235,13 +268,23 @@ class _WeekMonthChartState extends State<WeekMonthChart>
     );
   }
 
-  String getWeekStr() {
-    if (currentWeekIndex == 0) {
-      return '本周';
-    } else if (currentWeekIndex == 1) {
-      return '上周';
+  String getWeekOrMonthStr() {
+    if (currentChart == 0) {
+      if (currentWeekIndex == 0) {
+        return '本周';
+      } else if (currentWeekIndex == 1) {
+        return '上周';
+      } else {
+        return '$currentWeekIndex周前';
+      }
     } else {
-      return '$currentWeekIndex周前';
+      if (currentMonthIndex == 0) {
+        return '本月';
+      } else if (currentMonthIndex == 1) {
+        return '上月';
+      } else {
+        return '$currentMonthIndex月前';
+      }
     }
   }
 
@@ -275,7 +318,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
       }
     });
     return BarChartData(
-      maxY: maxY >= 5 ? maxY + 1 : 5,
+      maxY: maxY >= 5 ? maxY * 1.3 : 5,
       barTouchData: BarTouchData(
         touchTooltipData: BarTouchTooltipData(
             fitInsideHorizontally: true,
@@ -374,128 +417,124 @@ class _WeekMonthChartState extends State<WeekMonthChart>
   /// month line chart
 
   LineChartData monthLineData() {
-    return LineChartData(
-      gridData: FlGridData(show: false),
-      titlesData: FlTitlesData(
-          show: true,
-          leftTitles: SideTitles(showTitles: false),
-          bottomTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 22,
-              getTextStyles: (value) => const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-              margin: 10,
-              getTitles: (value) {
-                switch (value.toInt()) {
-                  case 1:
-                    return '1';
-                  case 5:
-                    return '5';
-                  case 10:
-                    return '10';
-                  case 15:
-                    return '15';
-                  case 20:
-                    return '20';
-                  case 25:
-                    return '25';
-                  case 30:
-                    return '30';
-                  default:
-                    return '';
-                }
-              })),
-      borderData: FlBorderData(show: false),
-      maxX: 31,
-    );
-  }
+    Pair<DateTime> currentMonth =
+        DateUtil.getMonthStartAndEnd(_now, currentMonthIndex);
+    Pair<DateTime> previousMonth =
+        DateUtil.getMonthStartAndEnd(_now, currentMonthIndex + 1);
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-/*
-  LineChartData weekLineChart() {
-    Map<int, int> weekCheck = weekTotalNum();
-    List<int> valus = List.from(weekCheck.values)..sort((a, b) => b - a);
-    double maxY = valus.first.toDouble();
+    List<double> currentMonthNums = [];
+    for (int i = 0;
+        i < (currentMonthIndex == 0 ? _now.day : currentMonth.x1.day);
+        i++) {
+      currentMonthNums.add(
+          HabitUtil.getTotalDoNumsOfDay(widget.habits, currentMonth.x0 + i.days)
+              .toDouble());
+    }
+    List<double> previousMonthNums = [];
+    for (int i = 0; i < previousMonth.x1.day; i++) {
+      previousMonthNums.add(HabitUtil.getTotalDoNumsOfDay(
+              widget.habits, previousMonth.x0 + i.days)
+          .toDouble());
+    }
+    double maxY = 0;
+    currentMonthNums.forEach((num) {
+      if (num > maxY) {
+        maxY = num;
+      }
+    });
+    previousMonthNums.forEach((num) {
+      if (num > maxY) {
+        maxY = num;
+      }
+    });
     return LineChartData(
         gridData: FlGridData(show: false),
+        lineTouchData: LineTouchData(
+            handleBuiltInTouches: true,
+            getTouchedSpotIndicator: (bar, indexs) {
+              return indexs
+                  .map((e) => TouchedSpotIndicatorData(
+                      FlLine(color: Colors.transparent, strokeWidth: 2),
+                      FlDotData(show: false)))
+                  .toList();
+            },
+            touchTooltipData: LineTouchTooltipData(
+                tooltipPadding: EdgeInsets.all(8),
+                tooltipRoundedRadius: 16,
+                fitInsideVertically: true,
+                fitInsideHorizontally: true,
+                getTooltipItems: (spots) {
+                  return spots
+                      .map((spot) => (spot.barIndex == 1
+                          ? LineTooltipItem(
+                              '${(spot.y - 1).toInt()}\n${getMonthByIndex(spot.x.toInt())}',
+                              AppTheme.appTheme
+                                  .textStyle(
+                                      textColor: Colors.black,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold)
+                                  .copyWith(fontFamily: 'Montserrat'))
+                          : null))
+                      .toList();
+                })),
         titlesData: FlTitlesData(
-          show: true,
-          bottomTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 22,
-            getTextStyles: (value) => const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-            margin: 10,
-            getTitles: (value) {
-              return CompleteDay.getSimpleDay(value.toInt());
-            },
-          ),
-          leftTitles: SideTitles(
-            showTitles: false,
-            getTextStyles: (value) => const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-            getTitles: (value) {
-              switch (value.toInt()) {
-                case 1:
-                  return '1m';
-                case 2:
-                  return '2m';
-                case 3:
-                  return '8m';
-                case 4:
-                  return '12m';
-              }
-              return '';
-            },
-            margin: 15,
-            reservedSize: 40,
-          ),
-        ),
+            show: true,
+            leftTitles: SideTitles(showTitles: false),
+            bottomTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 22,
+                getTextStyles: (value) => const TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                margin: 20,
+                getTitles: (value) {
+                  switch (value.toInt()) {
+                    case 1:
+                      return '1';
+                    case 5:
+                      return '5';
+                    case 10:
+                      return '10';
+                    case 15:
+                      return '15';
+                    case 20:
+                      return '20';
+                    case 25:
+                      return '25';
+                    case 30:
+                      return '30';
+                    default:
+                      return '';
+                  }
+                })),
         borderData: FlBorderData(show: false),
+        lineBarsData: monthLines(currentMonthNums, previousMonthNums),
+        maxX: 31,
         minX: 1,
-        maxX: 7,
-        maxY: maxY * 2,
-        minY: 0,
-        lineBarsData: [weekLine(weekCheck)]);
+        minY: 1,
+        maxY: maxY > 5 ? maxY * 1.3 : 5);
   }
 
-  Map<int, int> weekTotalNum() {
-    DateTime now = DateTime.now();
-    Map<int, int> weekTotalNum = {};
-    for (int i = 1; i <= now.weekday; i++) {
-      weekTotalNum[i] =
-          HabitUtil.getTotalDoNumsOfDay(_habits, now - (i - 1).days);
+  List<LineChartBarData> monthLines(
+      List<double> currentMonthNums, List<double> previousMonthNums) {
+    List<FlSpot> currentMonthSpots = [];
+    for (int i = 0; i < currentMonthNums.length; i++) {
+      currentMonthSpots.add(FlSpot(
+          i + 1.0, currentMonthNums[i] > 0 ? currentMonthNums[i] + 1 : 1));
     }
-    return weekTotalNum;
-  }
-
-  LineChartBarData weekLine(Map<int, int> weekTotalNum) {
-    DateTime now = DateTime.now();
-    return LineChartBarData(
-        spots: List<int>.from(weekTotalNum.keys)
-            .map((day) => FlSpot(
-            day.toDouble(),
-            HabitUtil.getTotalDoNumsOfDay(_habits, now - (day - 1).days)
-                .toDouble()))
-            .toList()
-          ..add(FlSpot(3, 5)),
+    List<FlSpot> previousMonthSpots = [];
+    for (int i = 0; i < previousMonthNums.length; i++) {
+      previousMonthSpots.add(FlSpot(
+          i + 1.0, previousMonthNums[i] > 0 ? previousMonthNums[i] + 1 : 1));
+    }
+    return [
+      LineChartBarData(
+        spots: previousMonthSpots,
         isCurved: true,
         colors: [
-          Colors.redAccent,
+          Colors.indigo,
         ],
         barWidth: 8,
         isStrokeCapRound: true,
@@ -504,6 +543,38 @@ class _WeekMonthChartState extends State<WeekMonthChart>
         ),
         belowBarData: BarAreaData(
           show: false,
-        ));
-  }*/
+        ),
+      ),
+      LineChartBarData(
+        spots: currentMonthSpots,
+        curveSmoothness: .33,
+        isCurved: true,
+        colors: [
+          Colors.white,
+        ],
+        barWidth: 8,
+        isStrokeCapRound: true,
+        dotData: FlDotData(
+          show: false,
+        ),
+        belowBarData: BarAreaData(
+          show: false,
+        ),
+      ),
+    ];
+  }
+
+  String getMonthByIndex(int index) {
+    DateTime currentMonthFirstDay =
+        DateUtil.getMonthStartAndEnd(_now, currentMonthIndex).x0;
+    DateTime time =
+        DateTime(currentMonthFirstDay.year, currentMonthFirstDay.month, index);
+    return '${DateUtil.twoDigits(time.month)}.${DateUtil.twoDigits(time.day)}';
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 }
