@@ -484,10 +484,10 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                 showTitles: true,
                 reservedSize: 22,
                 getTextStyles: (value) => const TextStyle(
-                      color: Colors.black,
+                      color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
-                    ),
+                    ).copyWith(fontFamily: 'Montserrat'),
                 margin: 20,
                 getTitles: (value) {
                   switch (value.toInt()) {
@@ -514,7 +514,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
         maxX: 31,
         minX: 1,
         minY: 1,
-        maxY: maxY > 5 ? maxY * 1.3 : 5);
+        maxY: maxY >= 5 ? maxY * 1.3 : 5);
   }
 
   List<LineChartBarData> monthLines(
