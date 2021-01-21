@@ -1,5 +1,6 @@
 import 'package:time/time.dart';
 import 'package:timefly/models/habit.dart';
+import 'package:timefly/utils/pair.dart';
 
 class DateUtil {
   static bool isToday(int millisecondsSinceEpoch) {
@@ -118,12 +119,23 @@ class DateUtil {
   }
 
   static String getWeekPeriodString(DateTime now, int weekIndex) {
-    int weekend = now.weekday;
+    Pair<DateTime> peroid = getWeekStartAndEnd(now, weekIndex);
+    return '${peroid.x0.month}.${peroid.x0.day} - ${peroid.x1.month}.${peroid.x1.day}';
+  }
 
-    DateTime start = now - (weekend - 1 + 7 * weekIndex).days;
+  ///根据当前时间获取，[monthIndex]个月的开始结束日期
+  static Pair<DateTime> getMonthStartAndEnd(DateTime now, int monthIndex) {
+    DateTime start = DateTime(now.year, now.month - monthIndex, 1);
+    DateTime end = DateTime(now.year, now.month - monthIndex + 1, 0);
+    return Pair<DateTime>(start, end);
+  }
+
+  ///根据当前时间获取，[weekIndex]周前的开始结束日期
+  static Pair<DateTime> getWeekStartAndEnd(DateTime now, int weekIndex) {
+    DateTime _now = DateTime(now.year, now.month, now.day);
+    DateTime start = _now - (_now.weekday - 1 + 7 * weekIndex).days;
     DateTime end = start + 6.days;
-
-    return '${start.month}.${start.day} - ${end.month}.${end.day}';
+    return Pair<DateTime>(start, end);
   }
 
   static String getWeekendString(int weekday) {

@@ -99,7 +99,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
               width: MediaQuery.of(context).size.width,
               height: 230,
               child: BarChart(
-                mainBarData(),
+                weekBarData(),
                 swapAnimationDuration: Duration(milliseconds: 250),
               ),
             ),
@@ -245,15 +245,33 @@ class _WeekMonthChartState extends State<WeekMonthChart>
     }
   }
 
-  BarChartData mainBarData() {
-    List<Pair<double>> checks = List.generate(7, (i) => doNumsOfDay(i));
+  BarChartData weekBarData() {
+    Pair<DateTime> currentWeek =
+        DateUtil.getWeekStartAndEnd(_now, currentWeekIndex);
+    Pair<DateTime> previousWeek =
+        DateUtil.getWeekStartAndEnd(_now, currentWeekIndex + 1);
+
+    List<double> currentWeekNums = [];
+    for (int i = 0; i < 7; i++) {
+      currentWeekNums.add(
+          HabitUtil.getTotalDoNumsOfDay(widget.habits, currentWeek.x0 + i.days)
+              .toDouble());
+    }
+    List<double> previousWeekNums = [];
+    for (int i = 0; i < 7; i++) {
+      previousWeekNums.add(
+          HabitUtil.getTotalDoNumsOfDay(widget.habits, previousWeek.x0 + i.days)
+              .toDouble());
+    }
     double maxY = 0;
-    checks.forEach((pair) {
-      if (pair.x0 > maxY) {
-        maxY = pair.x0;
+    currentWeekNums.forEach((num) {
+      if (num > maxY) {
+        maxY = num;
       }
-      if (pair.x1 > maxY) {
-        maxY = pair.x1;
+    });
+    previousWeekNums.forEach((num) {
+      if (num > maxY) {
+        maxY = num;
       }
     });
     return BarChartData(
@@ -305,32 +323,21 @@ class _WeekMonthChartState extends State<WeekMonthChart>
       borderData: FlBorderData(
         show: false,
       ),
-      barGroups: showingGroups(checks, maxY),
+      barGroups: showingGroups(currentWeekNums, previousWeekNums, maxY),
     );
   }
 
-  List<BarChartGroupData> showingGroups(
-          List<Pair<double>> checks, double maxY) =>
+  List<BarChartGroupData> showingGroups(List<double> currentWeekNums,
+          List<double> previousWeekNums, double maxY) =>
       List.generate(7, (i) {
-        return makeGroupData(i, checks[i], isTouched: i == touchedIndex);
+        return makeGroupData(i, currentWeekNums[i], previousWeekNums[i],
+            isTouched: i == touchedIndex);
       });
-
-  Pair<double> doNumsOfDay(int index) {
-    return Pair<double>(
-        HabitUtil.getTotalDoNumsOfDay(widget.habits,
-                _now - (_now.weekday - (index + 1) + 7 * currentWeekIndex).days)
-            .toDouble(),
-        HabitUtil.getTotalDoNumsOfDay(
-                widget.habits,
-                _now -
-                    (_now.weekday - (index + 1) + 7 * (currentWeekIndex + 1))
-                        .days)
-            .toDouble());
-  }
 
   BarChartGroupData makeGroupData(
     int x,
-    Pair<double> y, {
+    double currentY,
+    double previousY, {
     bool isTouched = false,
     double width = 12,
     List<int> showTooltips = const [],
@@ -340,7 +347,9 @@ class _WeekMonthChartState extends State<WeekMonthChart>
       x: x,
       barRods: [
         BarChartRodData(
-          y: isTouched ? (y.x0 > 0 ? y.x0 + 1 : 1) : (y.x0 > 0 ? y.x0 : 1),
+          y: isTouched
+              ? (currentY > 0 ? currentY + 1 : 1)
+              : (currentY > 0 ? currentY : 1),
           colors: [Colors.white],
           width: width,
           backDrawRodData: BackgroundBarChartRodData(
@@ -348,7 +357,9 @@ class _WeekMonthChartState extends State<WeekMonthChart>
           ),
         ),
         BarChartRodData(
-          y: isTouched ? (y.x1 > 0 ? y.x1 + 1 : 1) : (y.x1 > 0 ? y.x1 : 1),
+          y: isTouched
+              ? (previousY > 0 ? previousY + 1 : 1)
+              : (previousY > 0 ? previousY : 1),
           colors: [Colors.indigo],
           width: width,
           backDrawRodData: BackgroundBarChartRodData(
@@ -357,6 +368,48 @@ class _WeekMonthChartState extends State<WeekMonthChart>
         )
       ],
       showingTooltipIndicators: showTooltips,
+    );
+  }
+
+  /// month line chart
+
+  LineChartData monthLineData() {
+    return LineChartData(
+      gridData: FlGridData(show: false),
+      titlesData: FlTitlesData(
+          show: true,
+          leftTitles: SideTitles(showTitles: false),
+          bottomTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 22,
+              getTextStyles: (value) => const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+              margin: 10,
+              getTitles: (value) {
+                switch (value.toInt()) {
+                  case 1:
+                    return '1';
+                  case 5:
+                    return '5';
+                  case 10:
+                    return '10';
+                  case 15:
+                    return '15';
+                  case 20:
+                    return '20';
+                  case 25:
+                    return '25';
+                  case 30:
+                    return '30';
+                  default:
+                    return '';
+                }
+              })),
+      borderData: FlBorderData(show: false),
+      maxX: 31,
     );
   }
 

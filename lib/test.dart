@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:timefly/models/habit.dart';
 import 'package:time/time.dart';
+import 'package:timefly/utils/date_util.dart';
 
 void main() {
   print("object");
@@ -57,7 +58,16 @@ void main() {
 
     print('$i 月天数为 $count');
   }
+  print(DateTime(2021, -1, 1));//2020-11-01
+  print(DateTime(2021, 0, 0));//2020-11-30
+  print(DateTime(2021, 0, 1)); //2020-12-01
+  print(DateTime(2021, 1, 0)); //2020-12-31
+  print(DateTime(2021, 1, 1)); //2021-01-01
+  print(DateTime(2021, 2, 0)); //2021-01-31
+  print(DateTime(2021, 2, 1)); //2021-02-01
+  print(DateTime(2021, 3, 0)); //2021-02-28
 
+  print(DateUtil.getWeekStartAndEnd(DateTime.now(), 1));
   List<String> days = [
     '2020-1-1',
     '2020-1-2',
