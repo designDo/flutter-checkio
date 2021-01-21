@@ -37,7 +37,7 @@ class _AllHabitScreenState extends State<AllHabitScreen> {
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
             )),
-            height: 250,
+            height: 240,
           ),
         ),
         Container(

@@ -18,7 +18,7 @@ class _AllHabitListViewState extends State<AllHabitListView>
 
   Habit _selectedHabit;
 
-  double _listPadding = 24;
+  double _listPadding = 16;
 
   @override
   void initState() {

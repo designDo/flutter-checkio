@@ -7,7 +7,7 @@ import 'package:timefly/utils/habit_util.dart';
 import 'package:timefly/widget/calendar_view.dart';
 
 class AllHabitItemView extends StatefulWidget {
-  static double nominalHeightClosed = 100;
+  static double nominalHeightClosed = 85;
   static double nominalHeightOpen = 287;
   final Habit habit;
 
@@ -50,7 +50,7 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
     return GestureDetector(
       onTap: _handleTap,
       child: AnimatedContainer(
-        margin: EdgeInsets.only(left: 24, right: 24),
+        margin: EdgeInsets.only(left: 18, right: 18),
         decoration: BoxDecoration(
             boxShadow: <BoxShadow>[
               BoxShadow(
@@ -104,14 +104,14 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
   Widget getTopContent() {
     return Container(
       alignment: Alignment.centerLeft,
-      height: 100,
+      height: 85,
       child: Row(
         children: [
           Stack(
             alignment: Alignment.bottomRight,
             children: [
               Container(
-                margin: EdgeInsets.only(left: 16),
+                margin: EdgeInsets.only(left: 6),
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
                     boxShadow: <BoxShadow>[
@@ -163,7 +163,7 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                 overflow: TextOverflow.ellipsis,
                 style: AppTheme.appTheme.textStyle(
                     textColor: AppTheme.appTheme.textColorMain(),
-                    fontSize: 22,
+                    fontSize: 18,
                     fontWeight: FontWeight.w600)),
           ),
           SizedBox(
@@ -178,7 +178,7 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                   Text('记录',
                       style: AppTheme.appTheme.textStyle(
                           textColor: AppTheme.appTheme.textColorSecond(),
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: FontWeight.w600)),
                   SizedBox(
                     width: 3,
@@ -187,7 +187,7 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                       style: AppTheme.appTheme
                           .textStyle(
                               textColor: AppTheme.appTheme.textColorMain(),
-                              fontSize: 26,
+                              fontSize: 22,
                               fontWeight: FontWeight.w600)
                           .copyWith(fontFamily: 'Montserrat')),
                   SizedBox(
@@ -196,7 +196,7 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                   Text('次',
                       style: AppTheme.appTheme.textStyle(
                           textColor: AppTheme.appTheme.textColorSecond(),
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: FontWeight.w600)),
                 ],
               ),
@@ -208,7 +208,7 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                   Text('连续',
                       style: AppTheme.appTheme.textStyle(
                           textColor: AppTheme.appTheme.textColorSecond(),
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: FontWeight.w600)),
                   SizedBox(
                     width: 3,
@@ -217,7 +217,7 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                       style: AppTheme.appTheme
                           .textStyle(
                               textColor: AppTheme.appTheme.textColorMain(),
-                              fontSize: 26,
+                              fontSize: 22,
                               fontWeight: FontWeight.w600)
                           .copyWith(fontFamily: 'Montserrat')),
                   SizedBox(
@@ -226,7 +226,7 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                   Text('天',
                       style: AppTheme.appTheme.textStyle(
                           textColor: AppTheme.appTheme.textColorSecond(),
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: FontWeight.w600))
                 ],
               ),
@@ -253,7 +253,7 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                 overflow: TextOverflow.ellipsis,
                 style: AppTheme.appTheme.textStyle(
                     textColor: AppTheme.appTheme.textColorMain(),
-                    fontSize: 22,
+                    fontSize: 18,
                     fontWeight: FontWeight.w600)),
             Expanded(
               child: SizedBox(),
@@ -263,8 +263,8 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Container(
-                  width: 118,
-                  height: 40,
+                  width: 66,
+                  height: 20,
                   child: ListView.builder(
                       itemCount: 7,
                       physics: NeverScrollableScrollPhysics(),
@@ -287,10 +287,10 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(16))),
                           margin: EdgeInsets.only(
-                              left: index == 0 ? 0 : 4,
-                              right: index == 6 ? 0 : 4),
-                          width: 10,
-                          height: 40,
+                              left: index == 0 ? 0 : 2,
+                              right: index == 6 ? 0 : 2),
+                          width: 6,
+                          height: 20,
                         );
                       }),
                 ),
@@ -303,7 +303,7 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                     Text('记录',
                         style: AppTheme.appTheme.textStyle(
                             textColor: AppTheme.appTheme.textColorSecond(),
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.w600)),
                     SizedBox(
                       width: 3,
@@ -312,7 +312,7 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                         style: AppTheme.appTheme
                             .textStyle(
                                 textColor: AppTheme.appTheme.textColorMain(),
-                                fontSize: 26,
+                                fontSize: 22,
                                 fontWeight: FontWeight.w600)
                             .copyWith(fontFamily: 'Montserrat')),
                     SizedBox(
@@ -321,7 +321,7 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                     Text('次',
                         style: AppTheme.appTheme.textStyle(
                             textColor: AppTheme.appTheme.textColorSecond(),
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.w600)),
                   ],
                 ),
