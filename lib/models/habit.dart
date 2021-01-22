@@ -82,6 +82,9 @@ class Habit extends Equatable {
 
   List<HabitRecord> records;
 
+  ///历史最大连续天数
+  int historyMostStreak = 0;
+
   Habit(
       {this.id,
       this.name,
@@ -96,7 +99,8 @@ class Habit extends Equatable {
       this.modifyTime,
       this.completed,
       this.doNum,
-      this.records});
+      this.records,
+      this.historyMostStreak});
 
   @override
   String toString() {
@@ -200,7 +204,8 @@ class Habit extends Equatable {
         this.modifyTime,
         this.completed,
         this.doNum,
-        this.records
+        this.records,
+        this.historyMostStreak
       ];
 
   Habit copyWith(
@@ -217,7 +222,8 @@ class Habit extends Equatable {
       int modifyTime,
       bool completed,
       int doNum,
-      List<HabitRecord> records}) {
+      List<HabitRecord> records,
+      int historyMostStreak}) {
     return Habit(
         id: id ?? this.id,
         name: name ?? this.name,
@@ -232,6 +238,7 @@ class Habit extends Equatable {
         modifyTime: modifyTime ?? this.modifyTime,
         completed: completed ?? this.completed,
         doNum: doNum ?? this.doNum,
-        records: records ?? this.records);
+        records: records ?? this.records,
+        historyMostStreak: historyMostStreak ?? this.historyMostStreak);
   }
 }

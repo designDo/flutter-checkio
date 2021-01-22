@@ -44,12 +44,12 @@ class HabitUtil {
     List<String> days = checks.keys.toList();
     List<int> sort = [];
     int count = 1;
-    for (int i = days.length - 1; i >= 0; i--) {
+    for (int i = days.length - 1; i > 0; i--) {
       DateTime dayi = getDay(days[i]);
 
-      ///TODO 按周，排除没有选择的周期，也算连续
-      DateTime nextDay = i == 0 ? null : getDay(days[i - 1]);
-      if (isNextDay(dayi, nextDay) && nextDay != null) {
+      ///只算天和月，周无法统计连续
+      DateTime nextDay = getDay(days[i - 1]);
+      if (isNextDay(dayi, nextDay)) {
         count++;
       } else {
         sort.add(int.parse('$count'));
@@ -60,7 +60,7 @@ class HabitUtil {
     if (sort.length == 0) {
       return 0;
     }
-    return sort.first;
+    return sort.first + 1;
   }
 
   ///获取当前最大连续天数
@@ -200,6 +200,26 @@ class HabitUtil {
         currentMaxDoNum = habit.records.length;
       } else if (habit.records.length == currentMaxDoNum) {
         newHabits.add(habit);
+      }
+    });
+    return newHabits;
+  }
+
+  ///获取历史拥有最大连续次数的习惯们
+  static List<Habit> getMostHistoryStreakHabits(List<Habit> habits) {
+    List<Habit> newHabits = [];
+    int currentMaxStreak = 0;
+    habits.forEach((habit) {
+      if (habit.period != 1) {
+        int streak = getMostStreaks(combinationRecords(habit.records));
+        habit.historyMostStreak = streak;
+        if (streak > currentMaxStreak) {
+          newHabits.clear();
+          newHabits.add(habit);
+          currentMaxStreak = streak;
+        } else if (streak == currentMaxStreak) {
+          newHabits.add(habit);
+        }
       }
     });
     return newHabits;
