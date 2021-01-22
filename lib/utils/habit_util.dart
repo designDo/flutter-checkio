@@ -162,4 +162,30 @@ class HabitUtil {
     });
     return num;
   }
+
+  ///所有完成次数
+  static int getTotalDoNumsOfHistory(List<Habit> habits) {
+    int num = 0;
+    habits.forEach((habit) {
+      num += habit.records.length;
+    });
+    return num;
+  }
+
+  ///获取记录总天数，哪怕一天就一次也算
+  static int getTotalDaysOfHistory(List<Habit> habits) {
+    List<String> days = [];
+    DateTime recordTime;
+    habits.forEach((habit) {
+      habit.records.forEach((record) {
+        recordTime = DateTime.fromMillisecondsSinceEpoch(record.time);
+        String dayString =
+            '${recordTime.year}-${recordTime.month}-${recordTime.day}';
+        if (!days.contains(dayString)) {
+          days.add(dayString);
+        }
+      });
+    });
+    return days.length;
+  }
 }

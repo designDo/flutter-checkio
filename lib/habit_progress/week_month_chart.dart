@@ -169,8 +169,8 @@ class _WeekMonthChartState extends State<WeekMonthChart>
               decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 18,
+                        color: Colors.black.withOpacity(.1),
+                        blurRadius: 16,
                         offset: Offset(8, 4))
                   ],
                   color: Colors.white,
