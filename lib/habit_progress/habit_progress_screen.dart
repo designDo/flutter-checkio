@@ -43,14 +43,18 @@ class _HabitProgressScreenState extends State<HabitProgressScreen>
             _habits = data.data;
             return ListView(
               physics: ClampingScrollPhysics(),
-              padding: EdgeInsets.zero,
+              padding: EdgeInsets.only(
+                  top: 0, bottom: MediaQuery.of(context).padding.bottom),
               children: [
                 WeekMonthChart(
                   habits: _habits,
                 ),
-                MostCheckAndStreaksView(
+                TotalCheckAndDaysView(
                   habits: _habits,
-                )
+                ),
+                MostChecksView(
+                  habits: _habits,
+                ),
               ],
             );
           }),
@@ -64,15 +68,15 @@ class _HabitProgressScreenState extends State<HabitProgressScreen>
   }
 }
 
-class MostCheckAndStreaksView extends StatelessWidget {
+class TotalCheckAndDaysView extends StatelessWidget {
   final List<Habit> habits;
 
-  const MostCheckAndStreaksView({Key key, this.habits}) : super(key: key);
+  const TotalCheckAndDaysView({Key key, this.habits}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 24, right: 24, top: 8, bottom: 16),
+      margin: EdgeInsets.only(left: 24, right: 24, top: 6, bottom: 16),
       child: Row(
         children: [
           Expanded(
@@ -162,6 +166,113 @@ class MostCheckAndStreaksView extends StatelessWidget {
                   ],
                 ),
               ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class MostChecksView extends StatelessWidget {
+  final List<Habit> habits;
+
+  const MostChecksView({Key key, this.habits}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    List<Habit> mostDoNumHabits = HabitUtil.getMostDoNumHabits(habits);
+    return Container(
+      decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.all(Radius.circular(16)),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black.withOpacity(.1),
+                blurRadius: 16,
+                offset: Offset(4, 4))
+          ]),
+      width: double.infinity,
+      padding: EdgeInsets.all(16),
+      margin: EdgeInsets.only(left: 24, right: 24, top: 8, bottom: 16),
+      child: Stack(
+        alignment: Alignment.topRight,
+        children: [
+          Container(
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '记录次数最多的习惯',
+                  style: AppTheme.appTheme.textStyle(
+                      textColor: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                Wrap(
+                    spacing: 16,
+                    runSpacing: 16,
+                    children: mostDoNumHabits
+                        .map<Widget>((habit) => Container(
+                              padding: EdgeInsets.only(
+                                  left: 16, top: 8, right: 16, bottom: 8),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(32)),
+                                color: Color(0xFF5C5EDD).withOpacity(0.44),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                        boxShadow: <BoxShadow>[
+                                          BoxShadow(
+                                              color: Color(habit.mainColor)
+                                                  .withOpacity(0.3),
+                                              offset: Offset(0, 7),
+                                              blurRadius: 10)
+                                        ],
+                                        shape: BoxShape.circle,
+                                        color: Color(habit.mainColor)
+                                            .withOpacity(0.5)),
+                                    width: 32,
+                                    height: 32,
+                                    child: Image.asset(habit.iconPath),
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  Text(habit.name,
+                                      style: AppTheme.appTheme.textStyle(
+                                          textColor: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600))
+                                ],
+                              ),
+                            ))
+                        .toList()),
+              ],
+            ),
+          ),
+          Container(
+            alignment: Alignment.centerRight,
+            margin: EdgeInsets.only(top: 8, right: 8),
+            child: Text(
+              '${mostDoNumHabits.length == 0 ? 0 : mostDoNumHabits[0].records.length}',
+              style: AppTheme.appTheme
+                  .textStyle(
+                      textColor: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30)
+                  .copyWith(fontFamily: 'Montserrat'),
             ),
           )
         ],

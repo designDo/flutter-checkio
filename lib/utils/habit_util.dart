@@ -188,4 +188,20 @@ class HabitUtil {
     });
     return days.length;
   }
+
+  ///获取记录次数最多的所有习惯
+  static List<Habit> getMostDoNumHabits(List<Habit> habits) {
+    List<Habit> newHabits = [];
+    int currentMaxDoNum = 0;
+    habits.forEach((habit) {
+      if (habit.records.length > currentMaxDoNum) {
+        newHabits.clear();
+        newHabits.add(habit);
+        currentMaxDoNum = habit.records.length;
+      } else if (habit.records.length == currentMaxDoNum) {
+        newHabits.add(habit);
+      }
+    });
+    return newHabits;
+  }
 }
