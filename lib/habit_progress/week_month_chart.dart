@@ -254,8 +254,10 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                       },
                       child: SvgPicture.asset(
                         'assets/images/navigation_right.svg',
-                        color:
-                            currentWeekIndex == 0 ? Colors.grey : Colors.indigo,
+                        color: ((currentChart == 0 && currentWeekIndex == 0) ||
+                                (currentChart == 1 && currentMonthIndex == 0))
+                            ? Colors.grey
+                            : Colors.indigo,
                         width: 28,
                         height: 28,
                       ))
@@ -455,7 +457,21 @@ class _WeekMonthChartState extends State<WeekMonthChart>
               return indexs
                   .map((e) => TouchedSpotIndicatorData(
                       FlLine(color: Colors.transparent, strokeWidth: 2),
-                      FlDotData(show: false)))
+                      FlDotData(
+                          show: true,
+                          getDotPainter: (FlSpot spot, double xPercentage,
+                              LineChartBarData bar, int index) {
+                            return FlDotCirclePainter(
+                                radius: 8.5,
+                                color: bar.colors[0].value == Colors.white.value
+                                    ? bar.colors[0]
+                                    : Colors.transparent,
+                                strokeColor:
+                                    bar.colors[0].value == Colors.white.value
+                                        ? Colors.black12
+                                        : Colors.transparent,
+                                strokeWidth: 1);
+                          })))
                   .toList();
             },
             touchTooltipData: LineTouchTooltipData(
@@ -532,11 +548,12 @@ class _WeekMonthChartState extends State<WeekMonthChart>
     return [
       LineChartBarData(
         spots: previousMonthSpots,
+        curveSmoothness: .2,
         isCurved: true,
         colors: [
           Colors.indigo,
         ],
-        barWidth: 8,
+        barWidth: 5,
         isStrokeCapRound: true,
         dotData: FlDotData(
           show: false,
@@ -547,12 +564,12 @@ class _WeekMonthChartState extends State<WeekMonthChart>
       ),
       LineChartBarData(
         spots: currentMonthSpots,
-        curveSmoothness: .33,
+        curveSmoothness: .2,
         isCurved: true,
         colors: [
           Colors.white,
         ],
-        barWidth: 8,
+        barWidth: 5,
         isStrokeCapRound: true,
         dotData: FlDotData(
           show: false,
