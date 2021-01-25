@@ -117,7 +117,7 @@ class TotalCheckAndDaysView extends StatelessWidget {
                           .textStyle(
                               textColor: Colors.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: 18)
+                              fontSize: 16)
                           .copyWith(fontFamily: 'Montserrat'),
                     )
                   ],
@@ -163,7 +163,7 @@ class TotalCheckAndDaysView extends StatelessWidget {
                           .textStyle(
                               textColor: Colors.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: 18)
+                              fontSize: 16)
                           .copyWith(fontFamily: 'Montserrat'),
                     )
                   ],
@@ -211,7 +211,7 @@ class MostChecksView extends StatelessWidget {
                   '记录次数最多的习惯们',
                   style: AppTheme.appTheme.textStyle(
                       textColor: Colors.black,
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
@@ -246,8 +246,8 @@ class MostChecksView extends StatelessWidget {
                                         shape: BoxShape.circle,
                                         color: Color(habit.mainColor)
                                             .withOpacity(0.5)),
-                                    width: 32,
-                                    height: 32,
+                                    width: 38,
+                                    height: 38,
                                     child: Image.asset(habit.iconPath),
                                   ),
                                   SizedBox(
@@ -256,7 +256,7 @@ class MostChecksView extends StatelessWidget {
                                   Text(habit.name,
                                       style: AppTheme.appTheme.textStyle(
                                           textColor: Colors.black,
-                                          fontSize: 16,
+                                          fontSize: 14,
                                           fontWeight: FontWeight.w600))
                                 ],
                               ),
@@ -267,7 +267,7 @@ class MostChecksView extends StatelessWidget {
           ),
           Container(
             alignment: Alignment.centerRight,
-            margin: EdgeInsets.only(top: 8, right: 8),
+            margin: EdgeInsets.only(top: 4, right: 4),
             child: Text(
               '${mostDoNumHabits.length == 0 ? 0 : mostDoNumHabits[0].records.length}',
               style: AppTheme.appTheme
@@ -318,7 +318,7 @@ class MostStreaksView extends StatelessWidget {
                   '历史连续天数最多的习惯们',
                   style: AppTheme.appTheme.textStyle(
                       textColor: Colors.black,
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
@@ -353,8 +353,8 @@ class MostStreaksView extends StatelessWidget {
                                         shape: BoxShape.circle,
                                         color: Color(habit.mainColor)
                                             .withOpacity(0.5)),
-                                    width: 32,
-                                    height: 32,
+                                    width: 38,
+                                    height: 38,
                                     child: Image.asset(habit.iconPath),
                                   ),
                                   SizedBox(
@@ -363,7 +363,7 @@ class MostStreaksView extends StatelessWidget {
                                   Text(habit.name,
                                       style: AppTheme.appTheme.textStyle(
                                           textColor: Colors.black,
-                                          fontSize: 16,
+                                          fontSize: 14,
                                           fontWeight: FontWeight.w600))
                                 ],
                               ),
@@ -374,7 +374,7 @@ class MostStreaksView extends StatelessWidget {
           ),
           Container(
             alignment: Alignment.centerRight,
-            margin: EdgeInsets.only(top: 8, right: 8),
+            margin: EdgeInsets.only(top: 4, right: 4),
             child: Text(
               '${mostStreakHabits.length == 0 ? 0 : mostStreakHabits[0].historyMostStreak}',
               style: AppTheme.appTheme
