@@ -23,7 +23,7 @@ class HabitEditPage extends StatefulWidget {
 }
 
 class _HabitEditPageState extends State<HabitEditPage>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   String _habitIcon;
   Color _habitColor;
 
@@ -36,6 +36,7 @@ class _HabitEditPageState extends State<HabitEditPage>
   String _mark = '';
 
   AnimationController fontAnimationController;
+  AnimationController bottonAnimationController;
 
   @override
   void initState() {
@@ -53,12 +54,39 @@ class _HabitEditPageState extends State<HabitEditPage>
     fontAnimationController =
         AnimationController(duration: Duration(milliseconds: 300), vsync: this);
     fontAnimationController.forward(from: 0.5);
+
+    bottonAnimationController =
+        AnimationController(duration: Duration(milliseconds: 300), vsync: this);
+
+    WidgetsBinding.instance.addObserver(this);
+
+    Future.delayed(Duration(milliseconds: 500), () {
+      bottonAnimationController.forward();
+    });
+
     super.initState();
+  }
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        bool keybordShow = MediaQuery.of(context).viewInsets.bottom > 0;
+        if (keybordShow) {
+          bottonAnimationController.reverse();
+        } else {
+          bottonAnimationController.forward();
+        }
+      });
+    });
   }
 
   @override
   void dispose() {
     fontAnimationController.dispose();
+    bottonAnimationController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -169,6 +197,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                             fontSize: 15),
                         onValueChanged: (value) {
                           _name = value;
+                          print('change');
                         },
                       ),
                       SizedBox(
@@ -317,33 +346,38 @@ class _HabitEditPageState extends State<HabitEditPage>
               BlocProvider.of<HabitsBloc>(context).add(HabitsAdd(habit));
               Navigator.of(context).pop(habit);
             },
-            child: Container(
-              alignment: Alignment.center,
-              margin: EdgeInsets.only(bottom: 32),
-              height: 55,
-              width: 220,
-              decoration: BoxDecoration(
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                        color: Color(0xFF738AE6).withOpacity(0.5),
-                        offset: const Offset(5.1, 4.0),
-                        blurRadius: 16.0),
-                  ],
-                  gradient: LinearGradient(
-                    colors: <Color>[
-                      Color(0xFF738AE6),
-                      Color(0xFF5C5EDD),
+            child: ScaleTransition(
+              scale: CurvedAnimation(
+                  parent: bottonAnimationController,
+                  curve: Curves.fastOutSlowIn),
+              child: Container(
+                alignment: Alignment.center,
+                margin: EdgeInsets.only(bottom: 32),
+                height: 55,
+                width: 220,
+                decoration: BoxDecoration(
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                          color: Color(0xFF738AE6).withOpacity(0.5),
+                          offset: const Offset(5.1, 4.0),
+                          blurRadius: 16.0),
                     ],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                  borderRadius: BorderRadius.all(Radius.circular(35))),
-              child: Text(
-                '保存',
-                style: AppTheme.appTheme.textStyle(
-                    textColor: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600),
+                    gradient: LinearGradient(
+                      colors: <Color>[
+                        Color(0xFF738AE6),
+                        Color(0xFF5C5EDD),
+                      ],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(35))),
+                child: Text(
+                  '保存',
+                  style: AppTheme.appTheme.textStyle(
+                      textColor: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600),
+                ),
               ),
             ),
           )
