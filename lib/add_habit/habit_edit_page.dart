@@ -66,213 +66,287 @@ class _HabitEditPageState extends State<HabitEditPage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.appTheme.cardBackgroundColor(),
-      body: Column(
+      body: Stack(
+        alignment: Alignment.bottomCenter,
         children: [
-          barView(),
-          Expanded(
-            child: Container(
-              child: ListView(
-                padding: EdgeInsets.only(bottom: 20),
-                children: [
-                  SizedBox(
-                    height: 12,
-                  ),
-                  Container(
-                    height: 60,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(left: 16),
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(boxShadow: <BoxShadow>[
-                            BoxShadow(
-                                color: _habitColor.withOpacity(0.3),
-                                offset: Offset(0, 7),
-                                blurRadius: 10)
-                          ], shape: BoxShape.circle, color: _habitColor),
-                          width: 60,
-                          height: 60,
-                          child: Image.asset(_habitIcon),
-                        ),
-                        Container(
-                          alignment: Alignment.bottomCenter,
-                          height: 60,
-                          width: 30,
-                          child: InkWell(
-                            onTap: () async {
-                              Map<String, dynamic> result = await showDialog(
-                                  context: context,
-                                  barrierColor: Colors.black87,
-                                  builder: (context) {
-                                    return IconAndColorPage(
-                                        selectedIcon: _habitIcon,
-                                        selectedColor: _habitColor);
-                                  });
-                              if (result != null) {
-                                setState(() {
-                                  _habitIcon = result['icon'];
-                                  _habitColor = result['color'];
-                                });
-                              }
-                            },
-                            child: SvgPicture.asset(
-                              'assets/images/bianji.svg',
-                              color: Colors.black,
-                              width: 30,
-                              height: 30,
+          Column(
+            children: [
+              barView(),
+              Expanded(
+                child: Container(
+                  child: ListView(
+                    padding: EdgeInsets.only(bottom: 20),
+                    children: [
+                      SizedBox(
+                        height: 12,
+                      ),
+                      Container(
+                        height: 60,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(left: 16),
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(boxShadow: <BoxShadow>[
+                                BoxShadow(
+                                    color: _habitColor.withOpacity(0.3),
+                                    offset: Offset(0, 7),
+                                    blurRadius: 10)
+                              ], shape: BoxShape.circle, color: _habitColor),
+                              width: 60,
+                              height: 60,
+                              child: Image.asset(_habitIcon),
                             ),
-                          ),
-                        )
-                      ],
-                    ),
+                            Container(
+                              alignment: Alignment.bottomCenter,
+                              height: 60,
+                              width: 30,
+                              child: InkWell(
+                                onTap: () async {
+                                  Map<String, dynamic> result =
+                                      await showDialog(
+                                          context: context,
+                                          barrierColor: Colors.black87,
+                                          builder: (context) {
+                                            return IconAndColorPage(
+                                                selectedIcon: _habitIcon,
+                                                selectedColor: _habitColor);
+                                          });
+                                  if (result != null) {
+                                    setState(() {
+                                      _habitIcon = result['icon'];
+                                      _habitColor = result['color'];
+                                    });
+                                  }
+                                },
+                                child: SvgPicture.asset(
+                                  'assets/images/bianji.svg',
+                                  color: Colors.black,
+                                  width: 30,
+                                  height: 30,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      CustomEditField(
+                        maxLines: 1,
+                        maxLength: 10,
+                        initValue: '',
+                        hintText: '名字 ...',
+                        hintTextStyle: AppTheme.appTheme.textStyle(
+                            textColor: Colors.black.withOpacity(0.6),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                        textStyle: AppTheme.appTheme.textStyle(
+                            textColor: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                        containerDecoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                            color: AppTheme.appTheme
+                                .containerBackgroundColor()
+                                .withOpacity(0.6)),
+                        numDecoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                  color: Colors.black26,
+                                  offset: Offset(3, 3),
+                                  blurRadius: 6)
+                            ]),
+                        numTextStyle: TextStyle(
+                            color: Color(0xFF5C5EDD),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15),
+                        onValueChanged: (value) {
+                          _name = value;
+                        },
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        margin: EdgeInsets.only(left: 18, top: 8),
+                        child: Text(
+                          '时段',
+                          style: AppTheme.appTheme.textStyle(
+                              textColor: Colors.black,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18),
+                        ),
+                      ),
+                      timeView(),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        margin: EdgeInsets.only(left: 18),
+                        child: Text(
+                          '周期',
+                          style: AppTheme.appTheme.textStyle(
+                              textColor: Colors.black,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18),
+                        ),
+                      ),
+                      periodChooseView(),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        margin: EdgeInsets.only(left: 18),
+                        child: Text(
+                          '每${HabitPeroid.getPeroid(currentPeroid)}完成次数',
+                          style: AppTheme.appTheme.textStyle(
+                              textColor: Colors.black,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18),
+                        ),
+                      ),
+                      completeCountView(),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        margin: EdgeInsets.only(left: 18, top: 8),
+                        child: Text(
+                          '提醒时间',
+                          style: AppTheme.appTheme.textStyle(
+                              textColor: Colors.black,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18),
+                        ),
+                      ),
+                      timeReminderView(),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        margin: EdgeInsets.only(left: 18, top: 16),
+                        child: Text(
+                          '写一句话鼓励自己',
+                          style: AppTheme.appTheme.textStyle(
+                              textColor: Colors.black,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18),
+                        ),
+                      ),
+                      CustomEditField(
+                        maxLength: 50,
+                        initValue: _mark,
+                        hintText: '千里之行，始于足下 ...',
+                        hintTextStyle: AppTheme.appTheme.textStyle(
+                            textColor: Colors.black.withOpacity(0.6),
+                            fontWeight: FontWeight.normal,
+                            fontSize: 16),
+                        textStyle: AppTheme.appTheme.textStyle(
+                            textColor: Colors.black,
+                            fontWeight: FontWeight.normal,
+                            fontSize: 16),
+                        minHeight: 100,
+                        containerDecoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                            color: AppTheme.appTheme
+                                .containerBackgroundColor()
+                                .withOpacity(0.6)),
+                        numDecoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                  color: Colors.black26,
+                                  offset: Offset(3, 3),
+                                  blurRadius: 6)
+                            ]),
+                        numTextStyle: TextStyle(
+                            color: Color(0xFF5C5EDD),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15),
+                        onValueChanged: (value) {
+                          _mark = value;
+                        },
+                      ),
+                      SizedBox(
+                        height: 82,
+                      )
+                    ],
                   ),
-                  SizedBox(
-                    height: 8,
+                ),
+              ),
+            ],
+          ),
+          GestureDetector(
+            onTap: () async {
+              if (_name.length == 0) {
+                Fluttertoast.showToast(
+                    msg: '请输入名字',
+                    toastLength: Toast.LENGTH_SHORT,
+                    backgroundColor: Color(0xFF738AE6),
+                    gravity: ToastGravity.CENTER);
+                return;
+              }
+              Habit habit = Habit(
+                  id: Uuid().generateV4(),
+                  name: _name,
+                  iconPath: _habitIcon,
+                  mainColor: _habitColor.value,
+                  mark: _mark,
+                  period: currentPeroid,
+                  doNum: getCurrentCount(),
+                  completeTime: completeTimes
+                      .where((element) => element.isSelect)
+                      .first
+                      .time,
+                  completeDays: currentPeroid == 1
+                      ? completeDays
+                          .where((element) => element.isSelect)
+                          .map((e) => e.day)
+                          .toList()
+                      : [],
+                  remindTimes: remindTime == null
+                      ? []
+                      : [
+                          '${_twoDigits(remindTime.hour)}:${_twoDigits(remindTime.minute)}'
+                        ],
+                  createTime: DateTime.now().millisecondsSinceEpoch,
+                  completed: false);
+              BlocProvider.of<HabitsBloc>(context).add(HabitsAdd(habit));
+              Navigator.of(context).pop(habit);
+            },
+            child: Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(bottom: 32),
+              height: 55,
+              width: 220,
+              decoration: BoxDecoration(
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                        color: Color(0xFF738AE6).withOpacity(0.5),
+                        offset: const Offset(5.1, 4.0),
+                        blurRadius: 16.0),
+                  ],
+                  gradient: LinearGradient(
+                    colors: <Color>[
+                      Color(0xFF738AE6),
+                      Color(0xFF5C5EDD),
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
                   ),
-                  CustomEditField(
-                    maxLines: 1,
-                    maxLength: 10,
-                    initValue: '',
-                    hintText: '名字 ...',
-                    hintTextStyle: AppTheme.appTheme.textStyle(
-                        textColor: Colors.black.withOpacity(0.6),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18),
-                    textStyle: AppTheme.appTheme.textStyle(
-                        textColor: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18),
-                    containerDecoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
-                        color: AppTheme.appTheme
-                            .containerBackgroundColor()
-                            .withOpacity(0.6)),
-                    numDecoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                              color: Colors.black26,
-                              offset: Offset(3, 3),
-                              blurRadius: 6)
-                        ]),
-                    numTextStyle: TextStyle(
-                        color: Color(0xFF5C5EDD),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15),
-                    onValueChanged: (value) {
-                      _name = value;
-                    },
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.only(left: 18, top: 8),
-                    child: Text(
-                      '时段',
-                      style: AppTheme.appTheme.textStyle(
-                          textColor: Colors.black,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18),
-                    ),
-                  ),
-                  timeView(),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.only(left: 18),
-                    child: Text(
-                      '周期',
-                      style: AppTheme.appTheme.textStyle(
-                          textColor: Colors.black,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18),
-                    ),
-                  ),
-                  periodChooseView(),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.only(left: 18),
-                    child: Text(
-                      '每${HabitPeroid.getPeroid(currentPeroid)}完成次数',
-                      style: AppTheme.appTheme.textStyle(
-                          textColor: Colors.black,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18),
-                    ),
-                  ),
-                  completeCountView(),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.only(left: 18, top: 8),
-                    child: Text(
-                      '提醒时间',
-                      style: AppTheme.appTheme.textStyle(
-                          textColor: Colors.black,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18),
-                    ),
-                  ),
-                  timeReminderView(),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.only(left: 18, top: 16),
-                    child: Text(
-                      '写一句话鼓励自己',
-                      style: AppTheme.appTheme.textStyle(
-                          textColor: Colors.black,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18),
-                    ),
-                  ),
-                  CustomEditField(
-                    maxLength: 50,
-                    initValue: _mark,
-                    hintText: '千里之行，始于足下 ...',
-                    hintTextStyle: AppTheme.appTheme.textStyle(
-                        textColor: Colors.black.withOpacity(0.6),
-                        fontWeight: FontWeight.normal,
-                        fontSize: 16),
-                    textStyle: AppTheme.appTheme.textStyle(
-                        textColor: Colors.black,
-                        fontWeight: FontWeight.normal,
-                        fontSize: 16),
-                    minHeight: 100,
-                    containerDecoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
-                        color: AppTheme.appTheme
-                            .containerBackgroundColor()
-                            .withOpacity(0.6)),
-                    numDecoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                              color: Colors.black26,
-                              offset: Offset(3, 3),
-                              blurRadius: 6)
-                        ]),
-                    numTextStyle: TextStyle(
-                        color: Color(0xFF5C5EDD),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15),
-                    onValueChanged: (value) {
-                      _mark = value;
-                    },
-                  ),
-                  SizedBox(
-                    height: 32,
-                  )
-                ],
+                  borderRadius: BorderRadius.all(Radius.circular(35))),
+              child: Text(
+                '保存',
+                style: AppTheme.appTheme.textStyle(
+                    textColor: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600),
               ),
             ),
-          ),
+          )
         ],
       ),
     );
@@ -313,60 +387,7 @@ class _HabitEditPageState extends State<HabitEditPage>
             ),
           ),
           Expanded(
-            child: Container(
-              alignment: Alignment.centerRight,
-              margin: EdgeInsets.only(right: 11),
-              child: InkWell(
-                onTap: () async {
-                  if (_name.length == 0) {
-                    Fluttertoast.showToast(
-                        msg: '请输入名字',
-                        toastLength: Toast.LENGTH_SHORT,
-                        backgroundColor: Color(0xFF738AE6),
-                        gravity: ToastGravity.CENTER);
-                    return;
-                  }
-                  Habit habit = Habit(
-                      id: Uuid().generateV4(),
-                      name: _name,
-                      iconPath: _habitIcon,
-                      mainColor: _habitColor.value,
-                      mark: _mark,
-                      period: currentPeroid,
-                      doNum: getCurrentCount(),
-                      completeTime: completeTimes
-                          .where((element) => element.isSelect)
-                          .first
-                          .time,
-                      completeDays: currentPeroid == 1
-                          ? completeDays
-                              .where((element) => element.isSelect)
-                              .map((e) => e.day)
-                              .toList()
-                          : [],
-                      remindTimes: remindTime == null
-                          ? []
-                          : [
-                              '${_twoDigits(remindTime.hour)}:${_twoDigits(remindTime.minute)}'
-                            ],
-                      createTime: DateTime.now().millisecondsSinceEpoch,
-                      completed: false);
-                  BlocProvider.of<HabitsBloc>(context).add(HabitsAdd(habit));
-                  Navigator.of(context).pop(habit);
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  width: 40,
-                  height: 40,
-                  child: SvgPicture.asset(
-                    'assets/images/wancheng.svg',
-                    width: 30,
-                    height: 30,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
+            child: Container(),
           ),
         ],
       ),
