@@ -75,7 +75,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                 padding: EdgeInsets.only(bottom: 20),
                 children: [
                   SizedBox(
-                    height: 16,
+                    height: 12,
                   ),
                   Container(
                     height: 60,
@@ -87,7 +87,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                           padding: EdgeInsets.all(10),
                           decoration: BoxDecoration(boxShadow: <BoxShadow>[
                             BoxShadow(
-                                color: _habitColor.withOpacity(0.4),
+                                color: _habitColor.withOpacity(0.3),
                                 offset: Offset(0, 7),
                                 blurRadius: 10)
                           ], shape: BoxShape.circle, color: _habitColor),
@@ -128,7 +128,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                     ),
                   ),
                   SizedBox(
-                    height: 16,
+                    height: 8,
                   ),
                   CustomEditField(
                     maxLines: 1,
@@ -136,7 +136,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                     initValue: '',
                     hintText: '名字 ...',
                     hintTextStyle: AppTheme.appTheme.textStyle(
-                        textColor: Colors.black.withOpacity(0.5),
+                        textColor: Colors.black.withOpacity(0.6),
                         fontWeight: FontWeight.bold,
                         fontSize: 18),
                     textStyle: AppTheme.appTheme.textStyle(
@@ -146,7 +146,9 @@ class _HabitEditPageState extends State<HabitEditPage>
                     containerDecoration: BoxDecoration(
                         shape: BoxShape.rectangle,
                         borderRadius: BorderRadius.all(Radius.circular(15)),
-                        color: AppTheme.appTheme.containerBackgroundColor()),
+                        color: AppTheme.appTheme
+                            .containerBackgroundColor()
+                            .withOpacity(0.6)),
                     numDecoration: BoxDecoration(
                         shape: BoxShape.rectangle,
                         color: Colors.white,
@@ -158,7 +160,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                               blurRadius: 6)
                         ]),
                     numTextStyle: TextStyle(
-                        color: AppTheme.appTheme.gradientColorLight(),
+                        color: Color(0xFF5C5EDD),
                         fontWeight: FontWeight.bold,
                         fontSize: 15),
                     onValueChanged: (value) {
@@ -166,7 +168,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                     },
                   ),
                   SizedBox(
-                    height: 16,
+                    height: 8,
                   ),
                   Container(
                     alignment: Alignment.centerLeft,
@@ -174,9 +176,9 @@ class _HabitEditPageState extends State<HabitEditPage>
                     child: Text(
                       '时段',
                       style: AppTheme.appTheme.textStyle(
-                          textColor: Colors.black38,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16),
+                          textColor: Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18),
                     ),
                   ),
                   timeView(),
@@ -186,9 +188,9 @@ class _HabitEditPageState extends State<HabitEditPage>
                     child: Text(
                       '周期',
                       style: AppTheme.appTheme.textStyle(
-                          textColor: Colors.black38,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16),
+                          textColor: Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18),
                     ),
                   ),
                   periodChooseView(),
@@ -198,21 +200,21 @@ class _HabitEditPageState extends State<HabitEditPage>
                     child: Text(
                       '每${HabitPeroid.getPeroid(currentPeroid)}完成次数',
                       style: AppTheme.appTheme.textStyle(
-                          textColor: Colors.black38,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16),
+                          textColor: Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18),
                     ),
                   ),
                   completeCountView(),
                   Container(
                     alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.only(left: 18, top: 16),
+                    margin: EdgeInsets.only(left: 18, top: 8),
                     child: Text(
                       '提醒时间',
                       style: AppTheme.appTheme.textStyle(
-                          textColor: Colors.black38,
+                          textColor: Colors.black,
                           fontWeight: FontWeight.w600,
-                          fontSize: 16),
+                          fontSize: 18),
                     ),
                   ),
                   timeReminderView(),
@@ -222,9 +224,9 @@ class _HabitEditPageState extends State<HabitEditPage>
                     child: Text(
                       '写一句话鼓励自己',
                       style: AppTheme.appTheme.textStyle(
-                          textColor: Colors.black38,
+                          textColor: Colors.black,
                           fontWeight: FontWeight.w600,
-                          fontSize: 16),
+                          fontSize: 18),
                     ),
                   ),
                   CustomEditField(
@@ -232,7 +234,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                     initValue: _mark,
                     hintText: '千里之行，始于足下 ...',
                     hintTextStyle: AppTheme.appTheme.textStyle(
-                        textColor: Colors.black.withOpacity(0.5),
+                        textColor: Colors.black.withOpacity(0.6),
                         fontWeight: FontWeight.normal,
                         fontSize: 16),
                     textStyle: AppTheme.appTheme.textStyle(
@@ -243,7 +245,9 @@ class _HabitEditPageState extends State<HabitEditPage>
                     containerDecoration: BoxDecoration(
                         shape: BoxShape.rectangle,
                         borderRadius: BorderRadius.all(Radius.circular(15)),
-                        color: AppTheme.appTheme.containerBackgroundColor()),
+                        color: AppTheme.appTheme
+                            .containerBackgroundColor()
+                            .withOpacity(0.6)),
                     numDecoration: BoxDecoration(
                         shape: BoxShape.rectangle,
                         color: Colors.white,
@@ -255,7 +259,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                               blurRadius: 6)
                         ]),
                     numTextStyle: TextStyle(
-                        color: AppTheme.appTheme.gradientColorLight(),
+                        color: Color(0xFF5C5EDD),
                         fontWeight: FontWeight.bold,
                         fontSize: 15),
                     onValueChanged: (value) {
@@ -371,10 +375,10 @@ class _HabitEditPageState extends State<HabitEditPage>
 
   Widget timeView() {
     return Container(
-      margin: EdgeInsets.only(top: 12),
-      height: 60,
+      margin: EdgeInsets.only(top: 6),
+      height: 48,
       child: ListView.builder(
-        padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+        padding: EdgeInsets.only(left: 16, right: 16, bottom: 8),
         itemBuilder: (context, index) {
           CompleteTime completeTime = completeTimes[index];
           return GestureDetector(
@@ -389,33 +393,21 @@ class _HabitEditPageState extends State<HabitEditPage>
             child: AnimatedContainer(
               alignment: Alignment.center,
               margin: EdgeInsets.only(left: 16),
-              width: 60,
+              width: 68,
               decoration: BoxDecoration(
-                  boxShadow: completeTime.isSelect
-                      ? [
-                          BoxShadow(
-                              color: _habitColor.withOpacity(0.45),
-                              offset: Offset(3, 3),
-                              blurRadius: 5)
-                        ]
-                      : [
-                          BoxShadow(
-                              color: Colors.black12.withOpacity(0.1),
-                              offset: Offset(3, 3),
-                              blurRadius: 5)
-                        ],
-                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
                   shape: BoxShape.rectangle,
-                  color: completeTime.isSelect
-                      ? _habitColor
-                      : AppTheme.appTheme.containerBackgroundColor()),
+                  border: Border.all(color: Color(0xFF5C5EDD), width: 1.5),
+                  color:
+                      completeTime.isSelect ? Color(0xFF5C5EDD) : Colors.white),
               child: Text(
                 CompleteTime.getTime(completeTime.time),
                 style: AppTheme.appTheme.textStyle(
-                    textColor:
-                        completeTime.isSelect ? Colors.white : Colors.black87,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16),
+                    textColor: completeTime.isSelect
+                        ? Colors.white
+                        : Color(0xFF5C5EDD),
+                    fontWeight: FontWeight.normal,
+                    fontSize: 15),
               ),
               duration: Duration(milliseconds: 300),
             ),
@@ -433,10 +425,10 @@ class _HabitEditPageState extends State<HabitEditPage>
     return Column(
       children: [
         Container(
-          margin: EdgeInsets.only(top: 12),
-          height: 60,
+          margin: EdgeInsets.only(top: 6),
+          height: 48,
           child: ListView.builder(
-            padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+            padding: EdgeInsets.only(left: 16, right: 16, bottom: 8),
             itemBuilder: (context, index) {
               HabitPeroid habitPeroid = habitPeroids[index];
               return GestureDetector(
@@ -452,34 +444,21 @@ class _HabitEditPageState extends State<HabitEditPage>
                 child: AnimatedContainer(
                   alignment: Alignment.center,
                   margin: EdgeInsets.only(left: 16),
-                  width: 60,
+                  width: 68,
                   decoration: BoxDecoration(
-                      boxShadow: habitPeroid.isSelect
-                          ? [
-                              BoxShadow(
-                                  color: _habitColor.withOpacity(0.45),
-                                  offset: Offset(3, 3),
-                                  blurRadius: 5)
-                            ]
-                          : [
-                              BoxShadow(
-                                  color: Colors.black12.withOpacity(0.1),
-                                  offset: Offset(3, 3),
-                                  blurRadius: 5)
-                            ],
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
-                      shape: BoxShape.rectangle,
-                      color: habitPeroid.isSelect
-                          ? _habitColor
-                          : AppTheme.appTheme.containerBackgroundColor()),
+                    borderRadius: BorderRadius.all(Radius.circular(25)),
+                    border: Border.all(color: Color(0xFF5C5EDD), width: 1.5),
+                    color:
+                        habitPeroid.isSelect ? Color(0xFF5C5EDD) : Colors.white,
+                  ),
                   child: Text(
                     HabitPeroid.getPeroid(habitPeroid.peroid),
                     style: AppTheme.appTheme.textStyle(
                         textColor: habitPeroid.isSelect
                             ? Colors.white
-                            : Colors.black87,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16),
+                            : Color(0xFF5C5EDD),
+                        fontWeight: FontWeight.normal,
+                        fontSize: 15),
                   ),
                   duration: Duration(milliseconds: 300),
                 ),
@@ -491,9 +470,9 @@ class _HabitEditPageState extends State<HabitEditPage>
         ),
         currentPeroid == HabitPeroid.week
             ? Container(
-                height: 60,
+                height: 58,
                 child: ListView.builder(
-                  padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                  padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
                   itemBuilder: (context, index) {
                     CompleteDay completeDay = completeDays[index];
                     return GestureDetector(
@@ -505,34 +484,23 @@ class _HabitEditPageState extends State<HabitEditPage>
                       child: AnimatedContainer(
                         alignment: Alignment.center,
                         margin: EdgeInsets.only(left: 16),
-                        width: 60,
+                        width: 40,
+                        height: 40,
                         decoration: BoxDecoration(
-                            boxShadow: completeDay.isSelect
-                                ? [
-                                    BoxShadow(
-                                        color: _habitColor.withOpacity(0.45),
-                                        offset: Offset(3, 3),
-                                        blurRadius: 5)
-                                  ]
-                                : [
-                                    BoxShadow(
-                                        color: Colors.black12.withOpacity(0.1),
-                                        offset: Offset(3, 3),
-                                        blurRadius: 5)
-                                  ],
-                            borderRadius: BorderRadius.all(Radius.circular(15)),
-                            shape: BoxShape.rectangle,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                color: Color(0xFF5C5EDD), width: 1.5),
                             color: completeDay.isSelect
-                                ? _habitColor
-                                : AppTheme.appTheme.containerBackgroundColor()),
+                                ? Color(0xFF5C5EDD)
+                                : Colors.white),
                         child: Text(
                           CompleteDay.getDay(completeDay.day),
                           style: AppTheme.appTheme.textStyle(
                               textColor: completeDay.isSelect
                                   ? Colors.white
-                                  : Colors.black87,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16),
+                                  : Color(0xFF5C5EDD),
+                              fontWeight: FontWeight.normal,
+                              fontSize: 13),
                         ),
                         duration: Duration(milliseconds: 300),
                       ),
@@ -583,8 +551,8 @@ class _HabitEditPageState extends State<HabitEditPage>
 
   Widget completeCountView() {
     return Container(
-      margin: EdgeInsets.only(left: 32, top: 12),
-      height: 50,
+      margin: EdgeInsets.only(left: 32, top: 8),
+      height: 44,
       child: Row(
         children: [
           GestureDetector(
@@ -607,24 +575,18 @@ class _HabitEditPageState extends State<HabitEditPage>
           Container(
             alignment: Alignment.center,
             margin: EdgeInsets.only(left: 8, right: 8),
-            width: 50,
+            width: 44,
             decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                      color: _habitColor.withOpacity(0.45),
-                      offset: Offset(3, 3),
-                      blurRadius: 5)
-                ],
                 borderRadius: BorderRadius.all(Radius.circular(15)),
                 shape: BoxShape.rectangle,
-                color: _habitColor),
+                color: Color(0xFF5C5EDD)),
             child: AnimatedBuilder(
               builder: (context, child) {
                 return Text(
                   '${getCurrentCount()}',
                   style: AppTheme.appTheme.textStyle(
                       textColor: Colors.white,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                       fontSize: 23 * fontAnimationController.value),
                 );
               },
@@ -655,99 +617,105 @@ class _HabitEditPageState extends State<HabitEditPage>
 
   Widget timeReminderView() {
     return Container(
-      alignment: Alignment.centerLeft,
-      margin: EdgeInsets.only(left: 35, top: 16),
-      width: 50,
-      height: 50,
-      child: GestureDetector(
-        onTap: () async {
-          DateTime dateTime = await showCupertinoModalPopup(
-              context: context,
-              builder: (context) {
-                DateTime currentTime = DateTime.now();
-                return Container(
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: <Color>[
-                            AppTheme.appTheme.addHabitSheetBgLight(),
-                            AppTheme.appTheme.addHabitSheetBgDark()
+      margin: EdgeInsets.only(left: 16, top: 8),
+      height: 40,
+      child: Row(
+        children: [
+          remindTime == null
+              ? SizedBox()
+              : Container(
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.only(left: 16),
+                  width: 68,
+                  height: 40,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.all(Radius.circular(25)),
+                      color: Color(0xFF5C5EDD)),
+                  child: Text(
+                    '${_twoDigits(remindTime.hour)}:${_twoDigits(remindTime.minute)}',
+                    style: AppTheme.appTheme.textStyle(
+                        textColor: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15),
+                  ),
+                ),
+          GestureDetector(
+            onTap: () async {
+              DateTime dateTime = await showCupertinoModalPopup(
+                  context: context,
+                  builder: (context) {
+                    DateTime currentTime = DateTime.now();
+                    return Container(
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: <Color>[
+                                AppTheme.appTheme.addHabitSheetBgLight(),
+                                AppTheme.appTheme.addHabitSheetBgDark()
+                              ],
+                              begin: Alignment.bottomLeft,
+                              end: Alignment.topRight,
+                            ),
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(20),
+                                topLeft: Radius.circular(20))),
+                        height: 318,
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 230,
+                              child: CupertinoTheme(
+                                data: CupertinoThemeData(
+                                    textTheme: CupertinoTextThemeData(
+                                        dateTimePickerTextStyle: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18))),
+                                child: CupertinoDatePicker(
+                                  mode: CupertinoDatePickerMode.time,
+                                  onDateTimeChanged: (time) {
+                                    currentTime = time;
+                                  },
+                                ),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: 16, bottom: 32),
+                              height: 40,
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).pop(currentTime);
+                                },
+                                child: SvgPicture.asset(
+                                  'assets/images/duigou.svg',
+                                  width: 35,
+                                  height: 35,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            )
                           ],
-                          begin: Alignment.bottomLeft,
-                          end: Alignment.topRight,
-                        ),
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(20),
-                            topLeft: Radius.circular(20))),
-                    height: 318,
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 230,
-                          child: CupertinoTheme(
-                            data: CupertinoThemeData(
-                                textTheme: CupertinoTextThemeData(
-                                    dateTimePickerTextStyle: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18))),
-                            child: CupertinoDatePicker(
-                              mode: CupertinoDatePickerMode.time,
-                              onDateTimeChanged: (time) {
-                                currentTime = time;
-                              },
-                            ),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 16, bottom: 32),
-                          height: 40,
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).pop(currentTime);
-                            },
-                            child: SvgPicture.asset(
-                              'assets/images/duigou.svg',
-                              width: 35,
-                              height: 35,
-                              color: Colors.white,
-                            ),
-                          ),
-                        )
-                      ],
-                    ));
+                        ));
+                  });
+              if (dateTime == null) {
+                return;
+              }
+              setState(() {
+                remindTime = dateTime;
               });
-          if (dateTime == null) {
-            return;
-          }
-          setState(() {
-            remindTime = dateTime;
-          });
-        },
-        child: Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-              border: Border.all(color: Colors.black, width: 2),
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              color: Theme.of(context).primaryColorDark.withOpacity(0.08)),
-          width: 50,
-          height: 50,
-          child: remindTime == null
-              ? SvgPicture.asset(
+            },
+            child: Container(
+                alignment: Alignment.center,
+                margin: EdgeInsets.only(left: 8),
+                child: SvgPicture.asset(
                   'assets/images/jia.svg',
                   color: Colors.black,
-                  width: 30,
-                  height: 30,
-                )
-              : Text(
-                  '${_twoDigits(remindTime.hour)}:${_twoDigits(remindTime.minute)}',
-                  style: AppTheme.appTheme.textStyle(
-                      textColor: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
-                ),
-        ),
+                  width: 32,
+                  height: 32,
+                )),
+          )
+        ],
       ),
     );
   }
