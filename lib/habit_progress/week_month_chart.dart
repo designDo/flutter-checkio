@@ -462,7 +462,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                           getDotPainter: (FlSpot spot, double xPercentage,
                               LineChartBarData bar, int index) {
                             return FlDotCirclePainter(
-                                radius: 8.5,
+                                radius: 5.5,
                                 color: bar.colors[0].value == Colors.white.value
                                     ? bar.colors[0]
                                     : Colors.transparent,
@@ -548,13 +548,14 @@ class _WeekMonthChartState extends State<WeekMonthChart>
     return [
       LineChartBarData(
         spots: previousMonthSpots,
-        curveSmoothness: .2,
+        curveSmoothness: .33,
         isCurved: true,
         colors: [
           Colors.indigo,
         ],
-        barWidth: 5,
+        barWidth: 2,
         isStrokeCapRound: true,
+        preventCurveOverShooting: true,
         dotData: FlDotData(
           show: false,
         ),
@@ -564,16 +565,28 @@ class _WeekMonthChartState extends State<WeekMonthChart>
       ),
       LineChartBarData(
         spots: currentMonthSpots,
-        curveSmoothness: .2,
+        curveSmoothness: .33,
         isCurved: true,
         colors: [
           Colors.white,
         ],
-        barWidth: 5,
+        barWidth: 2,
+        preventCurveOverShooting: true,
         isStrokeCapRound: true,
         dotData: FlDotData(
-          show: false,
-        ),
+            show: true,
+            getDotPainter: (FlSpot spot, double xPercentage,
+                LineChartBarData bar, int index) {
+              return FlDotCirclePainter(
+                  radius: 2,
+                  color: bar.colors[0].value == Colors.white.value
+                      ? bar.colors[0]
+                      : Colors.transparent,
+                  strokeColor: bar.colors[0].value == Colors.white.value
+                      ? Colors.black12
+                      : Colors.transparent,
+                  strokeWidth: 0);
+            }),
         belowBarData: BarAreaData(
           show: false,
         ),
