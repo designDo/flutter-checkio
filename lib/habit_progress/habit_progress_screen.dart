@@ -221,45 +221,8 @@ class MostChecksView extends StatelessWidget {
                     spacing: 16,
                     runSpacing: 16,
                     children: mostDoNumHabits
-                        .map<Widget>((habit) => Container(
-                              padding: EdgeInsets.only(
-                                  left: 16, top: 8, right: 16, bottom: 8),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(32)),
-                                color: Color(0xFF5C5EDD).withOpacity(0.44),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.all(2),
-                                    decoration: BoxDecoration(
-                                        boxShadow: <BoxShadow>[
-                                          BoxShadow(
-                                              color: Color(habit.mainColor)
-                                                  .withOpacity(0.3),
-                                              offset: Offset(0, 7),
-                                              blurRadius: 10)
-                                        ],
-                                        shape: BoxShape.circle,
-                                        color: Color(habit.mainColor)
-                                            .withOpacity(0.5)),
-                                    width: 38,
-                                    height: 38,
-                                    child: Image.asset(habit.iconPath),
-                                  ),
-                                  SizedBox(
-                                    width: 8,
-                                  ),
-                                  Text(habit.name,
-                                      style: AppTheme.appTheme.textStyle(
-                                          textColor: Colors.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600))
-                                ],
-                              ),
+                        .map<Widget>((habit) => HabitItemView(
+                              habit: habit,
                             ))
                         .toList()),
               ],
@@ -328,45 +291,8 @@ class MostStreaksView extends StatelessWidget {
                     spacing: 16,
                     runSpacing: 16,
                     children: mostStreakHabits
-                        .map<Widget>((habit) => Container(
-                              padding: EdgeInsets.only(
-                                  left: 16, top: 8, right: 16, bottom: 8),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(32)),
-                                color: Color(0xFF5C5EDD).withOpacity(0.44),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.all(2),
-                                    decoration: BoxDecoration(
-                                        boxShadow: <BoxShadow>[
-                                          BoxShadow(
-                                              color: Color(habit.mainColor)
-                                                  .withOpacity(0.3),
-                                              offset: Offset(0, 7),
-                                              blurRadius: 10)
-                                        ],
-                                        shape: BoxShape.circle,
-                                        color: Color(habit.mainColor)
-                                            .withOpacity(0.5)),
-                                    width: 38,
-                                    height: 38,
-                                    child: Image.asset(habit.iconPath),
-                                  ),
-                                  SizedBox(
-                                    width: 8,
-                                  ),
-                                  Text(habit.name,
-                                      style: AppTheme.appTheme.textStyle(
-                                          textColor: Colors.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600))
-                                ],
-                              ),
+                        .map<Widget>((habit) => HabitItemView(
+                              habit: habit,
                             ))
                         .toList()),
               ],
@@ -385,6 +311,51 @@ class MostStreaksView extends StatelessWidget {
                   .copyWith(fontFamily: 'Montserrat'),
             ),
           )
+        ],
+      ),
+    );
+  }
+}
+
+class HabitItemView extends StatelessWidget {
+  final Habit habit;
+
+  const HabitItemView({Key key, this.habit}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(left: 6, top: 2, right: 12, bottom: 2),
+      decoration: BoxDecoration(
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+              color: Color(habit.mainColor).withOpacity(0.3),
+              offset: Offset(3, 3),
+              blurRadius: 10)
+        ],
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.all(Radius.circular(25)),
+        color: Color(habit.mainColor),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+            ),
+            width: 38,
+            height: 38,
+            child: Image.asset(habit.iconPath),
+          ),
+          SizedBox(
+            width: 4,
+          ),
+          Text(habit.name,
+              style: AppTheme.appTheme.textStyle(
+                  textColor: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.normal))
         ],
       ),
     );
