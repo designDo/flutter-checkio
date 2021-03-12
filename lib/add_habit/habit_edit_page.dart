@@ -572,7 +572,7 @@ class _HabitEditPageState extends State<HabitEditPage>
 
   int countByDay = 1;
   int countByWeek = 7;
-  int countByMonth = 30;
+  int countByMonth = 15;
 
   int getCurrentCount() {
     int count = 0;
