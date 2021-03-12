@@ -64,7 +64,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
             )),
-            height: 480,
+            height: 445 + MediaQuery.of(context).padding.top,
           ),
         ),
         Column(
@@ -165,7 +165,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
             Container(
               margin: EdgeInsets.only(left: 24, right: 24, top: 16, bottom: 16),
               padding: EdgeInsets.only(left: 32, right: 24),
-              height: 100,
+              height: 90,
               decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
@@ -185,12 +185,10 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                     children: [
                       Text(
                         getWeekOrMonthStr(),
-                        style: AppTheme.appTheme
-                            .textStyle(
-                                textColor: Color(0xFF5C5EDD),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18)
-                            .copyWith(fontFamily: 'Montserrat'),
+                        style: AppTheme.appTheme.textStyle(
+                            textColor: Color(0xFF5C5EDD),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16),
                       ),
                       SizedBox(
                         height: 6,
@@ -203,7 +201,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                                   _now, currentMonthIndex),
                           style: AppTheme.appTheme
                               .textStyle(
-                                  textColor: Color(0xFF5C5EDD).withOpacity(0.7),
+                                  textColor: Color(0xFF5C5EDD).withOpacity(0.9),
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18)
                               .copyWith(fontFamily: 'Montserrat'))

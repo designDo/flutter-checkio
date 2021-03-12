@@ -84,7 +84,7 @@ class TotalCheckAndDaysView extends StatelessWidget {
         children: [
           Expanded(
             child: AspectRatio(
-              aspectRatio: 1.34,
+              aspectRatio: 1.48,
               child: Container(
                 decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
@@ -105,11 +105,11 @@ class TotalCheckAndDaysView extends StatelessWidget {
                           .textStyle(
                               textColor: Colors.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: 30)
+                              fontSize: 28)
                           .copyWith(fontFamily: 'Montserrat'),
                     ),
                     SizedBox(
-                      height: 12,
+                      height: 8,
                     ),
                     Text(
                       '总记录(次)',
@@ -117,8 +117,7 @@ class TotalCheckAndDaysView extends StatelessWidget {
                           .textStyle(
                               textColor: Colors.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: 16)
-                          .copyWith(fontFamily: 'Montserrat'),
+                              fontSize: 16),
                     )
                   ],
                 ),
@@ -126,11 +125,11 @@ class TotalCheckAndDaysView extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: 32,
+            width: 18,
           ),
           Expanded(
             child: AspectRatio(
-              aspectRatio: 1.34,
+              aspectRatio: 1.48,
               child: Container(
                 decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
@@ -151,11 +150,11 @@ class TotalCheckAndDaysView extends StatelessWidget {
                           .textStyle(
                               textColor: Colors.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: 30)
+                              fontSize: 28)
                           .copyWith(fontFamily: 'Montserrat'),
                     ),
                     SizedBox(
-                      height: 12,
+                      height: 8,
                     ),
                     Text(
                       '总记录(天)',
@@ -163,8 +162,7 @@ class TotalCheckAndDaysView extends StatelessWidget {
                           .textStyle(
                               textColor: Colors.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: 16)
-                          .copyWith(fontFamily: 'Montserrat'),
+                              fontSize: 16),
                     )
                   ],
                 ),
@@ -237,7 +235,7 @@ class MostChecksView extends StatelessWidget {
                   .textStyle(
                       textColor: Colors.black,
                       fontWeight: FontWeight.bold,
-                      fontSize: 30)
+                      fontSize: 28)
                   .copyWith(fontFamily: 'Montserrat'),
             ),
           )
@@ -307,7 +305,7 @@ class MostStreaksView extends StatelessWidget {
                   .textStyle(
                       textColor: Colors.black,
                       fontWeight: FontWeight.bold,
-                      fontSize: 30)
+                      fontSize: 28)
                   .copyWith(fontFamily: 'Montserrat'),
             ),
           )
