@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:timefly/app_theme.dart';
+import 'package:timefly/detail/habit_detail_page.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_peroid.dart';
 import 'package:timefly/utils/date_util.dart';
@@ -110,21 +112,32 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
           Stack(
             alignment: Alignment.bottomRight,
             children: [
-              Container(
-                margin: EdgeInsets.only(left: 6),
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                          color: Color(widget.habit.mainColor).withOpacity(0.3),
-                          offset: Offset(0, 7),
-                          blurRadius: 10)
-                    ],
-                    shape: BoxShape.circle,
-                    color: Color(widget.habit.mainColor).withOpacity(0.5)),
-                width: 60,
-                height: 60,
-                child: Image.asset(widget.habit.iconPath),
+              GestureDetector(
+                child: Container(
+                  margin: EdgeInsets.only(left: 6),
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                            color:
+                                Color(widget.habit.mainColor).withOpacity(0.3),
+                            offset: Offset(0, 7),
+                            blurRadius: 10)
+                      ],
+                      shape: BoxShape.circle,
+                      color: Color(widget.habit.mainColor).withOpacity(0.5)),
+                  width: 60,
+                  height: 60,
+                  child: Image.asset(widget.habit.iconPath),
+                ),
+                onTap: () async {
+                  await Navigator.of(context)
+                      .push(CupertinoPageRoute(builder: (context) {
+                    return HabitDetailPage(
+                      habit: widget.habit,
+                    );
+                  }));
+                },
               ),
               Container(
                 alignment: Alignment.center,
