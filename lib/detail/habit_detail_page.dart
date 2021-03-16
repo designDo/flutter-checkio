@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:timefly/models/habit.dart';
+import 'package:timefly/utils/system_util.dart';
 
 ///detail page
 class HabitDetailPage extends StatefulWidget {
@@ -17,9 +18,6 @@ class _HabitDetailPageState extends State<HabitDetailPage> {
   @override
   void initState() {
     _controller = ScrollController();
-    _controller.addListener(() {
-      setState(() {});
-    });
     super.initState();
   }
 
@@ -32,85 +30,45 @@ class _HabitDetailPageState extends State<HabitDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          CustomScrollView(
-            controller: _controller,
-            physics: BouncingScrollPhysics(),
-            slivers: <Widget>[
-              SliverAppBar(
-                backgroundColor: Colors.blueAccent,
-                pinned: true,
-                expandedHeight: 300.0,
-                flexibleSpace: FlexibleSpaceBar(
-                  stretchModes: <StretchMode>[
-                    StretchMode.zoomBackground,
-                    StretchMode.fadeTitle,
-                  ],
-                  centerTitle: false,
-                  title: Text(
-                    'Flight Report',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.normal,
-                        fontSize: 16),
-                  ),
-                  background: Container(
-                    alignment: Alignment.center,
-                    color: Colors.redAccent,
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      color: Colors.blueAccent,
-                    ),
-                  ),
-                ),
-              ),
-              SliverList(
-                delegate: SliverChildListDelegate(List.generate(
-                    30,
-                    (index) => ListTile(
-                          leading: Icon(Icons.wb_sunny),
-                          title: Text('Monday'),
-                          subtitle: Text('sunny, h: 80, l: 65'),
-                        ))),
-              ),
-            ],
+      appBar: AppBar(
+        shadowColor: Colors.black.withOpacity(0.3),
+        backgroundColor: Colors.white,
+        brightness: Brightness.light,
+      ),
+      backgroundColor: Colors.white,
+      body: CustomScrollView(
+        controller: _controller,
+        physics: BouncingScrollPhysics(),
+        slivers: <Widget>[
+          SliverList(
+            delegate: SliverChildListDelegate(List.generate(
+                30,
+                (index) => Container(
+                      color: Colors.white,
+                      child: ListTile(
+                        leading: Icon(Icons.wb_sunny),
+                        title: Text('Monday'),
+                        subtitle: Text('sunny, h: 80, l: 65'),
+                      ),
+                    ))),
           ),
-          _buildFab(),
         ],
       ),
     );
   }
 
-  Widget _buildFab() {
-    double top = 300.0 - 40;
-    double scale = 1.0;
-    if (_controller.hasClients) {
-      double offset = _controller.offset;
-      top -= offset;
-      if (offset < 230 && offset > 0) {
-        //offset small => don't scale down
-        scale = 1.0 - (offset / 230);
-      } else if (230 < offset) {
-        //offset between scaleStart and scaleEnd => scale down
-        scale = 0;
-      } else {
-        //offset passed scaleEnd => hide fab
-        scale = 1.0;
-      }
-    }
-    return Positioned(
-      top: top,
-      left: 16.0,
-      child: new Transform(
-        transform: new Matrix4.identity()..scale(scale),
-        alignment: Alignment.center,
-        child: new FloatingActionButton(
-          onPressed: () => {},
-          child: new Icon(Icons.add),
-        ),
-      ),
+  Widget _spaceBarBg() {
+    return Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+        colors: <Color>[
+          Color(0xFF738AE6),
+          Color(0xFF5C5EDD),
+        ],
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+      )),
+      height: 300,
     );
   }
 }

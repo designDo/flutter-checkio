@@ -121,6 +121,37 @@ class Name {
       };
 }
 
+/*Widget _buildFab() {
+  double top = 300.0 - 40;
+  double scale = 1.0;
+  if (_controller.hasClients) {
+    double offset = _controller.offset;
+    top -= offset;
+    if (offset < 230 && offset > 0) {
+      //offset small => don't scale down
+      scale = 1.0 - (offset / 230);
+    } else if (230 < offset) {
+      //offset between scaleStart and scaleEnd => scale down
+      scale = 0;
+    } else {
+      //offset passed scaleEnd => hide fab
+      scale = 1.0;
+    }
+  }
+  return Positioned(
+    top: top,
+    left: 16.0,
+    child: new Transform(
+      transform: new Matrix4.identity()..scale(scale),
+      alignment: Alignment.center,
+      child: new FloatingActionButton(
+        onPressed: () => {},
+        child: new Icon(Icons.add),
+      ),
+    ),
+  );
+}*/
+
 /// 如何确定今日已经打卡？
 /// 添加字段 today-check List['时间戳']
 ///         total-check List['2020-12-12:时间戳,时间戳','2020-12-13:时间戳,时间戳]
