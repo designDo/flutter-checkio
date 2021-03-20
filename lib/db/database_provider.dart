@@ -156,10 +156,10 @@ class DatabaseProvider {
     return index > 0;
   }
 
-  Future<bool> deleteHabitrecord(HabitRecord record) async {
+  Future<bool> deleteHabitRecord(String habitId, int time) async {
     final db = await database;
-    int index =
-        await db.delete(RECORDS, where: 'time = ?', whereArgs: [record.time]);
+    int index = await db.delete(RECORDS,
+        where: 'habitId = ? and time = ?', whereArgs: [habitId, time]);
     return index > 0;
   }
 

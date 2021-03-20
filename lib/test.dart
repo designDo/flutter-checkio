@@ -29,6 +29,16 @@ void main() {
   print(jsonEncode(datas));
 
   List<String> times = ["18:11", "12:60"];
+  List<String> listq = List<String>.from(times);
+  for(int i =0 ;i < listq.length; i ++) {
+    if(listq[i] == '18:11') {
+      listq[i] = 'aaa';
+      print('change');
+    }
+  }
+
+  print('aaa$listq');
+
   List<HabitRecord> records = [];
   records.add(HabitRecord(time: 1111, content: "cidw"));
   Habit habit = Habit(
@@ -58,8 +68,8 @@ void main() {
 
     print('$i 月天数为 $count');
   }
-  print(DateTime(2021, -1, 1));//2020-11-01
-  print(DateTime(2021, 0, 0));//2020-11-30
+  print(DateTime(2021, -1, 1)); //2020-11-01
+  print(DateTime(2021, 0, 0)); //2020-11-30
   print(DateTime(2021, 0, 1)); //2020-12-01
   print(DateTime(2021, 1, 0)); //2020-12-31
   print(DateTime(2021, 1, 1)); //2021-01-01

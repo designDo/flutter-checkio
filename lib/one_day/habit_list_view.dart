@@ -3,7 +3,7 @@ import 'package:timefly/app_theme.dart';
 import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_peroid.dart';
-import 'package:timefly/one_day/habit_check_bottom_sheet_2.dart';
+import 'package:timefly/one_day/habit_check_view.dart';
 import 'package:timefly/utils/date_util.dart';
 import 'package:timefly/utils/habit_util.dart';
 import 'package:timefly/widget/circle_progress_bar.dart';
@@ -119,13 +119,14 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
     });
     tapAnimation = Tween<double>(begin: 1, end: 0.9).animate(CurvedAnimation(
         parent: tapAnimationController, curve: Curves.fastOutSlowIn));
-    Future.delayed(Duration(milliseconds: 500), () => setCheckValue());
+    setCheckValue();
     super.initState();
   }
 
+  DateTime start;
+  DateTime end;
+
   void setCheckValue() {
-    DateTime start;
-    DateTime end;
     DateTime now = DateTime.now();
     switch (widget.habit.period) {
       case HabitPeroid.day:
@@ -162,12 +163,11 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
         context: context,
         builder: (context, scroller) {
           return HabitCheckView(
-            habit: widget.habit,
-            isToday: true,
+            habitId: widget.habit.id,
+            start: start,
+            end: end,
           );
         });
-
-
   }
 
   @override

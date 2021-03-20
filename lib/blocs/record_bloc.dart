@@ -1,11 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:timefly/blocs/habit/habit_bloc.dart';
+import 'package:timefly/blocs/habit/habit_event.dart';
 import 'package:timefly/blocs/habit/habit_state.dart';
 import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/models/habit.dart';
-
-import 'habit/habit_event.dart';
 
 class RecordState extends Equatable {
   const RecordState();
@@ -37,11 +36,13 @@ class RecordEvent extends Equatable {
 ///加载数据库数据事件
 class RecordLoad extends RecordEvent {
   final String habitId;
+  final DateTime start;
+  final DateTime end;
 
-  RecordLoad(this.habitId);
+  RecordLoad(this.habitId, this.start, this.end);
 
   @override
-  List<Object> get props => [habitId];
+  List<Object> get props => [habitId, start, end];
 }
 
 ///添加一个数据
@@ -52,6 +53,16 @@ class RecordAdd extends RecordEvent {
 
   @override
   List<Object> get props => [record];
+}
+
+class RecordDelete extends RecordEvent {
+  final String habitId;
+  final int time;
+
+  RecordDelete(this.habitId, this.time);
+
+  @override
+  List<Object> get props => [habitId, time];
 }
 
 ///更新
@@ -74,21 +85,20 @@ class RecordBloc extends Bloc<RecordEvent, RecordState> {
   Stream<RecordState> mapEventToState(RecordEvent event) async* {
     if (event is RecordLoad) {
       yield* _mapRecordLoadToState(event);
-    } else if (event is HabitsAdd) {
+    } else if (event is RecordAdd) {
       yield* _mapRecordAddToState(event);
-    } else if (event is HabitUpdate) {
+    } else if (event is RecordUpdate) {
       yield* _mapRecordUpdateToState(event);
+    } else if (event is RecordDelete) {
+      yield* _mapRecordDeleteToState(event);
     }
   }
 
   Stream<RecordState> _mapRecordLoadToState(RecordLoad event) async* {
     try {
-      if (habitsBloc.state is HabitLoadSuccess) {
-        Habit habit = (habitsBloc.state as HabitLoadSuccess)
-            .habits
-            .firstWhere((habit) => habit.id == event.habitId);
-        yield RecordLoadSuccess(List.from(habit.records));
-      }
+      List<HabitRecord> records = await DatabaseProvider.db
+          .getHabitRecords(event.habitId, start: event.start, end: event.end);
+      yield RecordLoadSuccess(records);
     } catch (_) {
       yield RecordLoadFailure();
     }
@@ -97,9 +107,16 @@ class RecordBloc extends Bloc<RecordEvent, RecordState> {
   Stream<RecordState> _mapRecordAddToState(RecordAdd event) async* {
     if (state is RecordLoadSuccess) {
       final List<HabitRecord> records =
-          List.from((state as RecordLoadSuccess).records)..add(event.record);
+          List.from((state as RecordLoadSuccess).records)..insert(0,event.record);
       yield RecordLoadSuccess(records);
       DatabaseProvider.db.insertHabitRecord(event.record);
+      if (habitsBloc.state is HabitLoadSuccess) {
+        Habit currentHabit = (habitsBloc.state as HabitLoadSuccess)
+            .habits
+            .firstWhere((habit) => habit.id == event.record.habitId);
+        habitsBloc.add(HabitUpdate(currentHabit.copyWith(
+            records: List.from(currentHabit.records)..add(event.record))));
+      }
     }
   }
 
@@ -112,6 +129,40 @@ class RecordBloc extends Bloc<RecordEvent, RecordState> {
           .toList();
       yield RecordLoadSuccess(records);
       DatabaseProvider.db.updateHabitRecord(event.record);
+
+      if (habitsBloc.state is HabitLoadSuccess) {
+        Habit currentHabit = (habitsBloc.state as HabitLoadSuccess)
+            .habits
+            .firstWhere((habit) => habit.id == event.record.habitId);
+        List<HabitRecord> currentHabitRecords =   List<HabitRecord>.from(currentHabit.records);
+        for(int i =0; i< currentHabitRecords.length; i ++) {
+          if(currentHabitRecords[i].time == event.record.time) {
+            currentHabitRecords[i] = event.record;
+          }
+        }
+        habitsBloc.add(HabitUpdate(currentHabit.copyWith(
+            records: currentHabitRecords)));
+      }
+    }
+  }
+
+  Stream<RecordState> _mapRecordDeleteToState(RecordDelete event) async* {
+    if (state is RecordLoadSuccess) {
+      final List<HabitRecord> records =
+          List.from((state as RecordLoadSuccess).records)
+            ..removeWhere((record) => record.time == event.time);
+      yield RecordLoadSuccess(records);
+
+      DatabaseProvider.db.deleteHabitRecord(event.habitId, event.time);
+
+      if (habitsBloc.state is HabitLoadSuccess) {
+        Habit currentHabit = (habitsBloc.state as HabitLoadSuccess)
+            .habits
+            .firstWhere((habit) => habit.id == event.habitId);
+        habitsBloc.add(HabitUpdate(currentHabit.copyWith(
+            records: List.from(currentHabit.records)
+              ..removeWhere((record) => record.time == event.time))));
+      }
     }
   }
 }

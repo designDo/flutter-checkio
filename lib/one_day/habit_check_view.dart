@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:timefly/add_habit/edit_name.dart';
 import 'package:timefly/app_theme.dart';
-import 'package:timefly/db/database_provider.dart';
+import 'package:timefly/blocs/habit/habit_bloc.dart';
+import 'package:timefly/blocs/record_bloc.dart';
 import 'package:timefly/models/habit.dart';
-import 'package:timefly/models/habit_peroid.dart';
 import 'package:timefly/utils/date_util.dart';
+import 'package:timefly/utils/habit_util.dart';
 import 'package:timefly/utils/pair.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class HabitCheckView extends StatefulWidget {
-  ///若是今天需要拿todayCheck
-  final bool isToday;
+  final DateTime start;
+  final DateTime end;
 
-  ///根据time获取totalCheck对于的值
-  final DateTime time;
-  final Habit habit;
+  final String habitId;
 
-  const HabitCheckView({Key key, this.isToday = false, this.time, this.habit})
+  const HabitCheckView({Key key, this.habitId, this.start, this.end})
       : super(key: key);
 
   @override
@@ -30,106 +30,83 @@ class _HabitCheckViewState extends State<HabitCheckView> {
   final SlidableController slidableController = SlidableController();
   final ScrollController scrollController = ScrollController();
 
-  var _future;
   List<HabitRecord> habitRecords = [];
 
   @override
   void initState() {
-    _future = _getFuture();
     super.initState();
-  }
-
-  Future<List<HabitRecord>> _getFuture() async {
-    DateTime start;
-    DateTime end;
-    DateTime now = DateTime.now();
-    switch (widget.habit.period) {
-      case HabitPeroid.day:
-        start = DateUtil.startOfDay(now);
-        end = DateUtil.endOfDay(now);
-        break;
-      case HabitPeroid.week:
-        start = DateUtil.firstDayOfWeekend(DateTime.now());
-        end = DateUtil.endOfDay(DateTime.now());
-        break;
-      case HabitPeroid.month:
-        start = DateUtil.firstDayOfMonth(now);
-        end = DateUtil.endOfDay(now);
-        break;
-    }
-    return DatabaseProvider.db
-        .getHabitRecords(widget.habit.id, start: start, end: end);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.appTheme.containerBackgroundColor(),
-      body: Stack(
-        children: [
-          FutureBuilder<List<HabitRecord>>(
-            future: _future,
-            builder: (BuildContext context,
-                AsyncSnapshot<List<HabitRecord>> snapshot) {
-              if (snapshot.hasData) {
-                habitRecords = snapshot.data;
-                return Container(
-                  child: AnimatedList(
-                    key: listKey,
-                    padding: EdgeInsets.only(top: 50, bottom: 16),
-                    controller: scrollController,
-                    initialItemCount: habitRecords.length,
-                    itemBuilder: (context, index, animation) {
-                      return getCheckItemView(
-                          context, habitRecords[index], animation);
-                    },
+    return BlocProvider(
+      create: (context) => RecordBloc(BlocProvider.of<HabitsBloc>(context))
+        ..add(RecordLoad(widget.habitId, widget.start, widget.end)),
+      child: BlocBuilder<RecordBloc, RecordState>(
+        builder: (context, state) {
+          if (state is RecordLoadSuccess) {
+            habitRecords = HabitUtil.filterHabitRecordsWithTime(state.records,
+                start: widget.start, end: widget.end);
+            return Scaffold(
+              backgroundColor: AppTheme.appTheme.containerBackgroundColor(),
+              body: Stack(
+                children: [
+                  Container(
+                    child: AnimatedList(
+                      key: listKey,
+                      padding: EdgeInsets.only(top: 50, bottom: 16),
+                      controller: scrollController,
+                      initialItemCount: habitRecords.length,
+                      itemBuilder: (context, index, animation) {
+                        return getCheckItemView(
+                            context, habitRecords[index], animation);
+                      },
+                    ),
                   ),
-                );
-              }
-              return Container();
-            },
-          ),
-          Container(
-            width: double.infinity,
-            alignment: Alignment.topRight,
-            margin: EdgeInsets.only(right: 16, top: 16),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              child: SvgPicture.asset(
-                'assets/images/guanbi.svg',
-                color: Colors.black,
-                width: 40,
-                height: 40,
+                  Container(
+                    width: double.infinity,
+                    alignment: Alignment.topRight,
+                    margin: EdgeInsets.only(right: 16, top: 16),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: SvgPicture.asset(
+                        'assets/images/guanbi.svg',
+                        color: Colors.black,
+                        width: 40,
+                        height: 40,
+                      ),
+                    ),
+                  )
+                ],
               ),
-            ),
-          )
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          HabitRecord record = HabitRecord(
-              habitId: widget.habit.id,
-              time: DateTime.now().millisecondsSinceEpoch,
-              content: '');
-          bool success = await DatabaseProvider.db.insertHabitRecord(record);
-          if (success) {
-            listKey.currentState
-                .insertItem(0, duration: const Duration(milliseconds: 500));
-            habitRecords.insert(0, record);
-            scrollController.animateTo(0,
-                duration: Duration(milliseconds: 500),
-                curve: Curves.fastOutSlowIn);
+              floatingActionButton: FloatingActionButton(
+                onPressed: () async {
+                  HabitRecord record = HabitRecord(
+                      habitId: widget.habitId,
+                      time: DateTime.now().millisecondsSinceEpoch,
+                      content: '');
+
+                  BlocProvider.of<RecordBloc>(context).add(RecordAdd(record));
+                  listKey.currentState.insertItem(0,
+                      duration: const Duration(milliseconds: 500));
+                  scrollController.animateTo(0,
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.fastOutSlowIn);
+                },
+                backgroundColor: Colors.blueAccent,
+                child: SvgPicture.asset(
+                  'assets/images/jia.svg',
+                  color: Colors.white,
+                  width: 40,
+                  height: 40,
+                ),
+              ),
+            );
           }
+          return CircularProgressIndicator();
         },
-        backgroundColor: Colors.blueAccent,
-        child: SvgPicture.asset(
-          'assets/images/jia.svg',
-          color: Colors.white,
-          width: 40,
-          height: 40,
-        ),
       ),
     );
   }
@@ -169,7 +146,7 @@ class _HabitCheckViewState extends State<HabitCheckView> {
               secondaryActions: [
                 GestureDetector(
                   onTap: () async {
-                    removeItem(record);
+                    removeItem(context, record);
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -274,15 +251,14 @@ class _HabitCheckViewState extends State<HabitCheckView> {
     );
   }
 
-  void removeItem(HabitRecord record) async {
-    bool success = await DatabaseProvider.db.deleteHabitrecord(record);
-    if (success) {
-      int index = habitRecords.indexOf(record);
-      listKey.currentState.removeItem(
-          index, (_, animation) => getCheckItemView(_, record, animation),
-          duration: const Duration(milliseconds: 500));
-      habitRecords.removeAt(index);
-    }
+  void removeItem(BuildContext context, HabitRecord record) async {
+    BlocProvider.of<RecordBloc>(context)
+        .add(RecordDelete(widget.habitId, record.time));
+
+    int index = habitRecords.indexOf(record);
+    listKey.currentState.removeItem(
+        index, (_, animation) => getCheckItemView(_, record, animation),
+        duration: const Duration(milliseconds: 500));
   }
 
   void editNote(BuildContext context, HabitRecord record) async {
@@ -309,10 +285,7 @@ class _HabitCheckViewState extends State<HabitCheckView> {
             ),
           );
         }));
-    bool success = await DatabaseProvider.db.updateHabitRecord(record.copyWith(
-        habitId: record.habitId, time: record.time, content: content.value));
-    if (success) {
-      setState(() {});
-    }
+    BlocProvider.of<RecordBloc>(context).add(RecordUpdate(record.copyWith(
+        habitId: record.habitId, time: record.time, content: content.value)));
   }
 }
