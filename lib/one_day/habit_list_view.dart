@@ -5,6 +5,7 @@ import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_peroid.dart';
 import 'package:timefly/one_day/habit_check_bottom_sheet_2.dart';
 import 'package:timefly/utils/date_util.dart';
+import 'package:timefly/utils/habit_util.dart';
 import 'package:timefly/widget/circle_progress_bar.dart';
 import 'package:timefly/widget/float_modal.dart';
 
@@ -140,19 +141,13 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
         end = DateUtil.endOfDay(now);
         break;
     }
-    DatabaseProvider.db
-        .getHabitRecords(widget.habit.id, start: start, end: end)
-        .then((value) {
-      if (mounted) {
-        setState(() {
-          _initValue = value.length;
-          _maxValue = widget.habit.doNum;
-          if (_initValue > _maxValue) {
-            _maxValue = _initValue;
-          }
-        });
-      }
-    });
+    _initValue = HabitUtil.filterHabitRecordsWithTime(widget.habit.records,
+            start: start, end: end)
+        .length;
+    _maxValue = widget.habit.doNum;
+    if (_initValue > _maxValue) {
+      _maxValue = _initValue;
+    }
   }
 
   @override
@@ -171,9 +166,8 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
             isToday: true,
           );
         });
-    Future.delayed(Duration(milliseconds: 500), () async {
-      setCheckValue();
-    });
+
+
   }
 
   @override

@@ -225,4 +225,25 @@ class HabitUtil {
     });
     return Pair2(currentMaxStreak, newHabits);
   }
+
+  ///根据时间过滤记录
+  static List<HabitRecord> filterHabitRecordsWithTime(List<HabitRecord> records,
+      {DateTime start, DateTime end}) {
+    if (records == null || records.length == 0) {
+      return <HabitRecord>[];
+    }
+    List<HabitRecord> habitRecords = List<HabitRecord>.from(records);
+
+    if (start != null && end != null) {
+      habitRecords = habitRecords
+          .where((element) =>
+              element.time > start.millisecondsSinceEpoch &&
+              element.time < end.millisecondsSinceEpoch)
+          .toList();
+      records.sort((a, b) => b.time - a.time);
+    } else {
+      records.sort((a, b) => b.time - a.time);
+    }
+    return habitRecords;
+  }
 }
