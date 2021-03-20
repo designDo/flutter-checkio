@@ -4,6 +4,7 @@ import 'package:timefly/models/habit_list_model.dart';
 import 'package:time/time.dart';
 import 'package:timefly/models/habit_peroid.dart';
 import 'package:timefly/utils/date_util.dart';
+import 'package:timefly/utils/pair.dart';
 
 class HabitUtil {
   ///按completeTime分类，子分类下按时间排序
@@ -206,13 +207,13 @@ class HabitUtil {
   }
 
   ///获取历史拥有最大连续次数的习惯们
-  static List<Habit> getMostHistoryStreakHabits(List<Habit> habits) {
+  static Pair2<int, List<Habit>> getMostHistoryStreakHabits(
+      List<Habit> habits) {
     List<Habit> newHabits = [];
     int currentMaxStreak = 0;
     habits.forEach((habit) {
       if (habit.period != 1) {
         int streak = getMostStreaks(combinationRecords(habit.records));
-        habit.historyMostStreak = streak;
         if (streak > currentMaxStreak) {
           newHabits.clear();
           newHabits.add(habit);
@@ -222,6 +223,6 @@ class HabitUtil {
         }
       }
     });
-    return newHabits;
+    return Pair2(currentMaxStreak, newHabits);
   }
 }

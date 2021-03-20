@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/models/habit.dart';
+import 'package:timefly/utils/pair.dart';
 import 'package:timefly/widget/custom_edit_field.dart';
 
-class EditNameView extends StatefulWidget {
-  final HabitRecord habitRecord;
+class EditFiledView extends StatefulWidget {
+  final Mutable<String> content;
 
-  const EditNameView({
+  const EditFiledView({
     Key key,
-    this.habitRecord,
+    this.content,
   }) : super(key: key);
 
   @override
-  _EditNameViewState createState() => _EditNameViewState();
+  _EditFiledViewState createState() => _EditFiledViewState();
 }
 
-class _EditNameViewState extends State<EditNameView> {
+class _EditFiledViewState extends State<EditFiledView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +32,7 @@ class _EditNameViewState extends State<EditNameView> {
           child: CustomEditField(
             maxLength: 50,
             autoFucus: true,
-            initValue: widget.habitRecord.content,
+            initValue: widget.content.value,
             hintText: '记录些什么 ...',
             hintTextStyle: AppTheme.appTheme.textStyle(
                 textColor: Colors.black.withOpacity(0.5),
@@ -61,7 +62,7 @@ class _EditNameViewState extends State<EditNameView> {
                 fontWeight: FontWeight.bold,
                 fontSize: 15),
             onValueChanged: (value) {
-              widget.habitRecord.content = value;
+              widget.content.value = value;
             },
           ),
         ),

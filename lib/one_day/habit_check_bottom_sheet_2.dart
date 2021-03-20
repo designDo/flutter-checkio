@@ -7,6 +7,7 @@ import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_peroid.dart';
 import 'package:timefly/utils/date_util.dart';
+import 'package:timefly/utils/pair.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class HabitCheckView extends StatefulWidget {
@@ -285,11 +286,12 @@ class _HabitCheckViewState extends State<HabitCheckView> {
   }
 
   void editNote(BuildContext context, HabitRecord record) async {
+    Mutable<String> content = Mutable(record.content);
     await Navigator.of(context).push(PageRouteBuilder(
         opaque: false,
         pageBuilder: (context, ani1, ani2) {
-          return EditNameView(
-            habitRecord: record,
+          return EditFiledView(
+            content: content,
           );
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -307,9 +309,8 @@ class _HabitCheckViewState extends State<HabitCheckView> {
             ),
           );
         }));
-
     bool success = await DatabaseProvider.db.updateHabitRecord(record.copyWith(
-        habitId: record.habitId, time: record.time, content: record.content));
+        habitId: record.habitId, time: record.time, content: content.value));
     if (success) {
       setState(() {});
     }

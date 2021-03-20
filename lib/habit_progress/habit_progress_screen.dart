@@ -5,6 +5,7 @@ import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/habit_progress/week_month_chart.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/utils/habit_util.dart';
+import 'package:timefly/utils/pair.dart';
 
 class HabitProgressScreen extends StatefulWidget {
   @override
@@ -113,11 +114,10 @@ class TotalCheckAndDaysView extends StatelessWidget {
                     ),
                     Text(
                       '总记录(次)',
-                      style: AppTheme.appTheme
-                          .textStyle(
-                              textColor: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
+                      style: AppTheme.appTheme.textStyle(
+                          textColor: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16),
                     )
                   ],
                 ),
@@ -158,11 +158,10 @@ class TotalCheckAndDaysView extends StatelessWidget {
                     ),
                     Text(
                       '总记录(天)',
-                      style: AppTheme.appTheme
-                          .textStyle(
-                              textColor: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
+                      style: AppTheme.appTheme.textStyle(
+                          textColor: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16),
                     )
                   ],
                 ),
@@ -252,7 +251,8 @@ class MostStreaksView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Habit> mostStreakHabits = HabitUtil.getMostHistoryStreakHabits(habits);
+    Pair2<int, List<Habit>> mostStreakHabits =
+        HabitUtil.getMostHistoryStreakHabits(habits);
     return Container(
       decoration: BoxDecoration(
           shape: BoxShape.rectangle,
@@ -288,7 +288,7 @@ class MostStreaksView extends StatelessWidget {
                 Wrap(
                     spacing: 16,
                     runSpacing: 16,
-                    children: mostStreakHabits
+                    children: mostStreakHabits.t
                         .map<Widget>((habit) => HabitItemView(
                               habit: habit,
                             ))
@@ -300,7 +300,7 @@ class MostStreaksView extends StatelessWidget {
             alignment: Alignment.centerRight,
             margin: EdgeInsets.only(top: 4, right: 4),
             child: Text(
-              '${mostStreakHabits.length == 0 ? 0 : mostStreakHabits[0].historyMostStreak}',
+              '${mostStreakHabits.s}',
               style: AppTheme.appTheme
                   .textStyle(
                       textColor: Colors.black,

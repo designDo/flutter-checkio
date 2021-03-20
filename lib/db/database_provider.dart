@@ -44,9 +44,7 @@ class DatabaseProvider {
           "createTime INTEGER,"
           "modifyTime INTEGER,"
           "completed INTEGER,"
-          "doNum INTEGER,"
-          "todayCheck TEXT,"
-          "totalCheck TEXT"
+          "doNum INTEGER"
           ")",
         );
         await database.execute("CREATE TABLE records ("
@@ -58,13 +56,17 @@ class DatabaseProvider {
     );
   }
 
-  Future<List<Habit>> getHabits() async {
+  Future<List<Habit>> getAllHabits() async {
     final db = await database;
     var habits = await db.query('habits');
     List<Habit> newHabitList = [];
-    habits.forEach((element) {
-      newHabitList.add(Habit.fromJson(element));
-    });
+
+    for (Map<String, dynamic> element in habits) {
+      final habitId = element["id"]?.toString();
+      var records = await getHabitRecords(habitId);
+      Habit habit = Habit.fromJson(element, records: records);
+      newHabitList.add(habit);
+    }
     newHabitList.sort((a, b) => b.createTime - a.createTime);
     return newHabitList;
   }
@@ -76,8 +78,9 @@ class DatabaseProvider {
     List<Habit> newHabitList = [];
 
     for (Map<String, dynamic> element in habits) {
-      Habit habit = Habit.fromJson(element);
-      habit.records = await getHabitRecords(habit.id);
+      final habitId = element["id"]?.toString();
+      var records = await getHabitRecords(habitId);
+      Habit habit = Habit.fromJson(element, records: records);
       newHabitList.add(habit);
     }
     newHabitList.sort((a, b) => b.createTime - a.createTime);

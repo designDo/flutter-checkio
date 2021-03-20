@@ -7,9 +7,9 @@ import 'package:equatable/equatable.dart';
 ///
 // ignore: must_be_immutable
 class HabitRecord extends Equatable {
-  String habitId;
-  int time;
-  String content;
+  final String habitId;
+  final int time;
+  final String content;
 
   HabitRecord({this.time, this.content, this.habitId});
 
@@ -18,10 +18,11 @@ class HabitRecord extends Equatable {
     return 'HabitRecord{time: $time, content: $content, habitId: $habitId}';
   }
 
-  HabitRecord.fromJson(Map<String, dynamic> json) {
-    habitId = json['habitId']?.toString();
-    time = json["time"]?.toInt();
-    content = json["content"]?.toString();
+  static HabitRecord fromJson(Map<String, dynamic> json) {
+    return HabitRecord(
+        habitId: json['habitId']?.toString(),
+        time: json["time"]?.toInt(),
+        content: json["content"]?.toString());
   }
 
   Map<String, dynamic> toJson() {
@@ -44,99 +45,102 @@ class HabitRecord extends Equatable {
 // ignore: must_be_immutable
 class Habit extends Equatable {
   ///唯一id uuid v4
-  String id;
-  String name;
-  String iconPath;
-  int mainColor;
-  String mark;
+  final String id;
+  final String name;
+  final String iconPath;
+  final int mainColor;
+  final String mark;
 
   ///提醒时间 每天 10: 20，eg
   ///转化为 json String 存储 ["10:20","11:50"]
-  List<String> remindTimes;
+  final List<String> remindTimes;
 
   ///完成时间
   /// 0 任意 1 早上 2 上午 3 中午 4 下午 5 晚上
-  int completeTime;
+  final int completeTime;
 
   ///按周时 完成的day
   /// 1-7，周一 -- 周日
-  List<int> completeDays;
+  final List<int> completeDays;
 
   ///周期
   /// 0 按天
   /// 1 按周
   /// 2 按月
-  int period;
+  final int period;
 
   ///创建时间
-  int createTime;
+  final int createTime;
 
   ///修改时间
-  int modifyTime;
+  final int modifyTime;
 
   ///是否完成
-  bool completed;
+  final bool completed;
 
   ///次数
-  int doNum;
+  final int doNum;
 
-  List<HabitRecord> records;
+  final List<HabitRecord> records;
 
-  ///历史最大连续天数
-  int historyMostStreak = 0;
-
-  Habit(
-      {this.id,
-      this.name,
-      this.iconPath,
-      this.mainColor,
-      this.mark,
-      this.remindTimes,
-      this.completeDays,
-      this.completeTime,
-      this.period,
-      this.createTime,
-      this.modifyTime,
-      this.completed,
-      this.doNum,
-      this.records,
-      this.historyMostStreak});
+  Habit({
+    this.id,
+    this.name,
+    this.iconPath,
+    this.mainColor,
+    this.mark,
+    this.remindTimes,
+    this.completeDays,
+    this.completeTime,
+    this.period,
+    this.createTime,
+    this.modifyTime,
+    this.completed,
+    this.doNum,
+    this.records,
+  });
 
   @override
   String toString() {
-    return 'Habit{id: $id, name: $name, iconPath: $iconPath, mainColor: $mainColor, mark: $mark,'
-        ' remindTimes: $remindTimes, completeTime: $completeTime, completeDays:$completeDays, period: $period, '
-        'createTime: $createTime, modifyTime: $modifyTime, completed: $completed, doNum: $doNum,';
+    return 'Habit{id: $id, name: $name, iconPath: $iconPath, mainColor: '
+        '$mainColor, mark: $mark, remindTimes: $remindTimes, completeTime:'
+        ' $completeTime, completeDays: $completeDays, period: $period, '
+        'createTime: $createTime, modifyTime: $modifyTime, completed: $completed,'
+        ' doNum: $doNum, records: $records}';
   }
 
-  Habit.fromJson(Map<String, dynamic> json) {
-    id = json["id"]?.toString();
-    name = json["name"]?.toString();
-    iconPath = json["iconPath"]?.toString();
-    mainColor = json["mainColor"]?.toInt();
-    mark = json["mark"]?.toString();
+  static Habit fromJson(Map<String, dynamic> json,
+      {List<HabitRecord> records}) {
+    var remindTimes = List<String>();
     if (json["remindTimes"] != null) {
       var timesJson = jsonDecode(json["remindTimes"]);
-      var times = List<String>();
       timesJson.forEach((json) {
-        times.add(json.toString());
+        remindTimes.add(json.toString());
       });
-      remindTimes = times;
     }
+    var completeDays = List<int>();
     if (json["completeDays"] != null) {
       var daysJson = jsonDecode(json["completeDays"]);
-      var days = List<int>();
       daysJson.forEach((json) {
-        days.add(json.toInt());
+        completeDays.add(json.toInt());
       });
-      completeDays = days;
     }
-    completeTime = json['completeTime']?.toInt();
-    period = json["period"]?.toInt();
-    createTime = json["createTime"]?.toInt();
-    modifyTime = json["modifyTime"]?.toInt();
-    completed = json["completed"]?.toInt() == 1 ? true : false;
-    doNum = json["doNum"]?.toInt();
+
+    return Habit(
+        id: json["id"]?.toString(),
+        name: json["name"]?.toString(),
+        iconPath: json["iconPath"]?.toString(),
+        mainColor: json["mainColor"]?.toInt(),
+        mark: json["mark"]?.toString(),
+        remindTimes: remindTimes,
+        completeDays: completeDays,
+        completeTime: json['completeTime']?.toInt(),
+        period: json["period"]?.toInt(),
+        createTime: json["createTime"]?.toInt(),
+        modifyTime: json["modifyTime"]?.toInt(),
+        completed: json["completed"]?.toInt() == 1 ? true : false,
+        doNum: json["doNum"]?.toInt(),
+        records: records);
   }
 
   Map<String, dynamic> toJson() {
@@ -205,7 +209,6 @@ class Habit extends Equatable {
         this.completed,
         this.doNum,
         this.records,
-        this.historyMostStreak
       ];
 
   Habit copyWith(
@@ -222,23 +225,22 @@ class Habit extends Equatable {
       int modifyTime,
       bool completed,
       int doNum,
-      List<HabitRecord> records,
-      int historyMostStreak}) {
+      List<HabitRecord> records}) {
     return Habit(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        iconPath: iconPath ?? this.iconPath,
-        mainColor: mainColor ?? this.mainColor,
-        mark: mark ?? this.mark,
-        remindTimes: remindTimes ?? this.remindTimes,
-        completeDays: completeDays ?? this.completeDays,
-        completeTime: completeTime ?? this.completeTime,
-        period: period ?? this.period,
-        createTime: createTime ?? this.createTime,
-        modifyTime: modifyTime ?? this.modifyTime,
-        completed: completed ?? this.completed,
-        doNum: doNum ?? this.doNum,
-        records: records ?? this.records,
-        historyMostStreak: historyMostStreak ?? this.historyMostStreak);
+      id: id ?? this.id,
+      name: name ?? this.name,
+      iconPath: iconPath ?? this.iconPath,
+      mainColor: mainColor ?? this.mainColor,
+      mark: mark ?? this.mark,
+      remindTimes: remindTimes ?? this.remindTimes,
+      completeDays: completeDays ?? this.completeDays,
+      completeTime: completeTime ?? this.completeTime,
+      period: period ?? this.period,
+      createTime: createTime ?? this.createTime,
+      modifyTime: modifyTime ?? this.modifyTime,
+      completed: completed ?? this.completed,
+      doNum: doNum ?? this.doNum,
+      records: records ?? this.records,
+    );
   }
 }

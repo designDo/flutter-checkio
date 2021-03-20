@@ -21,7 +21,7 @@ class HabitsBloc extends Bloc<HabitsEvent, HabitsState> {
 
   Stream<HabitsState> _mapHabitsLoadToState() async* {
     try {
-      List<Habit> habits = await DatabaseProvider.db.getHabits();
+      List<Habit> habits = await DatabaseProvider.db.getAllHabits();
       print(habits);
       yield HabitLoadSuccess(habits);
     } catch (_) {
