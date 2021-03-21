@@ -371,6 +371,36 @@ class _HabitEditPageState extends State<HabitEditPage>
                     gravity: ToastGravity.CENTER);
                 return;
               }
+              if (widget.isModify) {
+                Habit newHabit = widget.habit.copyWith(
+                    name: _name,
+                    iconPath: _habitIcon,
+                    mainColor: _habitColor.value,
+                    mark: _mark,
+                    period: currentPeriod,
+                    doNum: getCurrentCount(),
+                    completeTime: completeTimes
+                        .where((element) => element.isSelect)
+                        .first
+                        .time,
+                    completeDays: currentPeriod == 1
+                        ? completeDays
+                            .where((element) => element.isSelect)
+                            .map((e) => e.day)
+                            .toList()
+                        : [],
+                    remindTimes: remindTime == null
+                        ? []
+                        : [
+                            '${_twoDigits(remindTime.hour)}:${_twoDigits(remindTime.minute)}'
+                          ],
+                    modifyTime: DateTime.now().millisecondsSinceEpoch,
+                    completed: false,
+                    records: []);
+                BlocProvider.of<HabitsBloc>(context).add(HabitUpdate(newHabit));
+                Navigator.of(context).pop();
+                return;
+              }
               Habit habit = Habit(
                   id: Uuid().generateV4(),
                   name: _name,
@@ -398,7 +428,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                   completed: false,
                   records: []);
               BlocProvider.of<HabitsBloc>(context).add(HabitsAdd(habit));
-              Navigator.of(context).pop(habit);
+              Navigator.of(context).pop();
             },
             child: ScaleTransition(
               scale: CurvedAnimation(
