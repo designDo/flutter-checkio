@@ -14,10 +14,18 @@ import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_color.dart';
 import 'package:timefly/models/habit_icon.dart';
 import 'package:timefly/models/habit_peroid.dart';
+import 'package:timefly/utils/date_util.dart';
 import 'package:timefly/utils/uuid.dart';
 import 'package:timefly/widget/custom_edit_field.dart';
 
 class HabitEditPage extends StatefulWidget {
+  final Habit habit;
+
+  ///修改，在保存时为 update
+  final bool isModify;
+
+  const HabitEditPage({Key key, this.habit, this.isModify}) : super(key: key);
+
   @override
   _HabitEditPageState createState() => _HabitEditPageState();
 }
@@ -30,38 +38,83 @@ class _HabitEditPageState extends State<HabitEditPage>
   List<CompleteTime> completeTimes = [];
   List<CompleteDay> completeDays = [];
 
-  List<HabitPeroid> habitPeroids = [];
+  List<HabitPeriod> habitPeriods = [];
+  int currentPeriod = HabitPeriod.day;
 
   String _name = '';
   String _mark = '';
 
+  int countByDay = 1;
+  int countByWeek = 7;
+  int countByMonth = 15;
+
   AnimationController fontAnimationController;
-  AnimationController bottonAnimationController;
+  AnimationController bottomAnimationController;
 
   @override
   void initState() {
+    print(widget.habit);
+    if (widget.isModify) {
+      _name = widget.habit.name;
+      _mark = widget.habit.mark;
+      if (widget.habit.period == HabitPeriod.day) {
+        countByDay = widget.habit.doNum;
+      }
+      if (widget.habit.period == HabitPeriod.week) {
+        countByWeek = widget.habit.doNum;
+      }
+      if (widget.habit.period == HabitPeriod.month) {
+        countByMonth = widget.habit.doNum;
+      }
+      if (widget.habit.remindTimes != null &&
+          widget.habit.remindTimes.length > 0) {
+        remindTime =
+            DateUtil.parseHourAndMinWithString(widget.habit.remindTimes[0]);
+      }
+    }
+
     List<HabitIcon> icons = HabitIcon.getIcons();
-    _habitIcon = icons[Random().nextInt(icons.length - 1)].icon;
+    if (widget.isModify) {
+      _habitIcon = widget.habit.iconPath;
+    } else {
+      _habitIcon = icons[Random().nextInt(icons.length - 1)].icon;
+    }
 
     List<HabitColor> colors = HabitColor.getBackgroundColors();
-    _habitColor = colors[Random().nextInt(colors.length - 1)].color;
+    if (widget.isModify) {
+      _habitColor = Color(widget.habit.mainColor);
+    } else {
+      _habitColor = colors[Random().nextInt(colors.length - 1)].color;
+    }
 
-    completeTimes = CompleteTime.getCompleteTimes();
+    completeTimes = CompleteTime.getCompleteTimes(
+        widget.isModify ? widget.habit.completeTime : 0);
+
     completeDays = CompleteDay.getCompleteDays();
+    if (widget.isModify && widget.habit.period == HabitPeriod.week) {
+      for (int i = 0; i < completeDays.length; i++) {
+        completeDays[i].isSelect =
+            widget.habit.completeDays.contains(completeDays[i].day);
+      }
+    }
 
-    habitPeroids = HabitPeroid.getHabitPeroids();
+    habitPeriods =
+        HabitPeriod.getHabitPeriods(widget.isModify ? widget.habit.period : 0);
+    if (widget.isModify) {
+      currentPeriod = widget.habit.period;
+    }
 
     fontAnimationController =
         AnimationController(duration: Duration(milliseconds: 300), vsync: this);
     fontAnimationController.forward(from: 0.5);
 
-    bottonAnimationController =
+    bottomAnimationController =
         AnimationController(duration: Duration(milliseconds: 300), vsync: this);
 
     WidgetsBinding.instance.addObserver(this);
 
     Future.delayed(Duration(milliseconds: 500), () {
-      bottonAnimationController.forward();
+      bottomAnimationController.forward();
     });
 
     super.initState();
@@ -72,11 +125,11 @@ class _HabitEditPageState extends State<HabitEditPage>
     super.didChangeMetrics();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
-        bool keybordShow = MediaQuery.of(context).viewInsets.bottom > 0;
-        if (keybordShow) {
-          bottonAnimationController.reverse();
+        bool keyboardShow = MediaQuery.of(context).viewInsets.bottom > 0;
+        if (keyboardShow) {
+          bottomAnimationController.reverse();
         } else {
-          bottonAnimationController.forward();
+          bottomAnimationController.forward();
         }
       });
     });
@@ -85,7 +138,7 @@ class _HabitEditPageState extends State<HabitEditPage>
   @override
   void dispose() {
     fontAnimationController.dispose();
-    bottonAnimationController.dispose();
+    bottomAnimationController.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -165,7 +218,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                       CustomEditField(
                         maxLines: 1,
                         maxLength: 10,
-                        initValue: '',
+                        initValue: _name,
                         hintText: '名字 ...',
                         hintTextStyle: AppTheme.appTheme.textStyle(
                             textColor: Colors.black.withOpacity(0.6),
@@ -231,7 +284,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                         alignment: Alignment.centerLeft,
                         margin: EdgeInsets.only(left: 18),
                         child: Text(
-                          '每${HabitPeroid.getPeroid(currentPeroid)}完成次数',
+                          '每${HabitPeriod.getPeriod(currentPeriod)}完成次数',
                           style: AppTheme.appTheme.textStyle(
                               textColor: Colors.black,
                               fontWeight: FontWeight.w600,
@@ -324,13 +377,13 @@ class _HabitEditPageState extends State<HabitEditPage>
                   iconPath: _habitIcon,
                   mainColor: _habitColor.value,
                   mark: _mark,
-                  period: currentPeroid,
+                  period: currentPeriod,
                   doNum: getCurrentCount(),
                   completeTime: completeTimes
                       .where((element) => element.isSelect)
                       .first
                       .time,
-                  completeDays: currentPeroid == 1
+                  completeDays: currentPeriod == 1
                       ? completeDays
                           .where((element) => element.isSelect)
                           .map((e) => e.day)
@@ -349,7 +402,7 @@ class _HabitEditPageState extends State<HabitEditPage>
             },
             child: ScaleTransition(
               scale: CurvedAnimation(
-                  parent: bottonAnimationController,
+                  parent: bottomAnimationController,
                   curve: Curves.fastOutSlowIn),
               child: Container(
                 alignment: Alignment.center,
@@ -413,7 +466,7 @@ class _HabitEditPageState extends State<HabitEditPage>
             child: Container(
               alignment: Alignment.center,
               child: Text(
-                '新建习惯',
+                '${widget.isModify ? '编辑习惯' : '新建习惯'}',
                 style: AppTheme.appTheme.textStyle(
                     textColor: Colors.black,
                     fontWeight: FontWeight.bold,
@@ -475,8 +528,6 @@ class _HabitEditPageState extends State<HabitEditPage>
     );
   }
 
-  int currentPeroid = HabitPeroid.day;
-
   Widget periodChooseView() {
     return Column(
       children: [
@@ -486,15 +537,15 @@ class _HabitEditPageState extends State<HabitEditPage>
           child: ListView.builder(
             padding: EdgeInsets.only(left: 16, right: 16, bottom: 8),
             itemBuilder: (context, index) {
-              HabitPeroid habitPeroid = habitPeroids[index];
+              HabitPeriod habitPeroid = habitPeriods[index];
               return GestureDetector(
                 onTap: () {
                   setState(() {
-                    habitPeroids.forEach((element) {
+                    habitPeriods.forEach((element) {
                       element.isSelect = false;
                     });
                     habitPeroid.isSelect = true;
-                    currentPeroid = habitPeroid.peroid;
+                    currentPeriod = habitPeroid.period;
                   });
                 },
                 child: AnimatedContainer(
@@ -508,7 +559,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                         habitPeroid.isSelect ? Color(0xFF5C5EDD) : Colors.white,
                   ),
                   child: Text(
-                    HabitPeroid.getPeroid(habitPeroid.peroid),
+                    HabitPeriod.getPeriod(habitPeroid.period),
                     style: AppTheme.appTheme.textStyle(
                         textColor: habitPeroid.isSelect
                             ? Colors.white
@@ -520,11 +571,11 @@ class _HabitEditPageState extends State<HabitEditPage>
                 ),
               );
             },
-            itemCount: habitPeroids.length,
+            itemCount: habitPeriods.length,
             scrollDirection: Axis.horizontal,
           ),
         ),
-        currentPeroid == HabitPeroid.week
+        currentPeriod == HabitPeriod.week
             ? Container(
                 height: 58,
                 child: ListView.builder(
@@ -571,13 +622,9 @@ class _HabitEditPageState extends State<HabitEditPage>
     );
   }
 
-  int countByDay = 1;
-  int countByWeek = 7;
-  int countByMonth = 15;
-
   int getCurrentCount() {
     int count = 0;
-    switch (currentPeroid) {
+    switch (currentPeriod) {
       case 0:
         count = countByDay;
         break;
@@ -592,7 +639,7 @@ class _HabitEditPageState extends State<HabitEditPage>
   }
 
   void setCurrentCount(int count) {
-    switch (currentPeroid) {
+    switch (currentPeriod) {
       case 0:
         countByDay = count;
         break;

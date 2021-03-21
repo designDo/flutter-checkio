@@ -1,4 +1,4 @@
-class HabitPeroid {
+class HabitPeriod {
   static const int day = 0;
   static const int week = 1;
   static const int month = 2;
@@ -6,32 +6,32 @@ class HabitPeroid {
   ///0 按天
   ///1 按周
   ///2 按月
-  final int peroid;
+  final int period;
   bool isSelect = false;
 
-  HabitPeroid(this.peroid, {this.isSelect = false});
+  HabitPeriod(this.period, {this.isSelect = false});
 
-  static List<HabitPeroid> getHabitPeroids() {
-    List<HabitPeroid> peroids = [];
+  static List<HabitPeriod> getHabitPeriods(int period) {
+    List<HabitPeriod> periods = [];
     for (int i = 0; i <= 2; i++) {
-      peroids.add(HabitPeroid(i, isSelect: i == 0));
+      periods.add(HabitPeriod(i, isSelect: i == period));
     }
-    return peroids;
+    return periods;
   }
 
-  static String getPeroid(int peroid) {
-    String peroidString = '天';
+  static String getPeriod(int peroid) {
+    String periodString = '天';
     switch (peroid) {
       case day:
-        peroidString = '天';
+        periodString = '天';
         break;
       case week:
-        peroidString = '周';
+        periodString = '周';
         break;
       case month:
-        peroidString = '月';
+        periodString = '月';
         break;
     }
-    return peroidString;
+    return periodString;
   }
 }

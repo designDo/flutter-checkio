@@ -38,7 +38,7 @@ class _IconAndColorPageState extends State<IconAndColorPage> {
 
     backgroundColors = HabitColor.getBackgroundColors();
     backgroundColors.forEach((color) {
-      if (color.color == widget.selectedColor) {
+      if (color.color.value == widget.selectedColor.value) {
         color.isSelect = true;
         _selectBackgroundColor = color;
       } else {

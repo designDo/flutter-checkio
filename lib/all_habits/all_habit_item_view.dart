@@ -148,7 +148,7 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                     borderRadius: BorderRadius.all(Radius.circular(3)),
                     color: Color(widget.habit.mainColor)),
                 child: Text(
-                  '${HabitPeroid.getPeroid(widget.habit.period)}',
+                  '${HabitPeriod.getPeriod(widget.habit.period)}',
                   style: TextStyle(
                       fontSize: 11,
                       color: Colors.white,

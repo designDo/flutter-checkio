@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:timefly/add_habit/habit_edit_page.dart';
 import 'package:timefly/models/habit.dart';
-import 'package:timefly/utils/system_util.dart';
 
 ///detail page
 class HabitDetailPage extends StatefulWidget {
@@ -31,9 +33,43 @@ class _HabitDetailPageState extends State<HabitDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        shadowColor: Colors.black.withOpacity(0.3),
-        backgroundColor: Colors.white,
-        brightness: Brightness.light,
+        leading: Container(
+          margin: EdgeInsets.only(left: 16),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: SvgPicture.asset(
+              'assets/images/fanhui.svg',
+              color: Colors.white,
+            ),
+          ),
+        ),
+        leadingWidth: 42,
+        backgroundColor: Color(widget.habit.mainColor).withOpacity(0.8),
+        actions: [
+          Container(
+            margin: EdgeInsets.only(right: 16),
+            child: GestureDetector(
+              onTap: () async {
+                await Navigator.of(context)
+                    .push(CupertinoPageRoute(builder: (context) {
+                  return HabitEditPage(
+                    isModify: true,
+                    habit: widget.habit,
+                  );
+                }));
+              },
+              child: SvgPicture.asset(
+                'assets/images/bianji.svg',
+                color: Colors.white,
+                width: 26,
+                height: 26,
+              ),
+            ),
+          )
+        ],
+        title: Text(widget.habit.name),
       ),
       backgroundColor: Colors.white,
       body: CustomScrollView(

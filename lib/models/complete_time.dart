@@ -11,10 +11,10 @@ class CompleteTime {
 
   CompleteTime(this.time, {this.isSelect = false});
 
-  static List<CompleteTime> getCompleteTimes() {
+  static List<CompleteTime> getCompleteTimes(int selectIndex) {
     List<CompleteTime> completeTimes = [];
     for (int i = 0; i <= 5; i++) {
-      completeTimes.add(CompleteTime(i, isSelect: i == 0));
+      completeTimes.add(CompleteTime(i, isSelect: i == selectIndex));
     }
     return completeTimes;
   }

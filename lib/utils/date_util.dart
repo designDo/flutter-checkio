@@ -198,4 +198,11 @@ class DateUtil {
   static DateTime endOfDay(DateTime now) {
     return startOfDay(now) + 1.days - 1.milliseconds;
   }
+
+  /// '15:12' 返回当天的这个时间
+  static DateTime parseHourAndMinWithString(String day) {
+    DateTime now = DateTime.now();
+    List<String> str = day.split(':');
+    return now.copyWith(hour: int.parse(str[0]), minute: int.parse(str[1]));
+  }
 }

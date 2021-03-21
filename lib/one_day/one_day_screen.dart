@@ -163,9 +163,12 @@ class _OneDayScreenState extends State<OneDayScreen>
           position: animation,
           child: GestureDetector(
             onTap: () async {
-              Habit newHabit = await Navigator.of(context)
+              await Navigator.of(context)
                   .push(CupertinoPageRoute(builder: (context) {
-                return HabitEditPage();
+                return HabitEditPage(
+                  isModify: false,
+                  habit: null,
+                );
               }));
             },
             child: Padding(

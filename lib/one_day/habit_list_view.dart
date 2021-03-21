@@ -129,15 +129,15 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
   void setCheckValue() {
     DateTime now = DateTime.now();
     switch (widget.habit.period) {
-      case HabitPeroid.day:
+      case HabitPeriod.day:
         start = DateUtil.startOfDay(now);
         end = DateUtil.endOfDay(now);
         break;
-      case HabitPeroid.week:
+      case HabitPeriod.week:
         start = DateUtil.firstDayOfWeekend(DateTime.now());
         end = DateUtil.endOfDay(DateTime.now());
         break;
-      case HabitPeroid.month:
+      case HabitPeriod.month:
         start = DateUtil.firstDayOfMonth(now);
         end = DateUtil.endOfDay(now);
         break;
@@ -252,7 +252,7 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
                                           BorderRadius.all(Radius.circular(3)),
                                       color: Color(widget.habit.mainColor)),
                                   child: Text(
-                                    '${HabitPeroid.getPeroid(widget.habit.period)}',
+                                    '${HabitPeriod.getPeriod(widget.habit.period)}',
                                     style: TextStyle(
                                         fontSize: 11,
                                         color: Colors.white,
