@@ -10,7 +10,10 @@ import 'package:timefly/home_screen.dart';
 import 'package:timefly/notification/notification_plugin.dart';
 import 'package:timefly/utils/date_util.dart';
 
+import 'blocs/bloc_observer.dart';
+
 void main() async {
+  Bloc.observer = SimpleBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
   NotificationPlugin.ensureInitialized();
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
