@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:timefly/add_habit/habit_edit_page.dart';
+import 'package:timefly/app_theme.dart';
 import 'package:timefly/models/habit.dart';
 
 ///detail page
@@ -33,43 +34,62 @@ class _HabitDetailPageState extends State<HabitDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Container(
-          margin: EdgeInsets.only(left: 16),
-          child: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-            child: SvgPicture.asset(
+        automaticallyImplyLeading: true,
+        leading: IconButton(
+            iconSize: 32,
+            padding: EdgeInsets.all(14),
+            icon: SvgPicture.asset(
               'assets/images/fanhui.svg',
               color: Colors.white,
             ),
-          ),
-        ),
-        leadingWidth: 42,
+            onPressed: () {
+              Navigator.of(context).pop();
+            }),
         backgroundColor: Color(widget.habit.mainColor).withOpacity(0.8),
         actions: [
-          Container(
-            margin: EdgeInsets.only(right: 16),
-            child: GestureDetector(
-              onTap: () async {
-                await Navigator.of(context)
-                    .push(CupertinoPageRoute(builder: (context) {
-                  return HabitEditPage(
-                    isModify: true,
-                    habit: widget.habit,
-                  );
-                }));
-              },
-              child: SvgPicture.asset(
-                'assets/images/bianji.svg',
-                color: Colors.white,
-                width: 26,
-                height: 26,
-              ),
+          IconButton(
+            iconSize: 33,
+            padding: EdgeInsets.all(16),
+            icon: SvgPicture.asset(
+              'assets/images/bianji.svg',
+              color: Colors.white,
             ),
-          )
+            onPressed: () async {
+              await Navigator.of(context)
+                  .push(CupertinoPageRoute(builder: (context) {
+                return HabitEditPage(
+                  isModify: true,
+                  habit: widget.habit,
+                );
+              }));
+            },
+          ),
         ],
-        title: Text(widget.habit.name),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.all(2),
+              width: 34,
+              height: 34,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 1)),
+              child: Image.asset(widget.habit.iconPath),
+            ),
+            SizedBox(
+              width: 6,
+            ),
+            Text(
+              widget.habit.name,
+              style: AppTheme.appTheme.textStyle(
+                  textColor: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600),
+            )
+          ],
+        ),
       ),
       backgroundColor: Colors.white,
       body: CustomScrollView(
