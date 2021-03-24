@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:timefly/add_habit/habit_edit_page.dart';
 import 'package:timefly/app_theme.dart';
+import 'package:timefly/detail/habit_detail_views.dart';
 import 'package:timefly/models/habit.dart';
 
 ///detail page
@@ -91,22 +92,17 @@ class _HabitDetailPageState extends State<HabitDetailPage> {
           ],
         ),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: AppTheme.appTheme.containerBackgroundColor(),
       body: CustomScrollView(
         controller: _controller,
         physics: BouncingScrollPhysics(),
         slivers: <Widget>[
           SliverList(
-            delegate: SliverChildListDelegate(List.generate(
-                30,
-                (index) => Container(
-                      color: Colors.white,
-                      child: ListTile(
-                        leading: Icon(Icons.wb_sunny),
-                        title: Text('Monday'),
-                        subtitle: Text('sunny, h: 80, l: 65'),
-                      ),
-                    ))),
+            delegate: SliverChildListDelegate(
+              [
+                HabitBaseInfoView(habit: widget.habit,)
+              ]
+            ),
           ),
         ],
       ),
