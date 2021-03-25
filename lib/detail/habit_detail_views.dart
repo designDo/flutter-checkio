@@ -164,3 +164,31 @@ class HabitBaseInfoView extends StatelessWidget {
     );
   }
 }
+
+class HabitMonthInfoView extends StatelessWidget {
+  final AnimationController animationController;
+  final Habit habit;
+
+  const HabitMonthInfoView({Key key, this.animationController, this.habit})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SlideTransition(
+      position: Tween<Offset>(begin: Offset(0, 0.3), end: Offset.zero).animate(
+          CurvedAnimation(
+              parent: animationController,
+              curve: Interval(0.5, 1, curve: Curves.ease))),
+      child: FadeTransition(
+        opacity: Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+            parent: animationController,
+            curve: Interval(0.5, 1, curve: Curves.ease))),
+        child: Container(
+          margin: EdgeInsets.only(left: 16, right: 16),
+          color: Colors.blueAccent,
+          height: 200,
+        ),
+      ),
+    );
+  }
+}

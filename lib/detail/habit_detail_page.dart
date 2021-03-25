@@ -43,7 +43,6 @@ class _HabitDetailPageState extends State<HabitDetailPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: true,
         leading: IconButton(
             iconSize: 32,
             padding: EdgeInsets.all(14),
@@ -110,7 +109,11 @@ class _HabitDetailPageState extends State<HabitDetailPage>
               HabitBaseInfoView(
                 habit: widget.habit,
                 animationController: _animationController,
-              )
+              ),
+              HabitMonthInfoView(
+                habit: widget.habit,
+                animationController: _animationController,
+              ),
             ]),
           ),
         ],
