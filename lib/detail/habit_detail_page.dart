@@ -16,18 +16,26 @@ class HabitDetailPage extends StatefulWidget {
   _HabitDetailPageState createState() => _HabitDetailPageState();
 }
 
-class _HabitDetailPageState extends State<HabitDetailPage> {
+class _HabitDetailPageState extends State<HabitDetailPage>
+    with SingleTickerProviderStateMixin {
   ScrollController _controller;
+  AnimationController _animationController;
 
   @override
   void initState() {
     _controller = ScrollController();
+    _animationController = AnimationController(
+        duration: Duration(milliseconds: 1000), vsync: this);
+    Future.delayed(Duration(milliseconds: 300), () {
+      _animationController.forward();
+    });
     super.initState();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -98,29 +106,15 @@ class _HabitDetailPageState extends State<HabitDetailPage> {
         physics: BouncingScrollPhysics(),
         slivers: <Widget>[
           SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                HabitBaseInfoView(habit: widget.habit,)
-              ]
-            ),
+            delegate: SliverChildListDelegate([
+              HabitBaseInfoView(
+                habit: widget.habit,
+                animationController: _animationController,
+              )
+            ]),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _spaceBarBg() {
-    return Container(
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-        colors: <Color>[
-          Color(0xFF738AE6),
-          Color(0xFF5C5EDD),
-        ],
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-      )),
-      height: 300,
     );
   }
 }

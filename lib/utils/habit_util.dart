@@ -246,4 +246,26 @@ class HabitUtil {
     }
     return habitRecords;
   }
+
+  static List<HabitRecord> getHabitRecordsWithPeroid(
+      List<HabitRecord> records, int period) {
+    DateTime now = DateTime.now();
+    DateTime start;
+    DateTime end;
+    switch (period) {
+      case HabitPeriod.day:
+        start = DateUtil.startOfDay(now);
+        end = DateUtil.endOfDay(now);
+        break;
+      case HabitPeriod.week:
+        start = DateUtil.firstDayOfWeekend(DateTime.now());
+        end = DateUtil.endOfDay(DateTime.now());
+        break;
+      case HabitPeriod.month:
+        start = DateUtil.firstDayOfMonth(now);
+        end = DateUtil.endOfDay(now);
+        break;
+    }
+    return filterHabitRecordsWithTime(records, start: start, end: end);
+  }
 }
