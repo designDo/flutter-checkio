@@ -9,10 +9,23 @@ class SystemUtil {
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: brightness,
       statusBarBrightness:
-          Platform.isAndroid ? Brightness.dark : Brightness.light,
+      Platform.isAndroid ? Brightness.dark : Brightness.light,
       systemNavigationBarColor: Colors.white,
       systemNavigationBarDividerColor: Colors.grey,
       systemNavigationBarIconBrightness: Brightness.dark,
     ));
+  }
+
+  static SystemUiOverlayStyle getSystemUiOverlayStyle(Brightness brightness) {
+    return SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: brightness,
+      statusBarBrightness:
+      Platform.isAndroid ? Brightness.dark : Brightness.light,
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarDividerColor: Colors.grey,
+      systemNavigationBarIconBrightness: Brightness.dark,
+    );
+
   }
 }
