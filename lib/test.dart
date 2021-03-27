@@ -106,6 +106,18 @@ void main() {
     }
   }
   print(sort);
+  print(getMonthsSince2020());
+}
+
+List<DateTime> getMonthsSince2020() {
+  List<DateTime> months = [];
+  int i = 1;
+  while (DateTime(2020, i, 1).microsecondsSinceEpoch <
+      DateTime.now().microsecondsSinceEpoch) {
+    months.add(DateTime(2020, i, 1));
+    i++;
+  }
+  return months;
 }
 
 DateTime getDay(String day) {

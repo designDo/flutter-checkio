@@ -205,4 +205,21 @@ class DateUtil {
     List<String> str = day.split(':');
     return now.copyWith(hour: int.parse(str[0]), minute: int.parse(str[1]));
   }
+
+  ///根据给定时间获取当前月的第一天
+  static DateTime getFirstDayOfMonth(DateTime dateTime) {
+    return DateTime(dateTime.year, dateTime.month, 1);
+  }
+
+  ///获取从 2020 年 1月份 之后的所有 月份 第一天
+  static List<DateTime> getMonthsSince2020() {
+    List<DateTime> months = [];
+    int i = 1;
+    while (DateTime(2020, i, 1).microsecondsSinceEpoch <
+        DateTime.now().microsecondsSinceEpoch) {
+      months.add(DateTime(2020, i, 1));
+      i++;
+    }
+    return months;
+  }
 }

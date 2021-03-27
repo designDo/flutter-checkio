@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:timefly/detail/detail_calender_view.dart';
 import 'package:timefly/models/complete_time.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_peroid.dart';
+import 'package:timefly/utils/date_util.dart';
 import 'package:timefly/utils/habit_util.dart';
 import 'package:timefly/widget/circle_progress_bar.dart';
 
@@ -172,8 +174,13 @@ class HabitMonthInfoView extends StatelessWidget {
   const HabitMonthInfoView({Key key, this.animationController, this.habit})
       : super(key: key);
 
+  final double margin = 20;
+  final double ratio = 1.5;
+
   @override
   Widget build(BuildContext context) {
+    List<DateTime> months = DateUtil.getMonthsSince2020();
+
     return SlideTransition(
       position: Tween<Offset>(begin: Offset(0, 0.3), end: Offset.zero).animate(
           CurvedAnimation(
@@ -184,11 +191,47 @@ class HabitMonthInfoView extends StatelessWidget {
             parent: animationController,
             curve: Interval(0.5, 1, curve: Curves.ease))),
         child: Container(
-          margin: EdgeInsets.only(left: 16, right: 16),
-          color: Colors.blueAccent,
-          height: 200,
+          height: _cardHeight(context, 50) + 30,
+          padding: EdgeInsets.only(bottom: 16),
+          child: PageView.builder(
+              controller: PageController(initialPage: months.length - 1),
+              itemCount: months.length,
+              itemBuilder: (context, index) {
+                List<DateTime> days = DateUtil.getMonthDays(months[index]);
+                return Column(
+                  children: [
+                    Container(
+                      height: _cardHeight(context, days.length),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                offset: const Offset(5, 5.0),
+                                blurRadius: 16.0)
+                          ],
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      margin: EdgeInsets.only(left: margin, right: margin),
+                      child: HabitDetailCalendarView(
+                        color: Color(habit.mainColor),
+                        days: days,
+                        records: HabitUtil.combinationRecords(habit.records),
+                      ),
+                    ),
+                    SizedBox()
+                  ],
+                );
+              }),
         ),
       ),
     );
+  }
+
+  double _cardHeight(BuildContext context, int dayLength) {
+    return ((MediaQuery.of(context).size.width - margin) / 7) /
+            ratio *
+            (dayLength / 7) +
+        (dayLength / 7 - 1) * 5;
   }
 }
