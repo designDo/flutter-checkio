@@ -167,64 +167,113 @@ class HabitBaseInfoView extends StatelessWidget {
   }
 }
 
-class HabitMonthInfoView extends StatelessWidget {
+class HabitMonthInfoView extends StatefulWidget {
   final AnimationController animationController;
   final Habit habit;
 
   const HabitMonthInfoView({Key key, this.animationController, this.habit})
       : super(key: key);
 
+  @override
+  State<StatefulWidget> createState() {
+    return HabitMonthInfoViewState();
+  }
+}
+
+class HabitMonthInfoViewState extends State<HabitMonthInfoView> {
   final double margin = 20;
   final double ratio = 1.5;
+  PageController pageController;
+  List<DateTime> months = DateUtil.getMonthsSince2020();
+  int currentIndex;
+
+  @override
+  void initState() {
+    currentIndex = months.length - 1;
+    pageController = PageController(initialPage: months.length - 1);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<DateTime> months = DateUtil.getMonthsSince2020();
-
-    return SlideTransition(
-      position: Tween<Offset>(begin: Offset(0, 0.3), end: Offset.zero).animate(
-          CurvedAnimation(
-              parent: animationController,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        FadeTransition(
+          opacity: Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+              parent: widget.animationController,
               curve: Interval(0.5, 1, curve: Curves.ease))),
-      child: FadeTransition(
-        opacity: Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
-            parent: animationController,
-            curve: Interval(0.5, 1, curve: Curves.ease))),
-        child: Container(
-          height: _cardHeight(context, 50) + 30,
-          padding: EdgeInsets.only(bottom: 16),
-          child: PageView.builder(
-              controller: PageController(initialPage: months.length - 1),
-              itemCount: months.length,
-              itemBuilder: (context, index) {
-                List<DateTime> days = DateUtil.getMonthDays(months[index]);
-                return Column(
-                  children: [
-                    Container(
-                      height: _cardHeight(context, days.length),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                offset: const Offset(5, 5.0),
-                                blurRadius: 16.0)
-                          ],
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      margin: EdgeInsets.only(left: margin, right: margin),
-                      child: HabitDetailCalendarView(
-                        color: Color(habit.mainColor),
-                        days: days,
-                        records: HabitUtil.combinationRecords(habit.records),
-                      ),
-                    ),
-                    SizedBox()
-                  ],
-                );
-              }),
+          child: Container(
+            margin: EdgeInsets.only(left: 20),
+            child: Text(
+              '${months[currentIndex].year}年${months[currentIndex].month}月',
+              style: AppTheme.appTheme.textStyle(
+                  textColor: Colors.black,
+                  fontWeight: FontWeight.w300,
+                  fontSize: 17),
+            ),
+          ),
         ),
-      ),
+        SlideTransition(
+          position: Tween<Offset>(begin: Offset(0, 0.3), end: Offset.zero)
+              .animate(CurvedAnimation(
+                  parent: widget.animationController,
+                  curve: Interval(0.5, 1, curve: Curves.ease))),
+          child: FadeTransition(
+            opacity: Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+                parent: widget.animationController,
+                curve: Interval(0.5, 1, curve: Curves.ease))),
+            child: Container(
+              height: _cardHeight(context, 50) + 30,
+              padding: EdgeInsets.only(bottom: 16),
+              child: PageView.builder(
+                  controller: pageController,
+                  itemCount: months.length,
+                  onPageChanged: (index) {
+                    setState(() {
+                      currentIndex = index;
+                    });
+                  },
+                  itemBuilder: (context, index) {
+                    List<DateTime> days = DateUtil.getMonthDays(months[index]);
+                    return Column(
+                      children: [
+                        Container(
+                          height: _cardHeight(context, days.length),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    offset: const Offset(10, 5.0),
+                                    blurRadius: 16.0)
+                              ],
+                              shape: BoxShape.rectangle,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15))),
+                          margin: EdgeInsets.only(
+                              top: 12, left: margin, right: margin),
+                          child: HabitDetailCalendarView(
+                            color: Color(widget.habit.mainColor),
+                            days: days,
+                            records: HabitUtil.combinationRecords(
+                                widget.habit.records),
+                          ),
+                        ),
+                        SizedBox()
+                      ],
+                    );
+                  }),
+            ),
+          ),
+        )
+      ],
     );
   }
 
