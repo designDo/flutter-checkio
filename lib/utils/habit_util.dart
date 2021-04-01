@@ -135,6 +135,17 @@ class HabitUtil {
     return recordsMap;
   }
 
+  static Map<String, List<HabitRecord>> combinationRecordsWithTime(
+      List<HabitRecord> records, DateTime start, DateTime end) {
+    List<HabitRecord> recordList = List<HabitRecord>.from(records);
+    recordList = recordList
+        .where((record) =>
+            record.time > start.millisecondsSinceEpoch &&
+            record.time < end.millisecondsSinceEpoch)
+        .toList();
+    return combinationRecords(recordList);
+  }
+
   ///一天内所有完成次数
   static int getTotalDoNumsOfDay(List<Habit> habits, DateTime now) {
     int num = 0;

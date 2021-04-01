@@ -243,6 +243,12 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView> {
                   },
                   itemBuilder: (context, index) {
                     List<DateTime> days = DateUtil.getMonthDays(months[index]);
+                    Map<String, List<HabitRecord>> records =
+                        HabitUtil.combinationRecordsWithTime(
+                            widget.habit.records,
+                            months[index],
+                            DateTime(months[index].year,
+                                months[index].month + 1, 1));
                     return Stack(
                       children: [
                         Column(
@@ -263,8 +269,7 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView> {
                               child: HabitDetailCalendarView(
                                 color: Color(widget.habit.mainColor),
                                 days: days,
-                                records: HabitUtil.combinationRecords(
-                                    widget.habit.records),
+                                records: records,
                               ),
                             ),
                             SizedBox()
@@ -279,6 +284,8 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView> {
                               calendarHeight(context, 42) + calendarPadding + 8,
                           bottom: 20,
                           child: Container(
+                            padding: EdgeInsets.only(left: 16, right: 16),
+                            alignment: Alignment.center,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               shape: BoxShape.rectangle,
@@ -293,6 +300,8 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView> {
                                     blurRadius: 12.0)
                               ],
                             ),
+                            child:
+                                _tipContainer(months[index], checkNum(records)),
                           ),
                         )
                       ],
@@ -303,6 +312,14 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView> {
         )
       ],
     );
+  }
+
+  int checkNum(Map<String, List<HabitRecord>> records) {
+    int num = 0;
+    records.forEach((key, record) {
+      num += record.length;
+    });
+    return num;
   }
 
   double calendarHeight(BuildContext context, int dayLength) {
@@ -318,5 +335,83 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView> {
 
   double _containerHeight(BuildContext context) {
     return _maxCalendarHeight(context) + 100;
+  }
+
+  Widget _tipContainer(DateTime month, int checkNum) {
+    DateTime createTime =
+        DateTime.fromMillisecondsSinceEpoch(widget.habit.createTime);
+    int createTimeMonth =
+        DateTime(createTime.year, createTime.month, 1).millisecondsSinceEpoch;
+    if (createTimeMonth > month.millisecondsSinceEpoch) {
+      return Text('暂无统计数据');
+    }
+    int needDoNum;
+    if (widget.habit.period == HabitPeriod.day) {
+      needDoNum =
+          DateTime(month.year, month.month + 1, 0).day * widget.habit.doNum;
+    } else if (widget.habit.period == HabitPeriod.month) {
+      needDoNum = widget.habit.doNum;
+    }
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              widget.habit.period == HabitPeriod.week
+                  ? SizedBox()
+                  : RichText(
+                      text: TextSpan(
+                          text: '本月需完成',
+                          style: AppTheme.appTheme.textStyle(
+                              textColor: Colors.black,
+                              fontWeight: FontWeight.w300,
+                              fontSize: 16),
+                          children: [
+                            TextSpan(
+                                text: '$needDoNum',
+                                style: AppTheme.appTheme
+                                    .textStyle(
+                                        textColor: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18)
+                                    .copyWith(fontFamily: 'Montserrat')),
+                            TextSpan(
+                              text: '次',
+                            )
+                          ]),
+                    ),
+              RichText(
+                text: TextSpan(
+                    text: '已经完成',
+                    style: AppTheme.appTheme.textStyle(
+                        textColor: Colors.black,
+                        fontWeight: FontWeight.w300,
+                        fontSize: 16),
+                    children: [
+                      TextSpan(
+                          text: '$checkNum',
+                          style: AppTheme.appTheme
+                              .textStyle(
+                                  textColor: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18)
+                              .copyWith(fontFamily: 'Montserrat')),
+                      TextSpan(
+                        text: '次',
+                      )
+                    ]),
+              )
+            ],
+          ),
+        ),
+        Container(
+          width: 60,
+          height: 60,
+          child: Icon(Icons.arrow_forward),
+        )
+      ],
+    );
   }
 }
