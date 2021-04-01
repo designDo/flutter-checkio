@@ -253,7 +253,7 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView> {
                                   calendarPadding,
                               decoration: BoxDecoration(
                                   color: Color(widget.habit.mainColor)
-                                      .withOpacity(0.1),
+                                      .withOpacity(0.1314),
                                   shape: BoxShape.rectangle,
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(30))),
