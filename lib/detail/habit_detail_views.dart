@@ -183,6 +183,7 @@ class HabitMonthInfoView extends StatefulWidget {
 class HabitMonthInfoViewState extends State<HabitMonthInfoView> {
   final double margin = 20;
   final double ratio = 1.5;
+  final double calendarPadding = 16;
   PageController pageController;
   List<DateTime> months = DateUtil.getMonthsSince2020();
   int currentIndex;
@@ -230,8 +231,8 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView> {
                 parent: widget.animationController,
                 curve: Interval(0.5, 1, curve: Curves.ease))),
             child: Container(
-              height: _cardHeight(context, 50) + 30,
-              padding: EdgeInsets.only(bottom: 16),
+              margin: EdgeInsets.only(top: 12),
+              height: _containerHeight(context),
               child: PageView.builder(
                   controller: pageController,
                   itemCount: months.length,
@@ -242,31 +243,58 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView> {
                   },
                   itemBuilder: (context, index) {
                     List<DateTime> days = DateUtil.getMonthDays(months[index]);
-                    return Column(
+                    return Stack(
                       children: [
-                        Container(
-                          height: _cardHeight(context, days.length),
-                          decoration: BoxDecoration(
+                        Column(
+                          children: [
+                            Container(
+                              height: _maxCalendarHeight(context) +
+                                  28 +
+                                  calendarPadding,
+                              decoration: BoxDecoration(
+                                  color: Color(widget.habit.mainColor)
+                                      .withOpacity(0.1),
+                                  shape: BoxShape.rectangle,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(30))),
+                              margin:
+                                  EdgeInsets.only(left: margin, right: margin),
+                              padding: EdgeInsets.only(top: calendarPadding),
+                              child: HabitDetailCalendarView(
+                                color: Color(widget.habit.mainColor),
+                                days: days,
+                                records: HabitUtil.combinationRecords(
+                                    widget.habit.records),
+                              ),
+                            ),
+                            SizedBox()
+                          ],
+                        ),
+                        Positioned(
+                          left: days.length > 42
+                              ? (days[43] == null ? 80 : 110)
+                              : 80,
+                          right: 20,
+                          top:
+                              calendarHeight(context, 42) + calendarPadding + 8,
+                          bottom: 20,
+                          child: Container(
+                            decoration: BoxDecoration(
                               color: Colors.white,
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(30),
+                                  topLeft: Radius.circular(30),
+                                  bottomRight: Radius.circular(30)),
                               boxShadow: [
                                 BoxShadow(
                                     color: Colors.black.withOpacity(0.1),
-                                    offset: const Offset(10, 5.0),
-                                    blurRadius: 16.0)
+                                    offset: const Offset(1, 1),
+                                    blurRadius: 12.0)
                               ],
-                              shape: BoxShape.rectangle,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15))),
-                          margin: EdgeInsets.only(
-                              top: 12, left: margin, right: margin),
-                          child: HabitDetailCalendarView(
-                            color: Color(widget.habit.mainColor),
-                            days: days,
-                            records: HabitUtil.combinationRecords(
-                                widget.habit.records),
+                            ),
                           ),
-                        ),
-                        SizedBox()
+                        )
                       ],
                     );
                   }),
@@ -277,10 +305,18 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView> {
     );
   }
 
-  double _cardHeight(BuildContext context, int dayLength) {
-    return ((MediaQuery.of(context).size.width - margin) / 7) /
+  double calendarHeight(BuildContext context, int dayLength) {
+    return ((MediaQuery.of(context).size.width - margin * 2) / 7) /
             ratio *
             (dayLength / 7) +
         (dayLength / 7 - 1) * 5;
+  }
+
+  double _maxCalendarHeight(BuildContext context) {
+    return calendarHeight(context, 49);
+  }
+
+  double _containerHeight(BuildContext context) {
+    return _maxCalendarHeight(context) + 100;
   }
 }
