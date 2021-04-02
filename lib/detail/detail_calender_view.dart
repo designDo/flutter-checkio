@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/utils/date_util.dart';
+import 'package:timefly/utils/pair.dart';
 
 import '../app_theme.dart';
 
@@ -39,6 +42,7 @@ class _HabitDetailCalendarViewState extends State<HabitDetailCalendarView> {
               crossAxisCount: 7, childAspectRatio: 1.5, mainAxisSpacing: 5),
           itemBuilder: (context, index) {
             DateTime day = days[index];
+            Pair2<bool, int> contains = containsDay(day);
             if (day == null) {
               if (index < 7) {
                 return Container(
@@ -53,100 +57,81 @@ class _HabitDetailCalendarViewState extends State<HabitDetailCalendarView> {
               return Container();
             }
             return Container(
-              decoration: getBox(days[index], index),
               alignment: Alignment.center,
-              child: Text(
-                '${day.day}',
-                style: AppTheme.appTheme
-                    .textStyle(
-                        textColor: containsDay(days[index])
-                            ? Colors.white
-                            : Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16)
-                    .copyWith(fontFamily: 'Montserrat'),
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: CustomPaint(
+                  painter: ContainerPainter(
+                      contains.s, contains.t, _lineHeight() / 2, widget.color),
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      '${day.day}',
+                      style: AppTheme.appTheme
+                          .textStyle(
+                              textColor:
+                                  contains.s ? Colors.white : Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15)
+                          .copyWith(fontFamily: 'Montserrat'),
+                    ),
+                  ),
+                ),
               ),
             );
           }),
     );
   }
 
-  BoxDecoration getBox(DateTime day, int index) {
-    DateTime lastDay = days[index - 1];
-    DateTime nextDay = days.length - 1 > index ? days[index + 1] : null;
-
-    if (containsDay(day)) {
-      bool containLastDay = containsDay(lastDay);
-      bool containNextDay = containsDay(nextDay);
-
-      ///昨天和明天都有记录
-      if (containLastDay && containNextDay) {
-        return colorBox();
-
-        ///昨天有记录，明天没有记录
-      } else if (containLastDay && !containNextDay) {
-        return rightBox();
-
-        ///昨天没有记录，明天有记录
-      } else if (!containLastDay && containNextDay) {
-        return leftBox();
-
-        ///昨天和明天都没有记录
-      } else {
-        return allBox();
-      }
-    } else {
-      return norBox();
-    }
-  }
-
-  BoxDecoration norBox() {
-    return BoxDecoration();
-  }
-
-  BoxDecoration colorBox() {
-    return BoxDecoration(color: widget.color);
-  }
-
-  BoxDecoration leftBox() {
-    return BoxDecoration(
-        shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(15), bottomLeft: Radius.circular(15)),
-        color: widget.color);
-  }
-
-  BoxDecoration rightBox() {
-    return BoxDecoration(
-        shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.only(
-            topRight: Radius.circular(15), bottomRight: Radius.circular(15)),
-        color: widget.color);
-  }
-
-  BoxDecoration allBox() {
-    return BoxDecoration(shape: BoxShape.circle, color: widget.color);
-  }
-
-  bool containsDay(DateTime date) {
+  Pair2<bool, int> containsDay(DateTime date) {
     if (date == null) {
-      return false;
+      return Pair2(false, 0);
     }
     bool contain = false;
+    int count = 0;
     if (widget.records == null || widget.records.length == 0) {
       contain = false;
     } else if (widget.records
         .containsKey('${date.year}-${date.month}-${date.day}')) {
       contain = true;
+      count = widget.records['${date.year}-${date.month}-${date.day}'].length;
     }
-    return contain;
+    return Pair2(contain, count);
   }
 
-  bool isSunday(DateTime date) {
-    return date.weekday == DateTime.sunday;
+  double _lineHeight() {
+    return ((MediaQuery.of(context).size.width - 20 * 2) / 7) / 1.5;
+  }
+}
+
+class ContainerPainter extends CustomPainter {
+  final int count;
+  final bool needPaint;
+  final double radius;
+  final Color color;
+
+  ContainerPainter(this.needPaint, this.count, this.radius, this.color);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Offset center = size.center(Offset.zero);
+    final Paint paint = Paint()..color = needPaint ? color : Colors.transparent;
+    canvas.drawCircle(center, radius - 2, paint);
+
+    for (int i = 0; i < count; i++) {
+      canvas.drawCircle(
+          center +
+              Offset((radius + 3) * cos((-2 + i) * pi / 6),
+                  (radius + 3) * sin((-2 + i) * pi / 6)),
+          3,
+          paint);
+    }
   }
 
-  bool isMonday(DateTime date) {
-    return date.weekday == DateTime.monday;
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    ContainerPainter oldPinter = oldDelegate as ContainerPainter;
+    return oldPinter.needPaint != this.needPaint ||
+        oldPinter.count != this.count;
   }
 }
