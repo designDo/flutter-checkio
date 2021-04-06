@@ -1,20 +1,30 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:timefly/models/habit.dart';
+import 'package:timefly/one_day/habit_check_view.dart';
 import 'package:timefly/utils/date_util.dart';
 import 'package:timefly/utils/pair.dart';
+import 'package:timefly/widget/float_modal.dart';
 
 import '../app_theme.dart';
 
 ///详情页面的 月 面板
 ///
 class HabitDetailCalendarView extends StatefulWidget {
+  final String habitId;
+  final int createTime;
   final Color color;
   final Map<String, List<HabitRecord>> records;
   final List<DateTime> days;
 
-  const HabitDetailCalendarView({Key key, this.color, this.records, this.days})
+  const HabitDetailCalendarView(
+      {Key key,
+      this.habitId,
+      this.color,
+      this.records,
+      this.days,
+      this.createTime})
       : super(key: key);
 
   @override
@@ -56,24 +66,57 @@ class _HabitDetailCalendarViewState extends State<HabitDetailCalendarView> {
               }
               return Container();
             }
-            return Container(
-              alignment: Alignment.center,
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: CustomPaint(
-                  painter: ContainerPainter(
-                      contains.s, contains.t, _lineHeight() / 2, widget.color),
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: Text(
-                      '${day.day}',
-                      style: AppTheme.appTheme
-                          .textStyle(
-                              textColor:
-                                  contains.s ? Colors.white : Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15)
-                          .copyWith(fontFamily: 'Montserrat'),
+            return GestureDetector(
+              onTap: () {
+                if (DateUtil.isFuture(day)) {
+                  Fluttertoast.showToast(
+                      msg: '超出时间范围',
+                      toastLength: Toast.LENGTH_SHORT,
+                      backgroundColor: Color(0xFF738AE6),
+                      gravity: ToastGravity.CENTER);
+                  return;
+                }
+                if (DateUtil.isLast(day,
+                    DateTime.fromMillisecondsSinceEpoch(widget.createTime))) {
+                  Fluttertoast.showToast(
+                      msg: '超出创建时间',
+                      toastLength: Toast.LENGTH_SHORT,
+                      backgroundColor: Color(0xFF738AE6),
+                      gravity: ToastGravity.CENTER);
+                  return;
+                }
+                showFloatingModalBottomSheet(
+                    barrierColor: Colors.black87,
+                    context: context,
+                    builder: (context, scroller) {
+                      return HabitCheckView(
+                        habitId: widget.habitId,
+                        isFromDetail: true,
+                        start: DateUtil.startOfDay(day),
+                        end: DateUtil.endOfDay(day),
+                      );
+                    });
+              },
+              onDoubleTap: () {},
+              child: Container(
+                alignment: Alignment.center,
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: CustomPaint(
+                    painter: ContainerPainter(contains.s, contains.t,
+                        _lineHeight() / 2, widget.color),
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        '${day.day}',
+                        style: AppTheme.appTheme
+                            .textStyle(
+                                textColor:
+                                    contains.s ? Colors.white : Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15)
+                            .copyWith(fontFamily: 'Montserrat'),
+                      ),
                     ),
                   ),
                 ),

@@ -11,14 +11,18 @@ import 'package:timefly/utils/date_util.dart';
 import 'package:timefly/utils/habit_util.dart';
 import 'package:timefly/utils/pair.dart';
 import 'package:timeline_tile/timeline_tile.dart';
+import 'package:time/time.dart';
 
 class HabitCheckView extends StatefulWidget {
+  ///首页签到进入，start 和 end 是一个周期，而详情进入是某一天，需要单独判断
+  final bool isFromDetail;
   final DateTime start;
   final DateTime end;
 
   final String habitId;
 
-  const HabitCheckView({Key key, this.habitId, this.start, this.end})
+  const HabitCheckView(
+      {Key key, this.habitId, this.start, this.end, this.isFromDetail})
       : super(key: key);
 
   @override
@@ -83,10 +87,28 @@ class _HabitCheckViewState extends State<HabitCheckView> {
               ),
               floatingActionButton: FloatingActionButton(
                 onPressed: () async {
+                  int checkTime;
+                  if (widget.isFromDetail) {
+                    ///判断是否为当天
+                    ///当天，time: DateTime.now().millisecondsSinceEpoch
+                    ///N天 time: DateTime.now().copyWith(start.year,start.month,satrt.day).millisecondsSinceEpoch
+                    ///即是 N天年月日 and 此时的时分秒
+                    if (DateUtil.isToday(widget.start.millisecondsSinceEpoch)) {
+                      checkTime = DateTime.now().millisecondsSinceEpoch;
+                    } else {
+                      checkTime = DateTime.now()
+                          .copyWith(
+                              year: widget.start.year,
+                              month: widget.start.month,
+                              day: widget.start.day)
+                          .millisecondsSinceEpoch;
+                    }
+                  } else {
+                    checkTime = DateTime.now().millisecondsSinceEpoch;
+                  }
+
                   HabitRecord record = HabitRecord(
-                      habitId: widget.habitId,
-                      time: DateTime.now().millisecondsSinceEpoch,
-                      content: '');
+                      habitId: widget.habitId, time: checkTime, content: '');
 
                   BlocProvider.of<RecordBloc>(context).add(RecordAdd(record));
                   listKey.currentState.insertItem(0,

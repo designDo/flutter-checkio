@@ -268,7 +268,9 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView> {
                               padding: EdgeInsets.only(top: calendarPadding),
                               child: HabitDetailCalendarView(
                                 color: Color(widget.habit.mainColor),
+                                createTime: widget.habit.createTime,
                                 days: days,
+                                habitId: widget.habit.id,
                                 records: records,
                               ),
                             ),

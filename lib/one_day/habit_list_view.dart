@@ -164,6 +164,7 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
         builder: (context, scroller) {
           return HabitCheckView(
             habitId: widget.habit.id,
+            isFromDetail: false,
             start: start,
             end: end,
           );

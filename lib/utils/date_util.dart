@@ -199,6 +199,17 @@ class DateUtil {
     return startOfDay(now) + 1.days - 1.milliseconds;
   }
 
+  static bool isFuture(DateTime time) {
+    return startOfDay(time).millisecondsSinceEpoch >
+        endOfDay(DateTime.now()).millisecondsSinceEpoch;
+  }
+
+  ///判断当前时间是否在给定时间之前
+  static bool isLast(DateTime now, DateTime time) {
+    return endOfDay(now).millisecondsSinceEpoch <
+        startOfDay(time).millisecondsSinceEpoch;
+  }
+
   /// '15:12' 返回当天的这个时间
   static DateTime parseHourAndMinWithString(String day) {
     DateTime now = DateTime.now();
