@@ -128,11 +128,17 @@ class HabitBaseInfoView extends StatelessWidget {
   }
 
   Widget _tipView(int recordLength) {
+    String tip = '今天需完成';
+    if (habit.period == HabitPeriod.week) {
+      tip = '本周需完成';
+    } else if (habit.period == HabitPeriod.month) {
+      tip = '本月需完成';
+    }
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          'Today Needs',
+          tip,
           style: AppTheme.appTheme.textStyle(
             textColor: Colors.black,
             fontSize: 14,
@@ -149,7 +155,7 @@ class HabitBaseInfoView extends StatelessWidget {
         SizedBox(
           width: 3,
         ),
-        Text('Has Done',
+        Text('已完成',
             style: AppTheme.appTheme.textStyle(
               textColor: Colors.black,
               fontSize: 14,
@@ -345,7 +351,11 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView> {
     int createTimeMonth =
         DateTime(createTime.year, createTime.month, 1).millisecondsSinceEpoch;
     if (createTimeMonth > month.millisecondsSinceEpoch) {
-      return Text('暂无统计数据');
+      return Text('暂无统计数据',
+          style: AppTheme.appTheme.textStyle(
+              textColor: Colors.black,
+              fontWeight: FontWeight.w300,
+              fontSize: 14));
     }
     int needDoNum;
     if (widget.habit.period == HabitPeriod.day) {
@@ -365,11 +375,11 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView> {
                   ? SizedBox()
                   : RichText(
                       text: TextSpan(
-                          text: '本月需完成',
+                          text: '本月需完成  ',
                           style: AppTheme.appTheme.textStyle(
                               textColor: Colors.black,
                               fontWeight: FontWeight.w300,
-                              fontSize: 16),
+                              fontSize: 14),
                           children: [
                             TextSpan(
                                 text: '$needDoNum',
@@ -377,20 +387,20 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView> {
                                     .textStyle(
                                         textColor: Colors.black,
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 18)
+                                        fontSize: 22)
                                     .copyWith(fontFamily: 'Montserrat')),
                             TextSpan(
-                              text: '次',
+                              text: '  次',
                             )
                           ]),
                     ),
               RichText(
                 text: TextSpan(
-                    text: '已经完成',
+                    text: '已经完成  ',
                     style: AppTheme.appTheme.textStyle(
                         textColor: Colors.black,
                         fontWeight: FontWeight.w300,
-                        fontSize: 16),
+                        fontSize: 14),
                     children: [
                       TextSpan(
                           text: '$checkNum',
@@ -398,10 +408,10 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView> {
                               .textStyle(
                                   textColor: Colors.black,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 18)
+                                  fontSize: 22)
                               .copyWith(fontFamily: 'Montserrat')),
                       TextSpan(
-                        text: '次',
+                        text: '  次',
                       )
                     ]),
               )
