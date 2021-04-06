@@ -1,18 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:timefly/add_habit/habit_edit_page.dart';
 import 'package:timefly/app_theme.dart';
+import 'package:timefly/blocs/habit/habit_bloc.dart';
+import 'package:timefly/blocs/habit/habit_state.dart';
 import 'package:timefly/detail/habit_detail_views.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/utils/system_util.dart';
 
 ///detail page
 class HabitDetailPage extends StatefulWidget {
-  final Habit habit;
+  final String habitId;
 
-  const HabitDetailPage({Key key, this.habit}) : super(key: key);
+  const HabitDetailPage({Key key, this.habitId}) : super(key: key);
 
   @override
   _HabitDetailPageState createState() => _HabitDetailPageState();
@@ -45,83 +48,100 @@ class _HabitDetailPageState extends State<HabitDetailPage>
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUtil.getSystemUiOverlayStyle(Brightness.dark),
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-              iconSize: 32,
-              padding: EdgeInsets.all(14),
-              icon: SvgPicture.asset(
-                'assets/images/fanhui.svg',
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              }),
-          backgroundColor: Color(widget.habit.mainColor).withOpacity(0.8),
-          actions: [
-            IconButton(
-              iconSize: 33,
-              padding: EdgeInsets.all(16),
-              icon: SvgPicture.asset(
-                'assets/images/bianji.svg',
-                color: Colors.white,
-              ),
-              onPressed: () async {
-                await Navigator.of(context)
-                    .push(CupertinoPageRoute(builder: (context) {
-                  return HabitEditPage(
-                    isModify: true,
-                    habit: widget.habit,
-                  );
-                }));
-              },
+      child: BlocBuilder<HabitsBloc, HabitsState>(
+        builder: (context, state) {
+          if (state is HabitsLoadInProgress) {
+            return CircularProgressIndicator();
+          }
+          if (state is HabitLoadSuccess) {
+            final Habit habit = state.habits
+                .firstWhere((element) => element.id == widget.habitId);
+            return _body(habit);
+          }
+          return Container();
+        },
+      ),
+    );
+  }
+
+  Widget _body(Habit habit) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+            iconSize: 32,
+            padding: EdgeInsets.all(14),
+            icon: SvgPicture.asset(
+              'assets/images/fanhui.svg',
+              color: Colors.white,
             ),
-          ],
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.all(2),
-                width: 34,
-                height: 34,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 1)),
-                child: Image.asset(widget.habit.iconPath),
-              ),
-              SizedBox(
-                width: 6,
-              ),
-              Text(
-                widget.habit.name,
-                style: AppTheme.appTheme.textStyle(
-                    textColor: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600),
-              )
-            ],
+            onPressed: () {
+              Navigator.of(context).pop();
+            }),
+        backgroundColor: Color(habit.mainColor).withOpacity(0.8),
+        actions: [
+          IconButton(
+            iconSize: 33,
+            padding: EdgeInsets.all(16),
+            icon: SvgPicture.asset(
+              'assets/images/bianji.svg',
+              color: Colors.white,
+            ),
+            onPressed: () async {
+              await Navigator.of(context)
+                  .push(CupertinoPageRoute(builder: (context) {
+                return HabitEditPage(
+                  isModify: true,
+                  habit: habit,
+                );
+              }));
+            },
           ),
-        ),
-        backgroundColor: AppTheme.appTheme.containerBackgroundColor(),
-        body: CustomScrollView(
-          controller: _controller,
-          physics: BouncingScrollPhysics(),
-          slivers: <Widget>[
-            SliverList(
-              delegate: SliverChildListDelegate([
-                HabitBaseInfoView(
-                  habit: widget.habit,
-                  animationController: _animationController,
-                ),
-                HabitMonthInfoView(
-                  habit: widget.habit,
-                  animationController: _animationController,
-                ),
-              ]),
+        ],
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.all(2),
+              width: 34,
+              height: 34,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 1)),
+              child: Image.asset(habit.iconPath),
             ),
+            SizedBox(
+              width: 6,
+            ),
+            Text(
+              habit.name,
+              style: AppTheme.appTheme.textStyle(
+                  textColor: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600),
+            )
           ],
         ),
+      ),
+      backgroundColor: AppTheme.appTheme.containerBackgroundColor(),
+      body: CustomScrollView(
+        controller: _controller,
+        physics: BouncingScrollPhysics(),
+        slivers: <Widget>[
+          SliverList(
+            delegate: SliverChildListDelegate([
+              HabitBaseInfoView(
+                habit: habit,
+                animationController: _animationController,
+              ),
+              HabitMonthInfoView(
+                habit: habit,
+                animationController: _animationController,
+              ),
+              Text('$habit')
+            ]),
+          ),
+        ],
       ),
     );
   }

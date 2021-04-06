@@ -134,7 +134,7 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                   await Navigator.of(context)
                       .push(CupertinoPageRoute(builder: (context) {
                     return HabitDetailPage(
-                      habit: widget.habit,
+                      habitId: widget.habit.id,
                     );
                   }));
                 },
