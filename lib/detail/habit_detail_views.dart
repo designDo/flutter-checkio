@@ -567,8 +567,10 @@ class HabitCheckInfoView extends StatelessWidget {
 
 class HabitStreakInfoView extends StatelessWidget {
   final Habit habit;
+  final AnimationController animationController;
 
-  const HabitStreakInfoView({Key key, this.habit}) : super(key: key);
+  const HabitStreakInfoView({Key key, this.habit, this.animationController})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -579,63 +581,73 @@ class HabitStreakInfoView extends StatelessWidget {
     if (streaks.length > 0) {
       maxCount = streaks[streaks.keys.first];
     }
-    return Container(
-      margin: EdgeInsets.only(top: 16, right: 16, left: 16),
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.all(Radius.circular(16)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black.withOpacity(.1),
-                blurRadius: 16,
-                offset: Offset(4, 4))
-          ]),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                '当前连续',
-                style: AppTheme.appTheme.textStyle(
-                    textColor: Colors.black,
-                    fontWeight: FontWeight.normal,
-                    fontSize: 14),
-              ),
-              SizedBox(
-                width: 3,
-              ),
-              Text(
-                '${HabitUtil.getMostStreaks(records)}',
-                style: AppTheme.appTheme
-                    .textStyle(
-                        textColor: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22)
-                    .copyWith(fontFamily: 'Montserrat'),
-              )
-            ],
-          ),
-          Text(
-            '历史连续',
-            style: AppTheme.appTheme.textStyle(
-                textColor: Colors.black,
-                fontWeight: FontWeight.normal,
-                fontSize: 14),
-          ),
-          streaks.length == 0
-              ? SizedBox()
-              : Column(
-                  children: streaks.keys
-                      .take(5)
-                      .map((e) => _checkInfo(e, streaks[e], maxCount))
-                      .toList(),
+    return SlideTransition(
+        position: Tween<Offset>(begin: Offset(0, 0.3), end: Offset.zero)
+            .animate(CurvedAnimation(
+                parent: animationController,
+                curve: Interval(0.7, 1, curve: Curves.ease))),
+        child: FadeTransition(
+          opacity: Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+              parent: animationController,
+              curve: Interval(0.7, 1, curve: Curves.ease))),
+          child: Container(
+            margin: EdgeInsets.only(top: 16, right: 16, left: 16),
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.all(Radius.circular(16)),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black.withOpacity(.1),
+                      blurRadius: 16,
+                      offset: Offset(4, 4))
+                ]),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      '当前连续',
+                      style: AppTheme.appTheme.textStyle(
+                          textColor: Colors.black,
+                          fontWeight: FontWeight.normal,
+                          fontSize: 14),
+                    ),
+                    SizedBox(
+                      width: 3,
+                    ),
+                    Text(
+                      '${HabitUtil.getMostStreaks(records)}',
+                      style: AppTheme.appTheme
+                          .textStyle(
+                              textColor: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22)
+                          .copyWith(fontFamily: 'Montserrat'),
+                    )
+                  ],
                 ),
-        ],
-      ),
-    );
+                Text(
+                  '历史连续',
+                  style: AppTheme.appTheme.textStyle(
+                      textColor: Colors.black,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 14),
+                ),
+                streaks.length == 0
+                    ? SizedBox()
+                    : Column(
+                        children: streaks.keys
+                            .take(5)
+                            .map((e) => _checkInfo(e, streaks[e], maxCount))
+                            .toList(),
+                      ),
+              ],
+            ),
+          ),
+        ));
   }
 
   Widget _checkInfo(String time, int count, int maxCount) {

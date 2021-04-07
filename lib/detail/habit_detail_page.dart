@@ -147,6 +147,7 @@ class _HabitDetailPageState extends State<HabitDetailPage>
               habit.period != HabitPeriod.week
                   ? HabitStreakInfoView(
                       habit: habit,
+                      animationController: _animationController,
                     )
                   : SizedBox(),
               Container(
