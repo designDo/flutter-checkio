@@ -143,6 +143,9 @@ class _HabitDetailPageState extends State<HabitDetailPage>
                 habit: habit,
                 animationController: _animationController,
               ),
+              HabitStreakInfoView(
+                habit: habit,
+              ),
               Text('$habit')
             ]),
           ),

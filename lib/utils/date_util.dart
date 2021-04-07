@@ -221,6 +221,12 @@ class DateUtil {
     return now.copyWith(hour: int.parse(str[0]), minute: int.parse(str[1]));
   }
 
+  /// '2020-12-20' 返回当天的这个时间
+  static DateTime parseYearAndMonthAndDayWithString(String day) {
+    List<String> str = day.split('-');
+    return DateTime(int.parse(str[0]), int.parse(str[1]), int.parse(str[2]));
+  }
+
   ///根据给定时间获取当前月的第一天
   static DateTime getFirstDayOfMonth(DateTime dateTime) {
     return DateTime(dateTime.year, dateTime.month, 1);

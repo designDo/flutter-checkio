@@ -564,3 +564,19 @@ class HabitCheckInfoView extends StatelessWidget {
     );
   }
 }
+
+class HabitStreakInfoView extends StatelessWidget {
+  final Habit habit;
+
+  const HabitStreakInfoView({Key key, this.habit}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Map<String, List<HabitRecord>> records =
+        HabitUtil.combinationRecords(habit.records);
+    return Container(
+      margin: EdgeInsets.only(top: 16),
+      child: Text('${HabitUtil.getHabitStreaks(records)}'),
+    );
+  }
+}

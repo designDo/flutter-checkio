@@ -49,8 +49,8 @@ class HabitUtil {
       DateTime dayi = getDay(days[i]);
 
       ///只算天和月，周无法统计连续
-      DateTime nextDay = getDay(days[i - 1]);
-      if (isNextDay(dayi, nextDay)) {
+      DateTime lastDay = getDay(days[i - 1]);
+      if (isNextDay(lastDay, dayi)) {
         count++;
       } else {
         sort.add(int.parse('$count'));
@@ -62,6 +62,46 @@ class HabitUtil {
       return 0;
     }
     return sort.first + 1;
+  }
+
+  /// 获取一个习惯历史最大连续数量
+  /// String 日期start,end int 数量
+  static Map<String, int> getHabitStreaks(
+      Map<String, List<HabitRecord>> checks) {
+    List<String> days = checks.keys.toList();
+    days.sort((a, b) =>
+        DateUtil.parseYearAndMonthAndDayWithString(a).millisecondsSinceEpoch -
+        DateUtil.parseYearAndMonthAndDayWithString(b).millisecondsSinceEpoch);
+    Map<String, int> streaks = {};
+    int count = 1;
+    DateTime startDay = getDay(days.first);
+    for (int i = 0; i < days.length - 1; i++) {
+      DateTime dayi = getDay(days[i]);
+
+      ///只算天和月，周无法统计连续
+      DateTime nextDay = getDay(days[i + 1]);
+      if (isNextDay(dayi, nextDay)) {
+        count++;
+      } else {
+        streaks['${DateUtil.formDateTime(startDay)},${DateUtil.formDateTime(dayi)}'] =
+            int.parse('$count');
+        count = 1;
+        startDay = nextDay;
+      }
+      if (i + 1 == days.length - 1) {
+        streaks['${DateUtil.formDateTime(startDay)},${DateUtil.formDateTime(nextDay)}'] =
+            int.parse('$count');
+      }
+    }
+
+    List<String> keys = streaks.keys.toList();
+    keys.sort((a, b) => streaks[b] == streaks[a] ? 1 : streaks[b] - streaks[a]);
+
+    Map<String, int> newStreaks = {};
+    keys.forEach((key) {
+      newStreaks[key] = streaks[key];
+    });
+    return newStreaks;
   }
 
   ///获取当前最大连续天数
@@ -88,8 +128,8 @@ class HabitUtil {
     return DateTime(int.parse(str[0]), int.parse(str[1]), int.parse(str[2]));
   }
 
-  static bool isNextDay(DateTime day1, DateTime nextDay) {
-    return nextDay == day1 - 1.days;
+  static bool isNextDay(DateTime day, DateTime nextDay) {
+    return day == nextDay - 1.days;
   }
 
   static int getDoNums(Habit habit) {
