@@ -108,7 +108,7 @@ class _HabitDetailCalendarViewState extends State<HabitDetailCalendarView> {
                     child: Container(
                       alignment: Alignment.center,
                       child: Text(
-                        '${day.day}',
+                        '${DateUtil.isToday(day.millisecondsSinceEpoch) ? '今' : day.day}',
                         style: AppTheme.appTheme
                             .textStyle(
                                 textColor:
