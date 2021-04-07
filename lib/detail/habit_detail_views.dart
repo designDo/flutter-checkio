@@ -673,29 +673,34 @@ class HabitStreakInfoView extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(
-          width: 8,
-        ),
-        Text(
-          '$count',
-          style: AppTheme.appTheme
-              .textStyle(
-                  textColor: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22)
-              .copyWith(fontFamily: 'Montserrat'),
-        ),
-        SizedBox(
-          width: 8,
-        ),
-        Text(
-          '${str[0].substring(str[0].indexOf('-') + 1)} -- ${str[1].substring(str[1].indexOf('-') + 1)}',
-          style: AppTheme.appTheme
-              .textStyle(
-                  textColor: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w300)
-              .copyWith(fontFamily: 'Montserrat'),
+        Container(
+          width: 111,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                '$count',
+                style: AppTheme.appTheme
+                    .textStyle(
+                        textColor: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22)
+                    .copyWith(fontFamily: 'Montserrat'),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                '${str[0].substring(str[0].indexOf('-') + 1)} -- ${str[1].substring(str[1].indexOf('-') + 1)}',
+                style: AppTheme.appTheme
+                    .textStyle(
+                        textColor: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w300)
+                    .copyWith(fontFamily: 'Montserrat'),
+              )
+            ],
+          ),
         )
       ],
     );
