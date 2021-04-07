@@ -574,9 +574,130 @@ class HabitStreakInfoView extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<String, List<HabitRecord>> records =
         HabitUtil.combinationRecords(habit.records);
+    Map<String, int> streaks = HabitUtil.getHabitStreaks(records);
+    int maxCount = 0;
+    if (streaks.length > 0) {
+      maxCount = streaks[streaks.keys.first];
+    }
     return Container(
-      margin: EdgeInsets.only(top: 16),
-      child: Text('${HabitUtil.getHabitStreaks(records)}'),
+      margin: EdgeInsets.only(top: 16, right: 16, left: 16),
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.all(Radius.circular(16)),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black.withOpacity(.1),
+                blurRadius: 16,
+                offset: Offset(4, 4))
+          ]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                '当前连续',
+                style: AppTheme.appTheme.textStyle(
+                    textColor: Colors.black,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 14),
+              ),
+              SizedBox(
+                width: 3,
+              ),
+              Text(
+                '${HabitUtil.getMostStreaks(records)}',
+                style: AppTheme.appTheme
+                    .textStyle(
+                        textColor: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22)
+                    .copyWith(fontFamily: 'Montserrat'),
+              )
+            ],
+          ),
+          Text(
+            '历史连续',
+            style: AppTheme.appTheme.textStyle(
+                textColor: Colors.black,
+                fontWeight: FontWeight.normal,
+                fontSize: 14),
+          ),
+          streaks.length == 0
+              ? SizedBox()
+              : Column(
+                  children: streaks.keys
+                      .take(5)
+                      .map((e) => _checkInfo(e, streaks[e], maxCount))
+                      .toList(),
+                ),
+        ],
+      ),
+    );
+  }
+
+  Widget _checkInfo(String time, int count, int maxCount) {
+    List<String> str = time.split(',');
+    return Row(
+      children: [
+        Expanded(
+          child: Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.2),
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    flex: count,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Color(habit.mainColor).withOpacity(0.6),
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      height: 10,
+                    ),
+                  ),
+                  Expanded(
+                    flex: maxCount - count,
+                    child: SizedBox(),
+                  )
+                ],
+              )
+            ],
+          ),
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        Text(
+          '$count',
+          style: AppTheme.appTheme
+              .textStyle(
+                  textColor: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22)
+              .copyWith(fontFamily: 'Montserrat'),
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        Text(
+          '${str[0].substring(str[0].indexOf('-') + 1)} -- ${str[1].substring(str[1].indexOf('-') + 1)}',
+          style: AppTheme.appTheme
+              .textStyle(
+                  textColor: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w300)
+              .copyWith(fontFamily: 'Montserrat'),
+        )
+      ],
     );
   }
 }

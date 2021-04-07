@@ -99,7 +99,9 @@ class HabitUtil {
 
     Map<String, int> newStreaks = {};
     keys.forEach((key) {
-      newStreaks[key] = streaks[key];
+      if (streaks[key] > 1) {
+        newStreaks[key] = streaks[key];
+      }
     });
     return newStreaks;
   }
