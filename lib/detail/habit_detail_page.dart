@@ -9,6 +9,7 @@ import 'package:timefly/blocs/habit/habit_bloc.dart';
 import 'package:timefly/blocs/habit/habit_state.dart';
 import 'package:timefly/detail/habit_detail_views.dart';
 import 'package:timefly/models/habit.dart';
+import 'package:timefly/one_day/habit_check_view.dart';
 import 'package:timefly/utils/system_util.dart';
 
 ///detail page
@@ -135,6 +136,10 @@ class _HabitDetailPageState extends State<HabitDetailPage>
                 animationController: _animationController,
               ),
               HabitMonthInfoView(
+                habit: habit,
+                animationController: _animationController,
+              ),
+              HabitCheckInfoView(
                 habit: habit,
                 animationController: _animationController,
               ),

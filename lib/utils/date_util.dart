@@ -17,6 +17,10 @@ class DateUtil {
     return '${dateTime.year}-${dateTime.month}-${dateTime.day}';
   }
 
+  static String formDateTime(DateTime dateTime) {
+    return '${dateTime.year}-${dateTime.month}-${dateTime.day}';
+  }
+
   static int millisecondsUntilTomorrow() {
     DateTime now = DateTime.now();
     DateTime tomorrow = DateTime(now.year, now.month, now.day, 23, 59, 59, 999);

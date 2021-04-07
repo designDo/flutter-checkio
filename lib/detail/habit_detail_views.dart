@@ -427,3 +427,140 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView> {
     );
   }
 }
+
+class HabitCheckInfoView extends StatelessWidget {
+  final AnimationController animationController;
+  final Habit habit;
+
+  const HabitCheckInfoView({Key key, this.habit, this.animationController})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        FadeTransition(
+          opacity: Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+              parent: animationController,
+              curve: Interval(0.6, 1, curve: Curves.fastOutSlowIn))),
+          child: Container(
+            margin: EdgeInsets.only(left: 16, bottom: 12, top: 8),
+            child: Text(
+              '${DateUtil.getDayString(habit.createTime)} -- ${DateUtil.formDateTime(DateTime.now())}',
+              style: AppTheme.appTheme
+                  .textStyle(
+                      textColor: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16)
+                  .copyWith(fontFamily: 'Montserrat'),
+            ),
+          ),
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: SlideTransition(
+                position: Tween<Offset>(begin: Offset(-1, 0), end: Offset.zero)
+                    .animate(CurvedAnimation(
+                        parent: animationController,
+                        curve: Interval(0.6, 1, curve: Curves.fastOutSlowIn))),
+                child: AspectRatio(
+                  aspectRatio: 1.58,
+                  child: Container(
+                    margin: EdgeInsets.only(left: 20),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black.withOpacity(.1),
+                              blurRadius: 16,
+                              offset: Offset(4, 4))
+                        ]),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '${habit.records.length}',
+                          style: AppTheme.appTheme
+                              .textStyle(
+                                  textColor: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 28)
+                              .copyWith(fontFamily: 'Montserrat'),
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          '总记录(次)',
+                          style: AppTheme.appTheme.textStyle(
+                              textColor: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 18,
+            ),
+            Expanded(
+              child: SlideTransition(
+                position: Tween<Offset>(begin: Offset(1, 0), end: Offset.zero)
+                    .animate(CurvedAnimation(
+                        parent: animationController,
+                        curve: Interval(0.6, 1, curve: Curves.fastOutSlowIn))),
+                child: AspectRatio(
+                  aspectRatio: 1.58,
+                  child: Container(
+                    margin: EdgeInsets.only(right: 20),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black.withOpacity(.1),
+                              blurRadius: 16,
+                              offset: Offset(4, 4))
+                        ]),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '${HabitUtil.combinationRecords(habit.records).keys.length}',
+                          style: AppTheme.appTheme
+                              .textStyle(
+                                  textColor: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 28)
+                              .copyWith(fontFamily: 'Montserrat'),
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          '总记录(天)',
+                          style: AppTheme.appTheme.textStyle(
+                              textColor: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ],
+        )
+      ],
+    );
+  }
+}
