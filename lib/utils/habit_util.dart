@@ -321,4 +321,17 @@ class HabitUtil {
     }
     return filterHabitRecordsWithTime(records, start: start, end: end);
   }
+
+  static int getDoCountOfHabit(
+      List<HabitRecord> records, DateTime start, DateTime end) {
+    start = DateUtil.startOfDay(start);
+    end = DateUtil.endOfDay(end);
+
+    int count = records
+        .where((record) =>
+            record.time > start.millisecondsSinceEpoch &&
+            record.time < end.millisecondsSinceEpoch)
+        .length;
+    return count;
+  }
 }

@@ -136,6 +136,10 @@ class _HabitDetailPageState extends State<HabitDetailPage>
                 habit: habit,
                 animationController: _animationController,
               ),
+              HabitCompleteRateView(
+                habit: habit,
+                animationController: _animationController,
+              ),
               HabitMonthInfoView(
                 habit: habit,
                 animationController: _animationController,

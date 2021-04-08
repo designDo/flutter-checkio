@@ -122,6 +122,15 @@ class DateUtil {
     return getMonthDays(DateTime.now().copyWith(day: 1)).length;
   }
 
+  static String getDayPeroidDtring(DateTime now, int dayIndex) {
+    DateTime time = now - dayIndex.days;
+    return '${twoDigits(time.month)}.${twoDigits(time.day)}';
+  }
+
+  static DateTime getDayPeroid(DateTime now, int dayIndex) {
+    return now - dayIndex.days;
+  }
+
   static String getWeekPeriodString(DateTime now, int weekIndex) {
     Pair<DateTime> peroid = getWeekStartAndEnd(now, weekIndex);
     return '${twoDigits(peroid.x0.month)}.${twoDigits(peroid.x0.day)} - ${twoDigits(peroid.x1.month)}.${twoDigits(peroid.x1.day)}';

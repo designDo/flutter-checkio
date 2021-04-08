@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:timefly/detail/detail_calender_view.dart';
 import 'package:timefly/models/complete_time.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_peroid.dart';
 import 'package:timefly/utils/date_util.dart';
 import 'package:timefly/utils/habit_util.dart';
+import 'package:timefly/utils/pair.dart';
 import 'package:timefly/widget/circle_progress_bar.dart';
 
 import '../app_theme.dart';
@@ -170,6 +172,284 @@ class HabitBaseInfoView extends StatelessWidget {
                 fontFamily: 'Montserrat')),
       ],
     );
+  }
+}
+
+class HabitCompleteRateView extends StatefulWidget {
+  final AnimationController animationController;
+  final Habit habit;
+
+  const HabitCompleteRateView({Key key, this.habit, this.animationController})
+      : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _HabitCompleteRateViewState();
+  }
+}
+
+class _HabitCompleteRateViewState extends State<HabitCompleteRateView> {
+  ///当前周标示
+  ///0 今天，1，昨天
+  ///
+  int currentDayIndex = 1;
+
+  ///当前周标示
+  ///0 当前周，1，上一周
+  int currentWeekIndex = 1;
+
+  ///当前月标示 0 当前月 1 上个月
+  int currentMonthIndex = 1;
+
+  DateTime _now = DateTime.now();
+
+  @override
+  Widget build(BuildContext context) {
+    int period = widget.habit.period;
+    return Row(
+      children: [
+        Expanded(
+          child: SlideTransition(
+            position: Tween<Offset>(begin: Offset(-1, 0), end: Offset.zero)
+                .animate(CurvedAnimation(
+                    parent: widget.animationController,
+                    curve: Interval(0.2, 0.6, curve: Curves.ease))),
+            child: Container(
+              padding:
+                  EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
+              alignment: Alignment.centerLeft,
+              decoration: BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.all(Radius.circular(45)),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        offset: const Offset(10, 5.0),
+                        blurRadius: 16.0)
+                  ]),
+              margin: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      _left(period);
+                    },
+                    child: SvgPicture.asset(
+                      'assets/images/navigation_left.svg',
+                      color: Colors.indigo,
+                      width: 25,
+                      height: 25,
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Text(
+                          _timeString(period),
+                          style: AppTheme.appTheme.textStyle(
+                              textColor: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        ),
+                        Text(_dateString(period),
+                            style: AppTheme.appTheme
+                                .textStyle(
+                                    textColor: Colors.black,
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: 16)
+                                .copyWith(fontFamily: 'Montserrat'))
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                      onTap: () {
+                        _right(period);
+                      },
+                      child: SvgPicture.asset(
+                        'assets/images/navigation_right.svg',
+                        color: ((period == HabitPeriod.day &&
+                                    currentDayIndex == 0) ||
+                                (period == HabitPeriod.week &&
+                                    currentWeekIndex == 0) ||
+                                (period == HabitPeriod.month &&
+                                    currentMonthIndex == 0))
+                            ? Colors.grey
+                            : Colors.indigo,
+                        width: 25,
+                        height: 25,
+                      ))
+                ],
+              ),
+            ),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(right: 16),
+          padding: EdgeInsets.all(5),
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    offset: const Offset(10, 5.0),
+                    blurRadius: 16.0),
+              ]),
+          width: 60,
+          height: 60,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              CircleProgressBar(
+                  backgroundColor: AppTheme.appTheme.containerBackgroundColor(),
+                  foregroundColor: Color(widget.habit.mainColor),
+                  value: _doCount(period) / widget.habit.doNum),
+              Text(
+                '${((_doCount(period) / widget.habit.doNum) * 100).toInt()}%',
+                style: AppTheme.appTheme
+                    .textStyle(
+                      textColor: Colors.black,
+                      fontSize: 14,
+                    )
+                    .copyWith(fontFamily: 'Montserrat'),
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  int _doCount(int period) {
+    int count = 0;
+    switch (period) {
+      case HabitPeriod.day:
+        DateTime start = DateUtil.getDayPeroid(_now, currentDayIndex);
+        count = HabitUtil.getDoCountOfHabit(widget.habit.records, start, start);
+        break;
+      case HabitPeriod.week:
+        Pair<DateTime> weekSAE =
+            DateUtil.getWeekStartAndEnd(_now, currentWeekIndex);
+        count = HabitUtil.getDoCountOfHabit(
+            widget.habit.records, weekSAE.x0, weekSAE.x1);
+        break;
+      case HabitPeriod.month:
+        Pair<DateTime> monthSAE =
+            DateUtil.getMonthStartAndEnd(_now, currentMonthIndex);
+        count = HabitUtil.getDoCountOfHabit(
+            widget.habit.records, monthSAE.x0, monthSAE.x1);
+        break;
+    }
+    return count;
+  }
+
+  void _left(int peroid) {
+    setState(() {
+      switch (peroid) {
+        case HabitPeriod.day:
+          currentDayIndex += 1;
+          break;
+        case HabitPeriod.week:
+          currentWeekIndex += 1;
+
+          break;
+        case HabitPeriod.month:
+          currentMonthIndex += 1;
+          break;
+      }
+    });
+  }
+
+  void _right(int peroid) {
+    if (peroid == HabitPeriod.day) {
+      if (currentDayIndex == 0) {
+        return;
+      }
+      setState(() {
+        currentDayIndex -= 1;
+      });
+    } else if (peroid == HabitPeriod.week) {
+      if (currentWeekIndex == 0) {
+        return;
+      }
+      setState(() {
+        currentWeekIndex -= 1;
+      });
+    } else {
+      if (currentMonthIndex == 0) {
+        return;
+      }
+      setState(() {
+        currentMonthIndex -= 1;
+      });
+    }
+  }
+
+  String _timeString(int peroid) {
+    String string = '';
+    switch (peroid) {
+      case HabitPeriod.day:
+        string = _dayString();
+        break;
+      case HabitPeriod.week:
+        string = _weekString();
+        break;
+      case HabitPeriod.month:
+        string = _monthString();
+        break;
+    }
+    return string;
+  }
+
+  String _dateString(int peroid) {
+    String string = '';
+    switch (peroid) {
+      case HabitPeriod.day:
+        string = DateUtil.getDayPeroidDtring(_now, currentDayIndex);
+        break;
+      case HabitPeriod.week:
+        string = DateUtil.getWeekPeriodString(_now, currentWeekIndex);
+        break;
+      case HabitPeriod.month:
+        string = DateUtil.getMonthPeriodString(_now, currentMonthIndex);
+        break;
+    }
+    return string;
+  }
+
+  String _dayString() {
+    if (currentDayIndex == 0) {
+      return '今天';
+    }
+    if (currentDayIndex == 1) {
+      return '昨天';
+    }
+    if (currentDayIndex == 2) {
+      return '前天';
+    }
+    return '$currentDayIndex天前';
+  }
+
+  String _weekString() {
+    if (currentWeekIndex == 0) {
+      return '本周';
+    }
+    if (currentWeekIndex == 1) {
+      return '上周';
+    }
+    return '$currentWeekIndex周前';
+  }
+
+  String _monthString() {
+    if (currentMonthIndex == 0) {
+      return '本月';
+    }
+    if (currentMonthIndex == 1) {
+      return '上月';
+    }
+    return '$currentMonthIndex月前';
   }
 }
 
