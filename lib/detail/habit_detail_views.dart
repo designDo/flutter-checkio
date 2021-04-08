@@ -447,7 +447,7 @@ class HabitCheckInfoView extends StatelessWidget {
           child: Container(
             margin: EdgeInsets.only(left: 16, bottom: 12, top: 8),
             child: Text(
-              '${DateUtil.getDayString(habit.createTime)} -- ${DateUtil.formDateTime(DateTime.now())}',
+              '${DateUtil.getDayString(habit.createTime)} - ${DateUtil.formDateTime(DateTime.now())}',
               style: AppTheme.appTheme
                   .textStyle(
                       textColor: Colors.black,
@@ -619,7 +619,7 @@ class HabitStreakInfoView extends StatelessWidget {
                       width: 3,
                     ),
                     Text(
-                      '${HabitUtil.getMostStreaks(records)}',
+                      '${HabitUtil.getNowStreaks(records)}',
                       style: AppTheme.appTheme
                           .textStyle(
                               textColor: Colors.black,
@@ -654,7 +654,8 @@ class HabitStreakInfoView extends StatelessWidget {
     List<String> str = time.split(',');
     return Row(
       children: [
-        Expanded(
+        Container(
+          width: 140,
           child: Stack(
             children: [
               Container(
@@ -685,34 +686,35 @@ class HabitStreakInfoView extends StatelessWidget {
             ],
           ),
         ),
-        Container(
-          width: 111,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                '$count',
-                style: AppTheme.appTheme
-                    .textStyle(
-                        textColor: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22)
-                    .copyWith(fontFamily: 'Montserrat'),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text(
-                '${str[0].substring(str[0].indexOf('-') + 1)} -- ${str[1].substring(str[1].indexOf('-') + 1)}',
-                style: AppTheme.appTheme
-                    .textStyle(
-                        textColor: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w300)
-                    .copyWith(fontFamily: 'Montserrat'),
-              )
-            ],
-          ),
+        Expanded(
+          child: SizedBox(),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              '$count',
+              style: AppTheme.appTheme
+                  .textStyle(
+                      textColor: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22)
+                  .copyWith(fontFamily: 'Montserrat'),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              '${str[0].replaceAll('-', '.')} - ${str[1].substring(str[1].indexOf('-') + 1).replaceAll('-', '.')}',
+              maxLines: 2,
+              style: AppTheme.appTheme
+                  .textStyle(
+                      textColor: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w300)
+                  .copyWith(fontFamily: 'Montserrat'),
+            )
+          ],
         )
       ],
     );
