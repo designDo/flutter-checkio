@@ -150,6 +150,9 @@ class _HabitDetailPageState extends State<HabitDetailPage>
                       animationController: _animationController,
                     )
                   : SizedBox(),
+              HabitRecentRecordsView(
+                habit: habit,
+              ),
               Container(
                 height: 100,
               )

@@ -186,7 +186,8 @@ class HabitMonthInfoView extends StatefulWidget {
   }
 }
 
-class HabitMonthInfoViewState extends State<HabitMonthInfoView> {
+class HabitMonthInfoViewState extends State<HabitMonthInfoView>
+    with AutomaticKeepAliveClientMixin {
   final double margin = 20;
   final double ratio = 1.5;
   final double calendarPadding = 16;
@@ -426,6 +427,9 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView> {
       ],
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class HabitCheckInfoView extends StatelessWidget {
@@ -718,5 +722,130 @@ class HabitStreakInfoView extends StatelessWidget {
         )
       ],
     );
+  }
+}
+
+class HabitRecentRecordsView extends StatelessWidget {
+  final Habit habit;
+
+  const HabitRecentRecordsView({Key key, this.habit}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: 28, left: 16, right: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: _children(habit),
+      ),
+    );
+  }
+
+  List<Widget> _children(Habit habit) {
+    List<Widget> children = [];
+    children.add(_titleView());
+    children.addAll(habit.records.take(5).map((e) => _recordView(e)));
+    return children;
+  }
+
+  Widget _titleView() {
+    return Row(
+      children: [
+        Text('最近记录',
+            style: AppTheme.appTheme.textStyle(
+                textColor: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 16)),
+        Expanded(
+          child: SizedBox(),
+        ),
+        GestureDetector(
+          onTap: () {
+            print('show all');
+          },
+          child: Row(
+            children: [
+              Text('查看全部',
+                  style: AppTheme.appTheme.textStyle(
+                      textColor: Colors.black,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 14)),
+              Icon(
+                Icons.arrow_forward,
+                color: Colors.black,
+                size: 23,
+              )
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _recordView(HabitRecord record) {
+    return Container(
+        margin: EdgeInsets.only(top: 16),
+        decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+            color: Colors.white,
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  offset: const Offset(5.1, 6.0),
+                  blurRadius: 14.0),
+            ]),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: EdgeInsets.only(left: 16, top: 16),
+              child: Text(
+                '${DateUtil.parseHourAndMinAndSecond(record.time)}',
+                style: AppTheme.appTheme
+                    .textStyle(
+                        textColor: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18)
+                    .copyWith(fontFamily: 'Montserrat'),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 24),
+              child: Text(
+                '${DateUtil.parseYearAndMonthAndDay(record.time)}',
+                style: AppTheme.appTheme
+                    .textStyle(
+                        textColor: Colors.black45,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16)
+                    .copyWith(fontFamily: 'Montserrat'),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.all(8),
+              margin: EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
+              decoration: BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                  color: AppTheme.appTheme.containerBackgroundColor()),
+              alignment: Alignment.topLeft,
+              width: double.infinity,
+              constraints: BoxConstraints(minHeight: 60),
+              child: Text(
+                '${record.content.length == 0 ? '' : record.content}',
+                style: AppTheme.appTheme.textStyle(
+                    textColor: record.content.length == 0
+                        ? Colors.black54
+                        : Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            )
+          ],
+        ));
   }
 }
