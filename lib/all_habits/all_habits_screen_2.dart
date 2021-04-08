@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timefly/all_habits/all_habit_list_view.dart';
 import 'package:timefly/app_theme.dart';
-import 'package:timefly/db/database_provider.dart';
+import 'package:timefly/blocs/habit/habit_bloc.dart';
+import 'package:timefly/blocs/habit/habit_state.dart';
 import 'package:timefly/models/complete_time.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/utils/system_util.dart';
@@ -16,10 +18,6 @@ class AllHabitScreen extends StatefulWidget {
 }
 
 class _AllHabitScreenState extends State<AllHabitScreen> {
-  List<CompleteTime> tabs;
-
-  List<Habit> _habits;
-
   @override
   Widget build(BuildContext context) {
     SystemUtil.changeStateBarMode(Brightness.light);
@@ -58,18 +56,25 @@ class _AllHabitScreenState extends State<AllHabitScreen> {
                 ),
               ),
               Expanded(
-                child: FutureBuilder<List<Habit>>(
-                  future: DatabaseProvider.db.getHabitsWithRecords(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
+                child: BlocBuilder<HabitsBloc, HabitsState>(
+                  builder: (context, state) {
+                    if (state is HabitsLoadInProgress) {
                       return Container(
                         child: Center(
                           child: CupertinoActivityIndicator(),
                         ),
                       );
                     }
-                    _habits = snapshot.data;
-                    tabs = filterCompleteTime();
+                    if (state is HabitsLodeFailure) {
+                      return Container(
+                        child: Center(
+                          child: Text('加载出错啦...'),
+                        ),
+                      );
+                    }
+                    List<Habit> habits = (state as HabitLoadSuccess).habits;
+
+                    List<CompleteTime> tabs = filterCompleteTime(habits);
                     return DefaultTabController(
                       length: tabs.length,
                       child: Column(
@@ -105,7 +110,7 @@ class _AllHabitScreenState extends State<AllHabitScreen> {
                             child: TabBarView(
                               children: tabs
                                   .map((time) => AllHabitListView(
-                                        habits: filterHabits(time.time),
+                                        habits: filterHabits(habits, time.time),
                                       ))
                                   .toList(),
                             ),
@@ -123,10 +128,10 @@ class _AllHabitScreenState extends State<AllHabitScreen> {
     );
   }
 
-  List<CompleteTime> filterCompleteTime() {
+  List<CompleteTime> filterCompleteTime(List<Habit> habits) {
     List<CompleteTime> times = [];
     times.add(CompleteTime(-1));
-    _habits.forEach((habit) {
+    habits.forEach((habit) {
       CompleteTime completeTime = CompleteTime(habit.completeTime);
       times.firstWhere((time) => time.time == habit.completeTime, orElse: () {
         times.add(completeTime);
@@ -137,11 +142,11 @@ class _AllHabitScreenState extends State<AllHabitScreen> {
     return times;
   }
 
-  List<Habit> filterHabits(int complete) {
+  List<Habit> filterHabits(List<Habit> habits, int complete) {
     if (complete == -1) {
-      return List.from(_habits);
+      return List.from(habits);
     }
-    return List<Habit>.from(_habits)
+    return List<Habit>.from(habits)
         .where((habit) => habit.completeTime == complete)
         .toList();
   }

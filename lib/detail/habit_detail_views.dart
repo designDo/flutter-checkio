@@ -744,7 +744,17 @@ class HabitRecentRecordsView extends StatelessWidget {
   List<Widget> _children(Habit habit) {
     List<Widget> children = [];
     children.add(_titleView());
-    children.addAll(habit.records.take(5).map((e) => _recordView(e)));
+    if (habit.records != null && habit.records.length > 0) {
+      children.addAll(habit.records.take(5).map((e) => _recordView(e)));
+    } else {
+      children.add(
+        Text('暂无记录...',
+            style: AppTheme.appTheme.textStyle(
+                textColor: Colors.black,
+                fontWeight: FontWeight.normal,
+                fontSize: 14)),
+      );
+    }
     return children;
   }
 

@@ -395,8 +395,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                             '${_twoDigits(remindTime.hour)}:${_twoDigits(remindTime.minute)}'
                           ],
                     modifyTime: DateTime.now().millisecondsSinceEpoch,
-                    completed: false,
-                    records: []);
+                    completed: false,);
                 BlocProvider.of<HabitsBloc>(context).add(HabitUpdate(newHabit));
                 Navigator.of(context).pop();
                 return;
