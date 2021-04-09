@@ -252,4 +252,32 @@ class DateUtil {
     }
     return months;
   }
+
+  /// 0-5 晚上
+  /// 5 - 9 早上
+  /// 9-12 上午
+  /// 12-14 中午
+  /// 14-18 下午
+  /// 18- 24 晚上
+  static String getNowTimeString() {
+    int hour = DateTime.now().hour;
+    String time = '';
+    if (hour >= 5 && hour < 9) {
+      time = '早上';
+    } else if (hour >= 9 && hour < 12) {
+      time = '上午';
+    } else if (hour >= 12 && hour < 14) {
+      time = '中午';
+    } else if (hour >= 14 && hour < 18) {
+      time = '下午';
+    } else {
+      time = '晚上';
+    }
+    return time;
+  }
+
+  static String getNowString() {
+    DateTime now = DateTime.now();
+    return '${now.year}年${now.month}月${now.day}日';
+  }
 }

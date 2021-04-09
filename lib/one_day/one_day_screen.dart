@@ -7,10 +7,13 @@ import 'package:timefly/blocs/habit/habit_bloc.dart';
 import 'package:timefly/blocs/habit/habit_state.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_list_model.dart';
-import 'package:timefly/notification/notification_plugin.dart';
+import 'package:timefly/models/habit_peroid.dart';
 import 'package:timefly/one_day/habit_list_view.dart';
+import 'package:timefly/one_day/one_day_normal_view.dart';
 import 'package:timefly/utils/habit_util.dart';
 import 'package:timefly/utils/system_util.dart';
+
+import 'one_day_rate_view.dart';
 
 class OneDayScreen extends StatefulWidget {
   @override
@@ -26,8 +29,8 @@ class _OneDayScreenState extends State<OneDayScreen>
 
   @override
   void initState() {
-    screenAnimationController = AnimationController(
-        duration: Duration(milliseconds: 1000), vsync: this);
+    screenAnimationController =
+        AnimationController(duration: Duration(milliseconds: 800), vsync: this);
     screenAnimationController.forward();
     super.initState();
   }
@@ -48,8 +51,7 @@ class _OneDayScreenState extends State<OneDayScreen>
             return Container();
           }
           if (state is HabitLoadSuccess) {
-            List<OnDayHabitListData> listData = getHabits((state).habits);
-            print('HabitLoadSuccess ListData');
+            List<OnDayHabitListData> listData = getHabits(state.habits);
             final int count = listData.length;
             return ListView.builder(
                 itemCount: listData.length,
@@ -58,22 +60,24 @@ class _OneDayScreenState extends State<OneDayScreen>
                   Widget widget;
                   switch (data.type) {
                     case OnDayHabitListData.typeHeader:
-                      widget = getHeaderView(
-                          Tween<Offset>(begin: Offset(0, 0.5), end: Offset.zero)
+                      widget = TimeAndWordView(
+                          animation: Tween<Offset>(
+                                  begin: Offset(0, 0.5), end: Offset.zero)
                               .animate(CurvedAnimation(
                                   parent: screenAnimationController,
                                   curve: Interval((1 / count) * index, 1,
                                       curve: Curves.fastOutSlowIn))),
-                          screenAnimationController);
+                          animationController: screenAnimationController);
                       break;
                     case OnDayHabitListData.typeTip:
-                      widget = getTipsView(
-                          Tween<Offset>(begin: Offset(1, 0), end: Offset.zero)
+                      widget = OneDayTipsView(
+                          animation: Tween<Offset>(
+                                  begin: Offset(1, 0), end: Offset.zero)
                               .animate(CurvedAnimation(
                                   parent: screenAnimationController,
                                   curve: Interval((1 / count) * index, 1,
                                       curve: Curves.fastOutSlowIn))),
-                          screenAnimationController);
+                          animationController: screenAnimationController);
                       break;
                     case OnDayHabitListData.typeTitle:
                       widget = getTitleView(
@@ -97,6 +101,17 @@ class _OneDayScreenState extends State<OneDayScreen>
                         habits: data.value,
                       );
                       break;
+                    case OnDayHabitListData.typeRate:
+                      widget = OneDayRateView(
+                        allHabits: state.habits,
+                        animation:
+                            Tween<Offset>(begin: Offset(1, 0), end: Offset.zero)
+                                .animate(CurvedAnimation(
+                                    parent: screenAnimationController,
+                                    curve: Interval((1 / count) * index, 1,
+                                        curve: Curves.fastOutSlowIn))),
+                      );
+                      break;
                   }
                   return widget;
                 });
@@ -111,47 +126,24 @@ class _OneDayScreenState extends State<OneDayScreen>
     List<OnDayHabitListData> datas = [];
     datas.add(
         OnDayHabitListData(type: OnDayHabitListData.typeHeader, value: null));
-    datas
-        .add(OnDayHabitListData(type: OnDayHabitListData.typeTip, value: null));
+    int dayPeroidHabitCount =
+        habits.where((element) => element.period == HabitPeriod.day).length;
+    int weekPeroidHabitCount =
+        habits.where((element) => element.period == HabitPeriod.week).length;
+    int monthPeroidHabitCount =
+        habits.where((element) => element.period == HabitPeriod.month).length;
+
+    if (dayPeroidHabitCount == 0 &&
+        weekPeroidHabitCount == 0 &&
+        monthPeroidHabitCount == 0) {
+      datas.add(
+          OnDayHabitListData(type: OnDayHabitListData.typeTip, value: null));
+    } else {
+      datas.add(
+          OnDayHabitListData(type: OnDayHabitListData.typeRate, value: habits));
+    }
     datas.addAll(HabitUtil.sortByCompleteTime(habits));
     return datas;
-  }
-
-  Widget getHeaderView(
-      Animation animation, AnimationController animationController) {
-    return AnimatedBuilder(
-      animation: animationController,
-      builder: (context, child) {
-        return SlideTransition(
-          position: animation,
-          child: Padding(
-            padding: EdgeInsets.only(left: 20, top: 40, bottom: 30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                GestureDetector(
-                  onTap: () async {
-                    await NotificationPlugin.getInstance()
-                        .scheduleNotification();
-                  },
-                  child: Text(
-                    'Hello,Good Morning',
-                    style: AppTheme.appTheme.textStyle(),
-                  ),
-                ),
-                Text(
-                  'You have 7 habits last !!',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline6
-                      .copyWith(color: Theme.of(context).primaryColor),
-                )
-              ],
-            ),
-          ),
-        );
-      },
-    );
   }
 
   Widget getTipsView(
@@ -195,11 +187,11 @@ class _OneDayScreenState extends State<OneDayScreen>
                         topLeft: Radius.circular(20),
                         bottomLeft: Radius.circular(20))),
                 child: Text(
-                  'You can add a habit Here!!!',
+                  '点击添加一个习惯吧...',
                   style: TextStyle(
                       color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
+                      fontWeight: FontWeight.normal,
+                      fontSize: 18),
                 ),
               ),
             ),
