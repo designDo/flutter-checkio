@@ -86,11 +86,11 @@ class OneDayRateView extends StatelessWidget {
   }
 
   Widget _tipView(int hasDoNum, int needCompleteNum) {
-    String tip = '所有‘天’周期习惯，今天，';
+    String tip = '以‘天’为周期习惯，今天，';
     if (period == HabitPeriod.week) {
-      tip = '所有‘周’周期习惯，本周，';
+      tip = '以‘周’为周期习惯，本周，';
     } else if (period == HabitPeriod.month) {
-      tip = '所有‘月’周期习惯，本月';
+      tip = '以‘月’为周期习惯，本月';
     }
     return Column(
       children: [
@@ -106,7 +106,7 @@ class OneDayRateView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              '需完成',
+              '共需完成',
               style: AppTheme.appTheme.textStyle(
                 textColor: Colors.black,
                 fontSize: 14,
