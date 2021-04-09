@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:timefly/models/habit.dart';
+import 'package:timefly/widget/circle_progress_bar.dart';
+
+import '../app_theme.dart';
 
 ///周期为天的习惯完成率
 class OneDayRateView extends StatelessWidget {
@@ -16,8 +20,7 @@ class OneDayRateView extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.only(left: 50, bottom: 16, top: 16),
         child: Container(
-          alignment: Alignment.center,
-          height: 100,
+          padding: EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
           decoration: BoxDecoration(
               boxShadow: <BoxShadow>[
                 BoxShadow(
@@ -37,7 +40,76 @@ class OneDayRateView extends StatelessWidget {
                   topLeft: Radius.circular(20),
                   bottomLeft: Radius.circular(20))),
           child: Row(
-            children: [],
+            children: [
+              Expanded(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    '今天',
+                    style: AppTheme.appTheme.textStyle(
+                        textColor: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+                  Text('1/2',
+                      style: AppTheme.appTheme.textStyle(
+                          textColor: Colors.white,
+                          fontWeight: FontWeight.normal,
+                          fontSize: 14)),
+                  Container(
+                    width: 50,
+                    height: 50,
+                    child: CircleProgressBar(
+                        backgroundColor: Colors.indigo.withOpacity(0.6),
+                        foregroundColor: Colors.white,
+                        value: 1 / 2),
+                  ),
+                ],
+              )),
+              Expanded(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    '今天',
+                    style: AppTheme.appTheme.textStyle(
+                        textColor: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+                  Container(
+                    width: 50,
+                    height: 50,
+                    child: CircleProgressBar(
+                        backgroundColor: Colors.indigo.withOpacity(0.6),
+                        foregroundColor: Colors.white,
+                        value: 1 / 2),
+                  ),
+                ],
+              )),
+              Expanded(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    '今天',
+                    style: AppTheme.appTheme.textStyle(
+                        textColor: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+                  Container(
+                    width: 50,
+                    height: 50,
+                    child: CircleProgressBar(
+                        backgroundColor: Colors.indigo.withOpacity(0.6),
+                        foregroundColor: Colors.white,
+                        value: 1 / 2),
+                  ),
+                ],
+              ))
+            ],
           ),
         ),
       ),
