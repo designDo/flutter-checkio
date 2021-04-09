@@ -25,7 +25,7 @@ class TimeAndWordView extends StatelessWidget {
                 left: 16,
                 right: 50,
                 top: MediaQuery.of(context).padding.top + 26,
-                bottom: 30),
+                bottom: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

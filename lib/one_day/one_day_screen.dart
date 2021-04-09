@@ -103,6 +103,7 @@ class _OneDayScreenState extends State<OneDayScreen>
                       break;
                     case OnDayHabitListData.typeRate:
                       widget = OneDayRateView(
+                        period: data.value,
                         allHabits: state.habits,
                         animation:
                             Tween<Offset>(begin: Offset(1, 0), end: Offset.zero)
@@ -139,66 +140,21 @@ class _OneDayScreenState extends State<OneDayScreen>
       datas.add(
           OnDayHabitListData(type: OnDayHabitListData.typeTip, value: null));
     } else {
-      datas.add(
-          OnDayHabitListData(type: OnDayHabitListData.typeRate, value: habits));
+      if (dayPeroidHabitCount > 0) {
+        datas.add(OnDayHabitListData(
+            type: OnDayHabitListData.typeRate, value: HabitPeriod.day));
+      }
+      if (weekPeroidHabitCount > 0) {
+        datas.add(OnDayHabitListData(
+            type: OnDayHabitListData.typeRate, value: HabitPeriod.week));
+      }
+      if (monthPeroidHabitCount > 0) {
+        datas.add(OnDayHabitListData(
+            type: OnDayHabitListData.typeRate, value: HabitPeriod.month));
+      }
     }
     datas.addAll(HabitUtil.sortByCompleteTime(habits));
     return datas;
-  }
-
-  Widget getTipsView(
-      Animation animation, AnimationController animationController) {
-    return AnimatedBuilder(
-      animation: animationController,
-      builder: (context, child) {
-        return SlideTransition(
-          position: animation,
-          child: GestureDetector(
-            onTap: () async {
-              await Navigator.of(context)
-                  .push(CupertinoPageRoute(builder: (context) {
-                return HabitEditPage(
-                  isModify: false,
-                  habit: null,
-                );
-              }));
-            },
-            child: Padding(
-              padding: EdgeInsets.only(left: 50),
-              child: Container(
-                alignment: Alignment.center,
-                height: 100,
-                decoration: BoxDecoration(
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                          color: Color(0xFF738AE6).withOpacity(0.8),
-                          offset: const Offset(13.1, 4.0),
-                          blurRadius: 16.0),
-                    ],
-                    gradient: LinearGradient(
-                      colors: <Color>[
-                        Color(0xFF738AE6),
-                        Color(0xFF5C5EDD),
-                      ],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        bottomLeft: Radius.circular(20))),
-                child: Text(
-                  '点击添加一个习惯吧...',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.normal,
-                      fontSize: 18),
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
   }
 
   Widget getTitleView(String title, Animation animation,
