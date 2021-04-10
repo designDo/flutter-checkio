@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:timefly/add_habit/habit_edit_page.dart';
 import 'package:timefly/all_habits/all_habit_list_view.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/blocs/habit/habit_bloc.dart';
@@ -47,12 +49,37 @@ class _AllHabitScreenState extends State<AllHabitScreen> {
               ),
               Container(
                 margin: EdgeInsets.only(left: 16, top: 8, bottom: 16),
-                child: Text(
-                  '所有习惯',
-                  style: AppTheme.appTheme.textStyle(
-                      textColor: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
+                child: Row(
+                  children: [
+                    Text(
+                      '所有习惯',
+                      style: AppTheme.appTheme.textStyle(
+                          textColor: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Expanded(child: SizedBox()),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context)
+                            .push(CupertinoPageRoute(builder: (context) {
+                          return HabitEditPage(
+                            isModify: false,
+                            habit: null,
+                          );
+                        }));
+                      },
+                      child: SvgPicture.asset(
+                        'assets/images/jia.svg',
+                        color: Colors.white,
+                        width: 30,
+                        height: 30,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 16,
+                    )
+                  ],
                 ),
               ),
               Expanded(
