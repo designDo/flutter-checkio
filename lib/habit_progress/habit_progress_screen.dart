@@ -4,8 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/blocs/habit/habit_bloc.dart';
 import 'package:timefly/blocs/habit/habit_state.dart';
+import 'package:timefly/habit_progress/progress_rate_views.dart';
 import 'package:timefly/habit_progress/week_month_chart.dart';
 import 'package:timefly/models/habit.dart';
+import 'package:timefly/models/habit_peroid.dart';
 import 'package:timefly/utils/habit_util.dart';
 import 'package:timefly/utils/pair.dart';
 
@@ -41,6 +43,16 @@ class _HabitProgressScreenState extends State<HabitProgressScreen>
           return Container();
         }
         List<Habit> _habits = (state as HabitLoadSuccess).habits;
+        int dayPeriodHabitCount = _habits
+            .where((element) => element.period == HabitPeriod.day)
+            .length;
+        int weekPeriodHabitCount = _habits
+            .where((element) => element.period == HabitPeriod.week)
+            .length;
+        int monthPeriodHabitCount = _habits
+            .where((element) => element.period == HabitPeriod.month)
+            .length;
+
         return ListView(
           physics: ClampingScrollPhysics(),
           padding: EdgeInsets.only(
@@ -52,6 +64,11 @@ class _HabitProgressScreenState extends State<HabitProgressScreen>
             TotalCheckAndDaysView(
               habits: _habits,
             ),
+            dayPeriodHabitCount > 0
+                ? ProgressDayRateView(
+                    allHabits: _habits,
+                  )
+                : SizedBox(),
             MostChecksView(
               habits: _habits,
             ),

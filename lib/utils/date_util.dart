@@ -280,4 +280,26 @@ class DateUtil {
     DateTime now = DateTime.now();
     return '${now.year}年${now.month}月${now.day}日';
   }
+
+  static int filterCreateDays(DateTime createTime, DateTime startTime, DateTime endTime) {
+    createTime = startOfDay(createTime);
+    endTime = startOfDay(endTime);
+    print(createTime);
+    print(endTime);
+    Duration duration = Duration(
+        milliseconds:
+            createTime.millisecondsSinceEpoch - endTime.millisecondsSinceEpoch);
+    if (duration.inDays > 0) {
+      return Duration(
+                  milliseconds: createTime.millisecondsSinceEpoch -
+                      startTime.millisecondsSinceEpoch)
+              .inDays +
+          1;
+    }
+    return Duration(
+                milliseconds: startTime.millisecondsSinceEpoch -
+                    endTime.millisecondsSinceEpoch)
+            .inDays +
+        1;
+  }
 }
