@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timefly/app_theme.dart';
-import 'package:timefly/db/database_provider.dart';
+import 'package:timefly/blocs/habit/habit_bloc.dart';
+import 'package:timefly/blocs/habit/habit_state.dart';
 import 'package:timefly/habit_progress/week_month_chart.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/utils/habit_util.dart';
@@ -18,10 +20,6 @@ class _HabitProgressScreenState extends State<HabitProgressScreen>
     with TickerProviderStateMixin {
   TabController _tabController;
 
-  List<Habit> _habits;
-
-  Map<String, List<HabitRecord>> recordMap;
-
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
@@ -35,33 +33,34 @@ class _HabitProgressScreenState extends State<HabitProgressScreen>
   Widget build(BuildContext context) {
     return Container(
       color: AppTheme.background,
-      child: FutureBuilder(
-          future: DatabaseProvider.db.getHabitsWithRecords(),
-          builder: (context, data) {
-            if (!data.hasData) {
-              return CupertinoActivityIndicator();
-            }
-            _habits = data.data;
-            return ListView(
-              physics: ClampingScrollPhysics(),
-              padding: EdgeInsets.only(
-                  top: 0, bottom: MediaQuery.of(context).padding.bottom),
-              children: [
-                WeekMonthChart(
-                  habits: _habits,
-                ),
-                TotalCheckAndDaysView(
-                  habits: _habits,
-                ),
-                MostChecksView(
-                  habits: _habits,
-                ),
-                MostStreaksView(
-                  habits: _habits,
-                ),
-              ],
-            );
-          }),
+      child: BlocBuilder<HabitsBloc, HabitsState>(builder: (context, state) {
+        if (state is HabitsLoadInProgress) {
+          return CupertinoActivityIndicator();
+        }
+        if (state is HabitsLodeFailure) {
+          return Container();
+        }
+        List<Habit> _habits = (state as HabitLoadSuccess).habits;
+        return ListView(
+          physics: ClampingScrollPhysics(),
+          padding: EdgeInsets.only(
+              top: 0, bottom: MediaQuery.of(context).padding.bottom),
+          children: [
+            WeekMonthChart(
+              habits: _habits,
+            ),
+            TotalCheckAndDaysView(
+              habits: _habits,
+            ),
+            MostChecksView(
+              habits: _habits,
+            ),
+            MostStreaksView(
+              habits: _habits,
+            ),
+          ],
+        );
+      }),
     );
   }
 
@@ -205,7 +204,7 @@ class MostChecksView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '记录次数最多的习惯们',
+                  '记录次数最多',
                   style: AppTheme.appTheme.textStyle(
                       textColor: Colors.black,
                       fontSize: 16,
@@ -276,7 +275,7 @@ class MostStreaksView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '历史连续天数最多的习惯们',
+                  '连续天数最多',
                   style: AppTheme.appTheme.textStyle(
                       textColor: Colors.black,
                       fontSize: 16,
@@ -323,7 +322,7 @@ class HabitItemView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 6, top: 2, right: 12, bottom: 2),
+      padding: EdgeInsets.only(left: 12, top: 2, right: 12, bottom: 2),
       decoration: BoxDecoration(
         boxShadow: <BoxShadow>[
           BoxShadow(
@@ -332,18 +331,23 @@ class HabitItemView extends StatelessWidget {
               blurRadius: 10)
         ],
         shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.all(Radius.circular(25)),
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(25),
+            bottomLeft: Radius.circular(25),
+            topRight: Radius.circular(8),
+            bottomRight: Radius.circular(8)),
         color: Color(habit.mainColor),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
+            padding: EdgeInsets.all(2),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
             ),
-            width: 38,
-            height: 38,
+            width: 32,
+            height: 32,
             child: Image.asset(habit.iconPath),
           ),
           SizedBox(
@@ -352,7 +356,7 @@ class HabitItemView extends StatelessWidget {
           Text(habit.name,
               style: AppTheme.appTheme.textStyle(
                   textColor: Colors.white,
-                  fontSize: 15,
+                  fontSize: 14,
                   fontWeight: FontWeight.normal))
         ],
       ),

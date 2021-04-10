@@ -42,26 +42,13 @@ class HabitUtil {
 
   /// 获取历史最大连续数量
   static int getMostStreaks(Map<String, List<HabitRecord>> checks) {
-    List<String> days = checks.keys.toList();
-    List<int> sort = [];
-    int count = 1;
-    for (int i = days.length - 1; i > 0; i--) {
-      DateTime dayi = getDay(days[i]);
-
-      ///只算天和月，周无法统计连续
-      DateTime lastDay = getDay(days[i - 1]);
-      if (isNextDay(lastDay, dayi)) {
-        count++;
-      } else {
-        sort.add(int.parse('$count'));
-        count = 1;
-      }
-    }
-    sort.sort((a, b) => b - a);
-    if (sort.length == 0) {
+    Map<String, int> streaks = getHabitStreaks(checks);
+    if (streaks.isEmpty) {
       return 0;
     }
-    return sort.first + 1;
+    List<int> values = streaks.values.toList();
+    values.sort((a, b) => a - b);
+    return values.first;
   }
 
   /// 获取一个习惯历史最大连续数量
