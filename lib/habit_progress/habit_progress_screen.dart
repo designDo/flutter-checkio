@@ -74,6 +74,11 @@ class _HabitProgressScreenState extends State<HabitProgressScreen>
                     allHabits: _habits,
                   )
                 : SizedBox(),
+            monthPeriodHabitCount > 0
+                ? ProgressMonthRateView(
+              allHabits: _habits,
+            )
+                : SizedBox(),
             MostChecksView(
               habits: _habits,
             ),

@@ -60,6 +60,9 @@ class HabitUtil {
         DateUtil.parseYearAndMonthAndDayWithString(a).millisecondsSinceEpoch -
         DateUtil.parseYearAndMonthAndDayWithString(b).millisecondsSinceEpoch);
     Map<String, int> streaks = {};
+    if (days.length == 0) {
+      return streaks;
+    }
     int count = 1;
     DateTime startDay = getDay(days.first);
     for (int i = 0; i < days.length - 1; i++) {
