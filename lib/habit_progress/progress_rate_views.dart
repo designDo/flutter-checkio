@@ -4,6 +4,7 @@ import 'package:timefly/models/habit_peroid.dart';
 import 'package:timefly/utils/date_util.dart';
 import 'package:timefly/utils/habit_util.dart';
 import 'package:timefly/utils/pair.dart';
+import 'package:timefly/widget/circle_progress_bar.dart';
 
 import '../app_theme.dart';
 
@@ -47,21 +48,100 @@ class ProgressDayRateView extends StatelessWidget {
           ),
           Row(
             children: [
-              Container(
-                width: 100,
-                height: 100,
-                color: Colors.redAccent,
-                child: Text('$rates'),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _rateView(1, rates[0]),
+                  _rateView(7, rates[1]),
+                  _rateView(15, rates[2])
+                ],
               ),
+              Expanded(child: SizedBox()),
               Container(
-                width: 100,
-                height: 100,
-                color: Colors.blueAccent,
+                width: 110,
+                height: 110,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CircleProgressBar(
+                        backgroundColor: AppTheme.appTheme
+                            .containerBackgroundColor()
+                            .withOpacity(0.6),
+                        foregroundColor: Colors.redAccent,
+                        strokeWidth: 8,
+                        value: rates[0].x0 / rates[0].x1),
+                    Container(
+                      width: 80,
+                      height: 80,
+                      child: CircleProgressBar(
+                          backgroundColor: AppTheme.appTheme
+                              .containerBackgroundColor()
+                              .withOpacity(0.6),
+                          strokeWidth: 8,
+                          foregroundColor: Colors.blueAccent,
+                          value: rates[1].x0 / rates[1].x1),
+                    ),
+                    Container(
+                      width: 50,
+                      height: 50,
+                      child: CircleProgressBar(
+                          backgroundColor: AppTheme.appTheme
+                              .containerBackgroundColor()
+                              .withOpacity(0.6),
+                          strokeWidth: 8,
+                          foregroundColor: Colors.purpleAccent,
+                          value: rates[2].x0 / rates[2].x1),
+                    )
+                  ],
+                ),
               ),
             ],
           )
         ],
       ),
+    );
+  }
+
+  Widget _rateView(int period, Pair<int> rate) {
+    Color _color = Colors.redAccent;
+    if (period == 7) {
+      _color = Colors.blueAccent;
+    }
+    if (period == 15) {
+      _color = Colors.purpleAccent;
+    }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          decoration: BoxDecoration(shape: BoxShape.circle, color: _color),
+          width: 5,
+          height: 5,
+        ),
+        SizedBox(
+          width: 6,
+        ),
+        Text(
+          '$period d',
+          style: AppTheme.appTheme
+              .textStyle(
+                  textColor: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.normal)
+              .copyWith(fontFamily: 'Montserrat'),
+        ),
+        SizedBox(
+          width: 16,
+        ),
+        Text('${rate.x0}/${rate.x1}',
+            style: AppTheme.appTheme
+                .textStyle(
+                    textColor: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold)
+                .copyWith(fontFamily: 'Montserrat'))
+      ],
     );
   }
 

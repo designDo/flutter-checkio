@@ -8,11 +8,13 @@ class CircleProgressBar extends StatefulWidget {
   final Color backgroundColor;
   final Color foregroundColor;
   final double value;
+  final double strokeWidth;
 
   const CircleProgressBar({
     Key key,
     this.animationDuration,
     this.backgroundColor,
+    this.strokeWidth,
     @required this.foregroundColor,
     @required this.value,
   }) : super(key: key);
@@ -125,6 +127,7 @@ class CircleProgressBarState extends State<CircleProgressBar>
               backgroundColor: backgroundColor,
               foregroundColor: foregroundColor,
               percentage: this.valueTween.evaluate(this.curve),
+              strokeWidth: widget.strokeWidth
             ),
           );
         },
