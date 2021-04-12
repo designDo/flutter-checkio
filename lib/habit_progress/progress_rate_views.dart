@@ -125,14 +125,17 @@ class ProgressDayRateView extends StatelessWidget {
         SizedBox(
           width: 6,
         ),
-        Text(
-          '$period D',
-          style: AppTheme.appTheme
-              .textStyle(
-                  textColor: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal)
-              .copyWith(fontFamily: 'Montserrat'),
+        Container(
+          width: 40,
+          child: Text(
+            '$period D',
+            style: AppTheme.appTheme
+                .textStyle(
+                    textColor: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.normal)
+                .copyWith(fontFamily: 'Montserrat'),
+          ),
         ),
         SizedBox(
           width: 16,
@@ -178,7 +181,6 @@ class ProgressDayRateView extends StatelessWidget {
               DateTime.fromMillisecondsSinceEpoch(habit.createTime),
               end,
               start);
-      print(habit.records.length);
       sevenDaysHasDoneNum +=
           HabitUtil.getDoCountOfHabit(habit.records, end, start);
     });
@@ -322,17 +324,20 @@ class ProgressWeekRateView extends StatelessWidget {
         SizedBox(
           width: 6,
         ),
-        Text(
-          '${period == 0 ? '本周' : '$period W 前'}',
-          style: AppTheme.appTheme
-              .textStyle(
-                  textColor: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal)
-              .copyWith(fontFamily: 'Montserrat'),
+        Container(
+          width: 60,
+          child: Text(
+            '${period == 0 ? '本周' : '$period W 前'}',
+            style: AppTheme.appTheme
+                .textStyle(
+                    textColor: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.normal)
+                .copyWith(fontFamily: 'Montserrat'),
+          ),
         ),
         SizedBox(
-          width: 16,
+          width: 8,
         ),
         Text('${rate.x0}/${rate.x1}',
             style: AppTheme.appTheme
@@ -527,17 +532,20 @@ class ProgressMonthRateView extends StatelessWidget {
         SizedBox(
           width: 6,
         ),
-        Text(
-          '${period == 0 ? '本月' : '$period M 前'}',
-          style: AppTheme.appTheme
-              .textStyle(
-                  textColor: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal)
-              .copyWith(fontFamily: 'Montserrat'),
+        Container(
+          width: 60,
+          child: Text(
+            '${period == 0 ? '本月' : '$period M 前'}',
+            style: AppTheme.appTheme
+                .textStyle(
+                    textColor: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.normal)
+                .copyWith(fontFamily: 'Montserrat'),
+          ),
         ),
         SizedBox(
-          width: 16,
+          width: 8,
         ),
         Text('${rate.x0}/${rate.x1}',
             style: AppTheme.appTheme

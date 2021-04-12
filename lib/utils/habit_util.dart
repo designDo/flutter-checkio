@@ -63,6 +63,10 @@ class HabitUtil {
     if (days.length == 0) {
       return streaks;
     }
+    if (days.length == 1) {
+      streaks['${days[0]},${days[0]}'] = 1;
+      return streaks;
+    }
     int count = 1;
     DateTime startDay = getDay(days.first);
     for (int i = 0; i < days.length - 1; i++) {
@@ -86,10 +90,9 @@ class HabitUtil {
 
     List<String> keys = streaks.keys.toList();
     keys.sort((a, b) => streaks[b] == streaks[a] ? 1 : streaks[b] - streaks[a]);
-
     Map<String, int> newStreaks = {};
     keys.forEach((key) {
-      if (streaks[key] > 1) {
+      if (streaks[key] >= 1) {
         newStreaks[key] = streaks[key];
       }
     });

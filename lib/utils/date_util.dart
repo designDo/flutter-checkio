@@ -285,8 +285,6 @@ class DateUtil {
       DateTime createTime, DateTime startTime, DateTime endTime) {
     createTime = startOfDay(createTime);
     endTime = startOfDay(endTime);
-    print(createTime);
-    print(endTime);
     Duration duration = Duration(
         milliseconds:
             createTime.millisecondsSinceEpoch - endTime.millisecondsSinceEpoch);
