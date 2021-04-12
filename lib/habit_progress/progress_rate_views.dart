@@ -164,7 +164,7 @@ class ProgressDayRateView extends StatelessWidget {
     habits.forEach((habit) {
       oneDayNeedDoNum += habit.doNum;
       oneDayHasDoneNum +=
-          HabitUtil.getDoCountOfHabit(habit.records, start, end);
+          HabitUtil.getDoCountOfHabit(habit.records, end, start);
     });
 
     ///7 day
@@ -175,7 +175,9 @@ class ProgressDayRateView extends StatelessWidget {
     habits.forEach((habit) {
       sevenDaysNeedDoNum += habit.doNum *
           DateUtil.filterCreateDays(
-              DateTime.fromMillisecondsSinceEpoch(habit.createTime), now, end);
+              DateTime.fromMillisecondsSinceEpoch(habit.createTime),
+              end,
+              start);
       print(habit.records.length);
       sevenDaysHasDoneNum +=
           HabitUtil.getDoCountOfHabit(habit.records, end, start);
@@ -189,7 +191,9 @@ class ProgressDayRateView extends StatelessWidget {
     habits.forEach((habit) {
       fivesDaysNeedDoNum += habit.doNum *
           DateUtil.filterCreateDays(
-              DateTime.fromMillisecondsSinceEpoch(habit.createTime), now, end);
+              DateTime.fromMillisecondsSinceEpoch(habit.createTime),
+              end,
+              start);
       fivesDaysHasDoneNum +=
           HabitUtil.getDoCountOfHabit(habit.records, end, start);
     });

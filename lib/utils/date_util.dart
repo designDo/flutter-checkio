@@ -281,7 +281,8 @@ class DateUtil {
     return '${now.year}年${now.month}月${now.day}日';
   }
 
-  static int filterCreateDays(DateTime createTime, DateTime startTime, DateTime endTime) {
+  static int filterCreateDays(
+      DateTime createTime, DateTime startTime, DateTime endTime) {
     createTime = startOfDay(createTime);
     endTime = startOfDay(endTime);
     print(createTime);
@@ -297,8 +298,8 @@ class DateUtil {
           1;
     }
     return Duration(
-                milliseconds: startTime.millisecondsSinceEpoch -
-                    endTime.millisecondsSinceEpoch)
+                milliseconds: endTime.millisecondsSinceEpoch -
+                    startTime.millisecondsSinceEpoch)
             .inDays +
         1;
   }
