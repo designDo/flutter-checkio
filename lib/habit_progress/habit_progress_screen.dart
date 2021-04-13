@@ -10,6 +10,7 @@ import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_peroid.dart';
 import 'package:timefly/utils/habit_util.dart';
 import 'package:timefly/utils/pair.dart';
+import 'package:timefly/utils/system_util.dart';
 
 class HabitProgressScreen extends StatefulWidget {
   @override
@@ -33,6 +34,7 @@ class _HabitProgressScreenState extends State<HabitProgressScreen>
 
   @override
   Widget build(BuildContext context) {
+    SystemUtil.changeStateBarMode(Brightness.light);
     return Container(
       color: AppTheme.background,
       child: BlocBuilder<HabitsBloc, HabitsState>(builder: (context, state) {
@@ -65,19 +67,22 @@ class _HabitProgressScreenState extends State<HabitProgressScreen>
               habits: _habits,
             ),
             dayPeriodHabitCount > 0
-                ? ProgressDayRateView(
+                ? ProgressRateView(
                     allHabits: _habits,
+                    period: HabitPeriod.day,
                   )
                 : SizedBox(),
             weekPeriodHabitCount > 0
-                ? ProgressWeekRateView(
+                ? ProgressRateView(
                     allHabits: _habits,
+                    period: HabitPeriod.week,
                   )
                 : SizedBox(),
             monthPeriodHabitCount > 0
-                ? ProgressMonthRateView(
-              allHabits: _habits,
-            )
+                ? ProgressRateView(
+                    allHabits: _habits,
+                    period: HabitPeriod.month,
+                  )
                 : SizedBox(),
             MostChecksView(
               habits: _habits,

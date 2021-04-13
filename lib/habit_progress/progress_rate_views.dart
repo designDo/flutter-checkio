@@ -9,10 +9,12 @@ import 'package:timefly/widget/circle_progress_bar.dart';
 import '../app_theme.dart';
 
 ///四环（今天完成率，昨天平均完成率，前天平均完成率）
-class ProgressDayRateView extends StatelessWidget {
+class ProgressRateView extends StatelessWidget {
   final List<Habit> allHabits;
+  final int period;
 
-  const ProgressDayRateView({Key key, this.allHabits}) : super(key: key);
+  const ProgressRateView({Key key, this.allHabits, this.period})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,29 +39,20 @@ class ProgressDayRateView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '以‘天’为周期习惯',
+            _title(),
             style: AppTheme.appTheme.textStyle(
                 textColor: Colors.black,
                 fontSize: 16,
                 fontWeight: FontWeight.bold),
           ),
           SizedBox(
-            height: 5,
+            height: 10,
           ),
           Row(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _rateView(1, rates[0]),
-                  _rateView(7, rates[1]),
-                  _rateView(15, rates[2])
-                ],
-              ),
-              Expanded(child: SizedBox()),
               Container(
-                width: 110,
-                height: 110,
+                width: 115,
+                height: 115,
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
@@ -72,8 +65,8 @@ class ProgressDayRateView extends StatelessWidget {
                         value:
                             rates[0].x0 / (rates[0].x1 == 0 ? 1 : rates[0].x1)),
                     Container(
-                      width: 80,
-                      height: 80,
+                      width: 85,
+                      height: 85,
                       child: CircleProgressBar(
                           backgroundColor: AppTheme.appTheme
                               .containerBackgroundColor()
@@ -84,8 +77,8 @@ class ProgressDayRateView extends StatelessWidget {
                               (rates[1].x1 == 0 ? 1 : rates[1].x1)),
                     ),
                     Container(
-                      width: 50,
-                      height: 50,
+                      width: 55,
+                      height: 55,
                       child: CircleProgressBar(
                           backgroundColor: AppTheme.appTheme
                               .containerBackgroundColor()
@@ -98,6 +91,23 @@ class ProgressDayRateView extends StatelessWidget {
                   ],
                 ),
               ),
+              SizedBox(
+                width: 45,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _rateView(0, rates[0]),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  _rateView(period == HabitPeriod.day ? 7 : 1, rates[1]),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  _rateView(period == HabitPeriod.day ? 15 : 2, rates[2])
+                ],
+              ),
             ],
           )
         ],
@@ -105,53 +115,117 @@ class ProgressDayRateView extends StatelessWidget {
     );
   }
 
-  Widget _rateView(int period, Pair<int> rate) {
-    Color _color = Colors.redAccent;
-    if (period == 7) {
-      _color = Colors.blueAccent;
+  String _title() {
+    if (period == HabitPeriod.day) {
+      return '以‘天’为周期习惯';
+    } else if (period == HabitPeriod.week) {
+      return '以‘周’为周期习惯';
+    } else {
+      return '以‘月’为周期习惯';
     }
-    if (period == 15) {
-      _color = Colors.purpleAccent;
-    }
+  }
+
+  Widget _rateView(int index, Pair<int> rate) {
+    Color _color = _rateColor(index);
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
           decoration: BoxDecoration(shape: BoxShape.circle, color: _color),
-          width: 5,
-          height: 5,
-        ),
-        SizedBox(
           width: 6,
-        ),
-        Container(
-          width: 40,
-          child: Text(
-            '$period D',
-            style: AppTheme.appTheme
-                .textStyle(
-                    textColor: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.normal)
-                .copyWith(fontFamily: 'Montserrat'),
-          ),
+          height: 6,
         ),
         SizedBox(
           width: 16,
         ),
-        Text('${rate.x0}/${rate.x1}',
-            style: AppTheme.appTheme
-                .textStyle(
-                    textColor: Colors.black,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold)
-                .copyWith(fontFamily: 'Montserrat'))
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${_periodString(index)}',
+              style: AppTheme.appTheme
+                  .textStyle(
+                      textColor: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold)
+                  .copyWith(fontFamily: 'Montserrat'),
+            ),
+            Row(
+              children: [
+                Text(
+                    '${rate.x1 == 0 ? '0%' : '${(rate.x0 / rate.x1 * 100).toInt()}%'}',
+                    style: AppTheme.appTheme
+                        .textStyle(
+                            textColor: Colors.black,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold)
+                        .copyWith(fontFamily: 'Montserrat')),
+                SizedBox(
+                  width: 5,
+                ),
+                Text('${rate.x0}/${rate.x1}',
+                    style: AppTheme.appTheme
+                        .textStyle(
+                            textColor: Colors.black,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold)
+                        .copyWith(fontFamily: 'Montserrat')),
+              ],
+            ),
+          ],
+        ),
       ],
     );
   }
 
+  String _periodString(int index) {
+    if (period == HabitPeriod.day) {
+      if (index == 0) {
+        return '1 D';
+      } else if (index == 7) {
+        return '7 D';
+      } else {
+        return '15 D';
+      }
+    } else if (period == HabitPeriod.week) {
+      if (index == 0) {
+        return '本周';
+      } else if (index == 1) {
+        return '1W前';
+      } else {
+        return '2W前';
+      }
+    } else {
+      if (index == 0) {
+        return '本月';
+      } else if (index == 1) {
+        return '1M前';
+      } else {
+        return '2M前';
+      }
+    }
+  }
+
+  Color _rateColor(int index) {
+    if (index == 0) {
+      return Colors.redAccent;
+    }
+    if (index == 1 || index == 7) {
+      return Colors.blueAccent;
+    }
+    return Colors.purpleAccent;
+  }
+
   List<Pair<int>> _getPeriodRates() {
+    if (period == HabitPeriod.day) {
+      return _getDayPeriodRates();
+    } else if (period == HabitPeriod.week) {
+      return _getWeekPeriodRates();
+    } else {
+      return _getMonthPeriodRates();
+    }
+  }
+
+  List<Pair<int>> _getDayPeriodRates() {
     List<Habit> habits = allHabits
         .where((element) => element.period == HabitPeriod.day)
         .toList();
@@ -206,151 +280,8 @@ class ProgressDayRateView extends StatelessWidget {
     rates.add(Pair(fivesDaysHasDoneNum, fivesDaysNeedDoNum));
     return rates;
   }
-}
 
-class ProgressWeekRateView extends StatelessWidget {
-  final List<Habit> allHabits;
-
-  const ProgressWeekRateView({Key key, this.allHabits}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    List<Pair<int>> rates = _getPeriodRates();
-    return Container(
-      alignment: Alignment.centerLeft,
-      decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.all(Radius.circular(16)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black.withOpacity(.1),
-                blurRadius: 16,
-                offset: Offset(4, 4))
-          ]),
-      width: double.infinity,
-      padding: EdgeInsets.all(16),
-      margin: EdgeInsets.only(left: 24, right: 24, top: 8, bottom: 16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '以‘周’为周期习惯',
-            style: AppTheme.appTheme.textStyle(
-                textColor: Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.bold),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          Row(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _rateView(0, rates[0]),
-                  _rateView(1, rates[1]),
-                  _rateView(2, rates[2])
-                ],
-              ),
-              Expanded(child: SizedBox()),
-              Container(
-                width: 110,
-                height: 110,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    CircleProgressBar(
-                        backgroundColor: AppTheme.appTheme
-                            .containerBackgroundColor()
-                            .withOpacity(0.6),
-                        foregroundColor: Colors.redAccent,
-                        strokeWidth: 8,
-                        value:
-                            rates[0].x0 / (rates[0].x1 == 0 ? 1 : rates[0].x1)),
-                    Container(
-                      width: 80,
-                      height: 80,
-                      child: CircleProgressBar(
-                          backgroundColor: AppTheme.appTheme
-                              .containerBackgroundColor()
-                              .withOpacity(0.6),
-                          strokeWidth: 8,
-                          foregroundColor: Colors.blueAccent,
-                          value: rates[1].x0 /
-                              (rates[1].x1 == 0 ? 1 : rates[1].x1)),
-                    ),
-                    Container(
-                      width: 50,
-                      height: 50,
-                      child: CircleProgressBar(
-                          backgroundColor: AppTheme.appTheme
-                              .containerBackgroundColor()
-                              .withOpacity(0.6),
-                          strokeWidth: 8,
-                          foregroundColor: Colors.purpleAccent,
-                          value: rates[2].x0 /
-                              (rates[2].x1 == 0 ? 1 : rates[2].x1)),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _rateView(int period, Pair<int> rate) {
-    Color _color = Colors.redAccent;
-    if (period == 1) {
-      _color = Colors.blueAccent;
-    }
-    if (period == 2) {
-      _color = Colors.purpleAccent;
-    }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          decoration: BoxDecoration(shape: BoxShape.circle, color: _color),
-          width: 5,
-          height: 5,
-        ),
-        SizedBox(
-          width: 6,
-        ),
-        Container(
-          width: 60,
-          child: Text(
-            '${period == 0 ? '本周' : '$period W 前'}',
-            style: AppTheme.appTheme
-                .textStyle(
-                    textColor: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.normal)
-                .copyWith(fontFamily: 'Montserrat'),
-          ),
-        ),
-        SizedBox(
-          width: 8,
-        ),
-        Text('${rate.x0}/${rate.x1}',
-            style: AppTheme.appTheme
-                .textStyle(
-                    textColor: Colors.black,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold)
-                .copyWith(fontFamily: 'Montserrat'))
-      ],
-    );
-  }
-
-  List<Pair<int>> _getPeriodRates() {
+  List<Pair<int>> _getWeekPeriodRates() {
     final DateTime now = DateTime.now();
 
     ///1 week
@@ -414,151 +345,8 @@ class ProgressWeekRateView extends StatelessWidget {
     rates.add(Pair(twoWeekAgoHasDoneNum, twoWeekAgoNeedDoNum));
     return rates;
   }
-}
 
-class ProgressMonthRateView extends StatelessWidget {
-  final List<Habit> allHabits;
-
-  const ProgressMonthRateView({Key key, this.allHabits}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    List<Pair<int>> rates = _getPeriodRates();
-    return Container(
-      alignment: Alignment.centerLeft,
-      decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.all(Radius.circular(16)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black.withOpacity(.1),
-                blurRadius: 16,
-                offset: Offset(4, 4))
-          ]),
-      width: double.infinity,
-      padding: EdgeInsets.all(16),
-      margin: EdgeInsets.only(left: 24, right: 24, top: 8, bottom: 16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '以‘月’为周期习惯',
-            style: AppTheme.appTheme.textStyle(
-                textColor: Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.bold),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          Row(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _rateView(0, rates[0]),
-                  _rateView(1, rates[1]),
-                  _rateView(2, rates[2])
-                ],
-              ),
-              Expanded(child: SizedBox()),
-              Container(
-                width: 110,
-                height: 110,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    CircleProgressBar(
-                        backgroundColor: AppTheme.appTheme
-                            .containerBackgroundColor()
-                            .withOpacity(0.6),
-                        foregroundColor: Colors.redAccent,
-                        strokeWidth: 8,
-                        value:
-                            rates[0].x0 / (rates[0].x1 == 0 ? 1 : rates[0].x1)),
-                    Container(
-                      width: 80,
-                      height: 80,
-                      child: CircleProgressBar(
-                          backgroundColor: AppTheme.appTheme
-                              .containerBackgroundColor()
-                              .withOpacity(0.6),
-                          strokeWidth: 8,
-                          foregroundColor: Colors.blueAccent,
-                          value: rates[1].x0 /
-                              (rates[1].x1 == 0 ? 1 : rates[1].x1)),
-                    ),
-                    Container(
-                      width: 50,
-                      height: 50,
-                      child: CircleProgressBar(
-                          backgroundColor: AppTheme.appTheme
-                              .containerBackgroundColor()
-                              .withOpacity(0.6),
-                          strokeWidth: 8,
-                          foregroundColor: Colors.purpleAccent,
-                          value: rates[2].x0 /
-                              (rates[2].x1 == 0 ? 1 : rates[2].x1)),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _rateView(int period, Pair<int> rate) {
-    Color _color = Colors.redAccent;
-    if (period == 1) {
-      _color = Colors.blueAccent;
-    }
-    if (period == 2) {
-      _color = Colors.purpleAccent;
-    }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          decoration: BoxDecoration(shape: BoxShape.circle, color: _color),
-          width: 5,
-          height: 5,
-        ),
-        SizedBox(
-          width: 6,
-        ),
-        Container(
-          width: 60,
-          child: Text(
-            '${period == 0 ? '本月' : '$period M 前'}',
-            style: AppTheme.appTheme
-                .textStyle(
-                    textColor: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.normal)
-                .copyWith(fontFamily: 'Montserrat'),
-          ),
-        ),
-        SizedBox(
-          width: 8,
-        ),
-        Text('${rate.x0}/${rate.x1}',
-            style: AppTheme.appTheme
-                .textStyle(
-                    textColor: Colors.black,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold)
-                .copyWith(fontFamily: 'Montserrat'))
-      ],
-    );
-  }
-
-  List<Pair<int>> _getPeriodRates() {
+  List<Pair<int>> _getMonthPeriodRates() {
     final DateTime now = DateTime.now();
 
     ///1 month
