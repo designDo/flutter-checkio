@@ -155,7 +155,7 @@ class ProgressRateView extends StatelessWidget {
                     '${rate.x1 == 0 ? '0%' : '${(rate.x0 / rate.x1 * 100).toInt()}%'}',
                     style: AppTheme.appTheme
                         .textStyle(
-                            textColor: Colors.black,
+                            textColor: Colors.black.withOpacity(0.7),
                             fontSize: 12,
                             fontWeight: FontWeight.bold)
                         .copyWith(fontFamily: 'Montserrat')),
@@ -165,7 +165,7 @@ class ProgressRateView extends StatelessWidget {
                 Text('${rate.x0}/${rate.x1}',
                     style: AppTheme.appTheme
                         .textStyle(
-                            textColor: Colors.black,
+                            textColor: Colors.black.withOpacity(0.7),
                             fontSize: 12,
                             fontWeight: FontWeight.bold)
                         .copyWith(fontFamily: 'Montserrat')),
