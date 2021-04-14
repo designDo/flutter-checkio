@@ -13,9 +13,11 @@ class HabitUtil {
     int weekend = DateTime.now().weekday;
 
     ///过滤当天
-    habits = habits.where((habit) =>
-        habit.period == HabitPeriod.month ||
-        (habit.completeDays.contains(weekend))).toList();
+    habits = habits
+        .where((habit) =>
+            habit.period == HabitPeriod.month ||
+            (habit.completeDays.contains(weekend)))
+        .toList();
     if (habits.length > 0) {
       Map<int, List<Habit>> map = {};
       habits.forEach((habit) {
@@ -332,5 +334,9 @@ class HabitUtil {
             record.time < end.millisecondsSinceEpoch)
         .length;
     return count;
+  }
+
+  static bool containAllDay(Habit habit) {
+    return habit.period == HabitPeriod.month || habit.completeDays.length == 7;
   }
 }

@@ -157,7 +157,9 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
               )
             ],
           ),
-          widget.habit.period == 1 ? weekContent() : normalContent()
+          HabitUtil.containAllDay(widget.habit)
+              ? normalContent()
+              : specialContent()
         ],
       ),
     );
@@ -253,7 +255,8 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
     );
   }
 
-  Widget weekContent() {
+  ///completeDays不全
+  Widget specialContent() {
     return Expanded(
       child: Container(
         child: Row(
