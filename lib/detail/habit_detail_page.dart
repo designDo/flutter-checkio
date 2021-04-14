@@ -9,8 +9,6 @@ import 'package:timefly/blocs/habit/habit_bloc.dart';
 import 'package:timefly/blocs/habit/habit_state.dart';
 import 'package:timefly/detail/habit_detail_views.dart';
 import 'package:timefly/models/habit.dart';
-import 'package:timefly/models/habit_peroid.dart';
-import 'package:timefly/one_day/habit_check_view.dart';
 import 'package:timefly/utils/habit_util.dart';
 import 'package:timefly/utils/system_util.dart';
 

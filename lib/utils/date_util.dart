@@ -281,24 +281,42 @@ class DateUtil {
     return '${now.year}年${now.month}月${now.day}日';
   }
 
-  static int filterCreateDays(
-      DateTime createTime, DateTime startTime, DateTime endTime) {
+  static int filterCreateDays(List<int> completeDays, DateTime createTime,
+      DateTime startTime, DateTime endTime) {
     createTime = startOfDay(createTime);
     endTime = startOfDay(endTime);
+    startTime = startOfDay(startTime);
+    print(completeDays);
     Duration duration = Duration(
-        milliseconds:
-            createTime.millisecondsSinceEpoch - endTime.millisecondsSinceEpoch);
-    if (duration.inDays > 0) {
-      return Duration(
-                  milliseconds: createTime.millisecondsSinceEpoch -
+        milliseconds: createTime.millisecondsSinceEpoch -
+            startTime.millisecondsSinceEpoch);
+    print(duration);
+    int dayNum;
+    if (duration.inDays >= 0) {
+      dayNum = Duration(
+                  milliseconds: endTime.millisecondsSinceEpoch -
+                      createTime.millisecondsSinceEpoch)
+              .inDays +
+          1;
+      dayNum = List.generate(
+              dayNum,
+              (index) => DateTime(
+                  createTime.year, createTime.month, createTime.day + index))
+          .where((day) => completeDays.contains(day.weekday))
+          .length;
+    } else {
+      dayNum = Duration(
+                  milliseconds: endTime.millisecondsSinceEpoch -
                       startTime.millisecondsSinceEpoch)
               .inDays +
           1;
+      dayNum = List.generate(
+              dayNum,
+              (index) => DateTime(
+                  startTime.year, startTime.month, startTime.day + index))
+          .where((day) => completeDays.contains(day.weekday))
+          .length;
     }
-    return Duration(
-                milliseconds: endTime.millisecondsSinceEpoch -
-                    startTime.millisecondsSinceEpoch)
-            .inDays +
-        1;
+    return dayNum;
   }
 }
