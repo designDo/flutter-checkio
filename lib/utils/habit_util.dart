@@ -260,14 +260,15 @@ class HabitUtil {
     return newHabits;
   }
 
-  ///获取历史拥有最大连续次数的习惯们
+  ///获取当前拥有最大连续次数的习惯们
   static Pair2<int, List<Habit>> getMostHistoryStreakHabits(
       List<Habit> habits) {
     List<Habit> newHabits = [];
-    int currentMaxStreak = 0;
+    int currentMaxStreak = 1;
+
     habits.forEach((habit) {
-      if (habit.period != 1) {
-        int streak = getMostStreaks(combinationRecords(habit.records));
+      if (HabitUtil.containAllDay(habit)) {
+        int streak = getNowStreaks(combinationRecords(habit.records));
         if (streak > currentMaxStreak) {
           newHabits.clear();
           newHabits.add(habit);
@@ -277,7 +278,7 @@ class HabitUtil {
         }
       }
     });
-    return Pair2(currentMaxStreak, newHabits);
+    return Pair2(currentMaxStreak == 1 ? 0 : currentMaxStreak, newHabits);
   }
 
   ///根据时间过滤记录

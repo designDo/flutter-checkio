@@ -286,11 +286,9 @@ class DateUtil {
     createTime = startOfDay(createTime);
     endTime = startOfDay(endTime);
     startTime = startOfDay(startTime);
-    print(completeDays);
     Duration duration = Duration(
         milliseconds: createTime.millisecondsSinceEpoch -
             startTime.millisecondsSinceEpoch);
-    print(duration);
     int dayNum;
     if (duration.inDays >= 0) {
       dayNum = Duration(

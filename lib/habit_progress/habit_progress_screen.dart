@@ -284,6 +284,9 @@ class MostStreaksView extends StatelessWidget {
   Widget build(BuildContext context) {
     Pair2<int, List<Habit>> mostStreakHabits =
         HabitUtil.getMostHistoryStreakHabits(habits);
+    if (mostStreakHabits.s == 0) {
+      return Container();
+    }
     return Container(
       decoration: BoxDecoration(
           shape: BoxShape.rectangle,
@@ -307,7 +310,7 @@ class MostStreaksView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '连续天数最多',
+                  '当前连续天数最多',
                   style: AppTheme.appTheme.textStyle(
                       textColor: Colors.black,
                       fontSize: 16,

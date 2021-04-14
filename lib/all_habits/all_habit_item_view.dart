@@ -28,11 +28,8 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
 
   double ratio = 1.8;
 
-  Map<String, List<HabitRecord>> records;
-
   @override
   void initState() {
-    records = HabitUtil.combinationRecords(widget.habit.records);
     super.initState();
   }
 
@@ -91,7 +88,8 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                         return calendarHeight;
                       },
                       habit: widget.habit,
-                      records: records,
+                      records:
+                          HabitUtil.combinationRecords(widget.habit.records),
                     ),
                   ),
                 ],
@@ -228,7 +226,8 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                   SizedBox(
                     width: 3,
                   ),
-                  Text('${HabitUtil.getNowStreaks(records)}',
+                  Text(
+                      '${HabitUtil.getNowStreaks(HabitUtil.combinationRecords(widget.habit.records))}',
                       style: AppTheme.appTheme
                           .textStyle(
                               textColor: AppTheme.appTheme.textColorMain(),
