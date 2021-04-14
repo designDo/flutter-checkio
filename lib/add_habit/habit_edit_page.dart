@@ -36,7 +36,8 @@ class _HabitEditPageState extends State<HabitEditPage>
   Color _habitColor;
 
   List<CompleteTime> completeTimes = [];
-  List<CompleteDay> completeDays = [];
+  List<CompleteDay> weekCompleteDays = [];
+  List<CompleteDay> dayCompleteDays = [];
 
   List<HabitPeriod> habitPeriods = [];
   int currentPeriod = HabitPeriod.day;
@@ -90,11 +91,19 @@ class _HabitEditPageState extends State<HabitEditPage>
     completeTimes = CompleteTime.getCompleteTimes(
         widget.isModify ? widget.habit.completeTime : 0);
 
-    completeDays = CompleteDay.getCompleteDays();
+    weekCompleteDays = CompleteDay.getCompleteDays();
     if (widget.isModify && widget.habit.period == HabitPeriod.week) {
-      for (int i = 0; i < completeDays.length; i++) {
-        completeDays[i].isSelect =
-            widget.habit.completeDays.contains(completeDays[i].day);
+      for (int i = 0; i < weekCompleteDays.length; i++) {
+        weekCompleteDays[i].isSelect =
+            widget.habit.completeDays.contains(weekCompleteDays[i].day);
+      }
+    }
+
+    dayCompleteDays = CompleteDay.getCompleteDays();
+    if (widget.isModify && widget.habit.period == HabitPeriod.day) {
+      for (int i = 0; i < dayCompleteDays.length; i++) {
+        dayCompleteDays[i].isSelect =
+            widget.habit.completeDays.contains(dayCompleteDays[i].day);
       }
     }
 
@@ -373,33 +382,30 @@ class _HabitEditPageState extends State<HabitEditPage>
               }
               if (widget.isModify) {
                 Habit newHabit = widget.habit.copyWith(
-                    name: _name,
-                    iconPath: _habitIcon,
-                    mainColor: _habitColor.value,
-                    mark: _mark,
-                    period: currentPeriod,
-                    doNum: getCurrentCount(),
-                    completeTime: completeTimes
-                        .where((element) => element.isSelect)
-                        .first
-                        .time,
-                    completeDays: currentPeriod == 1
-                        ? completeDays
-                            .where((element) => element.isSelect)
-                            .map((e) => e.day)
-                            .toList()
-                        : [],
-                    remindTimes: remindTime == null
-                        ? []
-                        : [
-                            '${_twoDigits(remindTime.hour)}:${_twoDigits(remindTime.minute)}'
-                          ],
-                    modifyTime: DateTime.now().millisecondsSinceEpoch,
-                    completed: false,);
+                  name: _name,
+                  iconPath: _habitIcon,
+                  mainColor: _habitColor.value,
+                  mark: _mark,
+                  period: currentPeriod,
+                  doNum: getCurrentCount(),
+                  completeTime: completeTimes
+                      .where((element) => element.isSelect)
+                      .first
+                      .time,
+                  completeDays: _completeDays(),
+                  remindTimes: remindTime == null
+                      ? []
+                      : [
+                          '${_twoDigits(remindTime.hour)}:${_twoDigits(remindTime.minute)}'
+                        ],
+                  modifyTime: DateTime.now().millisecondsSinceEpoch,
+                  completed: false,
+                );
                 BlocProvider.of<HabitsBloc>(context).add(HabitUpdate(newHabit));
                 Navigator.of(context).pop();
                 return;
               }
+
               Habit habit = Habit(
                   id: Uuid().generateV4(),
                   name: _name,
@@ -412,12 +418,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                       .where((element) => element.isSelect)
                       .first
                       .time,
-                  completeDays: currentPeriod == 1
-                      ? completeDays
-                          .where((element) => element.isSelect)
-                          .map((e) => e.day)
-                          .toList()
-                      : [],
+                  completeDays: _completeDays(),
                   remindTimes: remindTime == null
                       ? []
                       : [
@@ -467,6 +468,21 @@ class _HabitEditPageState extends State<HabitEditPage>
         ],
       ),
     );
+  }
+
+  List<int> _completeDays() {
+    if (currentPeriod == HabitPeriod.day) {
+      return dayCompleteDays
+          .where((element) => element.isSelect)
+          .map((e) => e.day)
+          .toList();
+    } else if (currentPeriod == HabitPeriod.week) {
+      return weekCompleteDays
+          .where((element) => element.isSelect)
+          .map((e) => e.day)
+          .toList();
+    }
+    return <int>[];
   }
 
   Widget barView() {
@@ -604,50 +620,53 @@ class _HabitEditPageState extends State<HabitEditPage>
             scrollDirection: Axis.horizontal,
           ),
         ),
-        currentPeriod == HabitPeriod.week
-            ? Container(
-                height: 58,
-                child: ListView.builder(
-                  padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                  itemBuilder: (context, index) {
-                    CompleteDay completeDay = completeDays[index];
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          completeDay.isSelect = !completeDay.isSelect;
-                        });
-                      },
-                      child: AnimatedContainer(
-                        alignment: Alignment.center,
-                        margin: EdgeInsets.only(left: 16),
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                                color: Color(0xFF5C5EDD), width: 1.5),
-                            color: completeDay.isSelect
-                                ? Color(0xFF5C5EDD)
-                                : Colors.white),
-                        child: Text(
-                          CompleteDay.getDay(completeDay.day),
-                          style: AppTheme.appTheme.textStyle(
-                              textColor: completeDay.isSelect
-                                  ? Colors.white
-                                  : Color(0xFF5C5EDD),
-                              fontWeight: FontWeight.normal,
-                              fontSize: 13),
-                        ),
-                        duration: Duration(milliseconds: 300),
-                      ),
-                    );
-                  },
-                  itemCount: completeDays.length,
-                  scrollDirection: Axis.horizontal,
-                ),
-              )
-            : SizedBox()
+        currentPeriod == HabitPeriod.month
+            ? SizedBox()
+            : _chooseCompleteDysView(currentPeriod == HabitPeriod.day
+                ? dayCompleteDays
+                : weekCompleteDays)
       ],
+    );
+  }
+
+  Widget _chooseCompleteDysView(List<CompleteDay> completeDays) {
+    return Container(
+      height: 58,
+      child: ListView.builder(
+        padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
+        itemBuilder: (context, index) {
+          CompleteDay completeDay = completeDays[index];
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                completeDay.isSelect = !completeDay.isSelect;
+              });
+            },
+            child: AnimatedContainer(
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(left: 16),
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Color(0xFF5C5EDD), width: 1.5),
+                  color:
+                      completeDay.isSelect ? Color(0xFF5C5EDD) : Colors.white),
+              child: Text(
+                CompleteDay.getDay(completeDay.day),
+                style: AppTheme.appTheme.textStyle(
+                    textColor:
+                        completeDay.isSelect ? Colors.white : Color(0xFF5C5EDD),
+                    fontWeight: FontWeight.normal,
+                    fontSize: 13),
+              ),
+              duration: Duration(milliseconds: 300),
+            ),
+          );
+        },
+        itemCount: completeDays.length,
+        scrollDirection: Axis.horizontal,
+      ),
     );
   }
 

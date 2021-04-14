@@ -58,14 +58,7 @@ class _IconAndColorPageState extends State<IconAndColorPage> {
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.all(Radius.circular(20)),
-          gradient: LinearGradient(
-            colors: <Color>[
-              AppTheme.appTheme.addHabitSheetBgLight(),
-              AppTheme.appTheme.addHabitSheetBgDark()
-            ],
-            begin: Alignment.bottomLeft,
-            end: Alignment.topRight,
-          ),
+          color: Colors.white,
         ),
         child: Column(
           children: [
@@ -100,7 +93,7 @@ class _IconAndColorPageState extends State<IconAndColorPage> {
                           shape: BoxShape.rectangle,
                           color: (icons[index].isSelect
                               ? _selectBackgroundColor.color
-                              : Colors.white12)),
+                              : AppTheme.appTheme.containerBackgroundColor())),
                       alignment: Alignment.center,
                       child: Image.asset(
                         icons[index].icon,
@@ -178,7 +171,7 @@ class _IconAndColorPageState extends State<IconAndColorPage> {
                   'assets/images/duigou.svg',
                   width: 35,
                   height: 35,
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
               ),
             )

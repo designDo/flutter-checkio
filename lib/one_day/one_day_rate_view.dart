@@ -19,8 +19,15 @@ class OneDayRateView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int needCompleteNnm = _needCompleteNum();
-    int hasDoNum = _hasDoNum();
+    List<Habit> habits = allHabits;
+    if (period == HabitPeriod.day) {
+      int weekend = DateTime.now().weekday;
+      habits = habits
+          .where((element) => element.completeDays.contains(weekend))
+          .toList();
+    }
+    int needCompleteNnm = _needCompleteNum(habits);
+    int hasDoNum = _hasDoNum(habits);
     return SlideTransition(
       position: animation,
       child: Padding(
@@ -142,15 +149,15 @@ class OneDayRateView extends StatelessWidget {
     );
   }
 
-  int _needCompleteNum() {
+  int _needCompleteNum(List<Habit> habits) {
     int count = 0;
-    allHabits.where((element) => element.period == period).forEach((element) {
+    habits.where((element) => element.period == period).forEach((element) {
       count += element.doNum;
     });
     return count;
   }
 
-  int _hasDoNum() {
+  int _hasDoNum(List<Habit> habits) {
     int count = 0;
     final DateTime _now = DateTime.now();
     DateTime start;
@@ -167,7 +174,7 @@ class OneDayRateView extends StatelessWidget {
       start = monthSAE.x0;
       end = monthSAE.x1;
     }
-    allHabits.where((element) => element.period == period).forEach((element) {
+    habits.where((element) => element.period == period).forEach((element) {
       count += HabitUtil.getDoCountOfHabit(element.records, start, end);
     });
     return count;

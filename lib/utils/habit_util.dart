@@ -10,6 +10,12 @@ class HabitUtil {
   ///按completeTime分类，子分类下按时间排序
   static List<OnDayHabitListData> sortByCompleteTime(List<Habit> habits) {
     List<OnDayHabitListData> datas = [];
+    int weekend = DateTime.now().weekday;
+
+    ///过滤当天
+    habits = habits.where((habit) =>
+        habit.period == HabitPeriod.month ||
+        (habit.completeDays.contains(weekend))).toList();
     if (habits.length > 0) {
       Map<int, List<Habit>> map = {};
       habits.forEach((habit) {

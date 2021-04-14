@@ -127,8 +127,12 @@ class _OneDayScreenState extends State<OneDayScreen>
     List<OnDayHabitListData> datas = [];
     datas.add(
         OnDayHabitListData(type: OnDayHabitListData.typeHeader, value: null));
-    int dayPeroidHabitCount =
-        habits.where((element) => element.period == HabitPeriod.day).length;
+    int weekend = DateTime.now().weekday;
+    int dayPeroidHabitCount = habits
+        .where((element) =>
+            element.period == HabitPeriod.day &&
+            element.completeDays.contains(weekend))
+        .length;
     int weekPeroidHabitCount =
         habits.where((element) => element.period == HabitPeriod.week).length;
     int monthPeroidHabitCount =
