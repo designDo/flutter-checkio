@@ -40,7 +40,7 @@ class HabitBaseInfoView extends StatelessWidget {
               decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.all(Radius.circular(
-                      habit.period == HabitPeriod.week ? 45 : 35)),
+                      HabitUtil.containAllDay(habit) ? 35 : 45)),
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
@@ -53,7 +53,9 @@ class HabitBaseInfoView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   _tipView(recordLength),
-                  habit.period == HabitPeriod.week ? _weekInfo() : Container()
+                  HabitUtil.containAllDay(habit)
+                      ? Container()
+                      : _completeDaysInfo()
                 ],
               ),
             ),
@@ -96,7 +98,7 @@ class HabitBaseInfoView extends StatelessWidget {
     );
   }
 
-  Widget _weekInfo() {
+  Widget _completeDaysInfo() {
     return Container(
       margin: EdgeInsets.only(left: 8),
       child: Row(
@@ -135,6 +137,19 @@ class HabitBaseInfoView extends StatelessWidget {
       tip = '本周需完成';
     } else if (habit.period == HabitPeriod.month) {
       tip = '本月需完成';
+    }
+    if (habit.period == HabitPeriod.day &&
+        !habit.completeDays.contains(DateTime.now().weekday)) {
+      return Container(
+        width: double.infinity,
+        child: Text(
+          '今天不在记录周期内',
+          style: AppTheme.appTheme.textStyle(
+            textColor: Colors.black,
+            fontSize: 14,
+          ),
+        ),
+      );
     }
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -559,6 +574,8 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView>
                                 days: days,
                                 habitId: widget.habit.id,
                                 records: records,
+                                period: widget.habit.period,
+                                completeDays: widget.habit.completeDays,
                               ),
                             ),
                             SizedBox()
@@ -640,8 +657,12 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView>
     }
     int needDoNum;
     if (widget.habit.period == HabitPeriod.day) {
-      needDoNum =
-          DateTime(month.year, month.month + 1, 0).day * widget.habit.doNum;
+      int dayNum = DateTime(month.year, month.month + 1, 0).day;
+      dayNum = List.generate(
+              dayNum, (index) => DateTime(month.year, month.month, index + 1))
+          .where((day) => widget.habit.completeDays.contains(day.weekday))
+          .length;
+      needDoNum = dayNum * widget.habit.doNum;
     } else if (widget.habit.period == HabitPeriod.month) {
       needDoNum = widget.habit.doNum;
     }
