@@ -304,7 +304,7 @@ class ProgressRateView extends StatelessWidget {
     int oneWeekHasDoneNum = 0;
     oneWeekHabits.forEach((habit) {
       oneWeekNeedDoNum += habit.doNum;
-      oneWeekHasDoneNum =
+      oneWeekHasDoneNum +=
           HabitUtil.getDoCountOfHabit(habit.records, start, end);
     });
 
@@ -323,7 +323,7 @@ class ProgressRateView extends StatelessWidget {
     int oneWeekAgoHasDoneNum = 0;
     oneWeekAgoHabits.forEach((habit) {
       oneWeekAgoNeedDoNum += habit.doNum;
-      oneWeekAgoHasDoneNum =
+      oneWeekAgoHasDoneNum +=
           HabitUtil.getDoCountOfHabit(habit.records, start, end);
     });
 
@@ -342,7 +342,7 @@ class ProgressRateView extends StatelessWidget {
     int twoWeekAgoHasDoneNum = 0;
     twoWeekAgoHabits.forEach((habit) {
       twoWeekAgoNeedDoNum += habit.doNum;
-      twoWeekAgoHasDoneNum =
+      twoWeekAgoHasDoneNum +=
           HabitUtil.getDoCountOfHabit(habit.records, start, end);
     });
 
@@ -369,7 +369,7 @@ class ProgressRateView extends StatelessWidget {
     int oneWeekHasDoneNum = 0;
     oneWeekHabits.forEach((habit) {
       oneWeekNeedDoNum += habit.doNum;
-      oneWeekHasDoneNum =
+      oneWeekHasDoneNum +=
           HabitUtil.getDoCountOfHabit(habit.records, start, end);
     });
 
@@ -388,7 +388,7 @@ class ProgressRateView extends StatelessWidget {
     int oneWeekAgoHasDoneNum = 0;
     oneWeekAgoHabits.forEach((habit) {
       oneWeekAgoNeedDoNum += habit.doNum;
-      oneWeekAgoHasDoneNum =
+      oneWeekAgoHasDoneNum +=
           HabitUtil.getDoCountOfHabit(habit.records, start, end);
     });
 
@@ -407,7 +407,7 @@ class ProgressRateView extends StatelessWidget {
     int twoWeekAgoHasDoneNum = 0;
     twoWeekAgoHabits.forEach((habit) {
       twoWeekAgoNeedDoNum += habit.doNum;
-      twoWeekAgoHasDoneNum =
+      twoWeekAgoHasDoneNum +=
           HabitUtil.getDoCountOfHabit(habit.records, start, end);
     });
 
