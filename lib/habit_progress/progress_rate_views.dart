@@ -357,64 +357,64 @@ class ProgressRateView extends StatelessWidget {
     final DateTime now = DateTime.now();
 
     ///1 month
-    Pair<DateTime> oneWeek = DateUtil.getMonthStartAndEnd(now, 0);
-    DateTime start = oneWeek.x0;
-    DateTime end = oneWeek.x1;
-    List<Habit> oneWeekHabits = allHabits
+    Pair<DateTime> oneMonth = DateUtil.getMonthStartAndEnd(now, 0);
+    DateTime start = oneMonth.x0;
+    DateTime end = oneMonth.x1;
+    List<Habit> oneMonthHabits = allHabits
         .where((element) =>
             element.period == HabitPeriod.month &&
             element.createTime < DateUtil.endOfDay(end).millisecondsSinceEpoch)
         .toList();
-    int oneWeekNeedDoNum = 0;
-    int oneWeekHasDoneNum = 0;
-    oneWeekHabits.forEach((habit) {
-      oneWeekNeedDoNum += habit.doNum;
-      oneWeekHasDoneNum +=
+    int oneMonthNeedDoNum = 0;
+    int oneMonthHasDoneNum = 0;
+    oneMonthHabits.forEach((habit) {
+      oneMonthNeedDoNum += habit.doNum;
+      oneMonthHasDoneNum +=
           HabitUtil.getDoCountOfHabit(habit.records, start, end);
     });
 
     ///1 month ago
-    Pair<DateTime> oneWeekAgo = DateUtil.getMonthStartAndEnd(now, 1);
-    start = oneWeekAgo.x0;
-    end = oneWeekAgo.x1;
+    Pair<DateTime> oneMonthAgo = DateUtil.getMonthStartAndEnd(now, 1);
+    start = oneMonthAgo.x0;
+    end = oneMonthAgo.x1;
 
-    List<Habit> oneWeekAgoHabits = allHabits
+    List<Habit> oneMonthAgoHabits = allHabits
         .where((element) =>
             element.period == HabitPeriod.month &&
             element.createTime < DateUtil.endOfDay(end).millisecondsSinceEpoch)
         .toList();
 
-    int oneWeekAgoNeedDoNum = 0;
-    int oneWeekAgoHasDoneNum = 0;
-    oneWeekAgoHabits.forEach((habit) {
-      oneWeekAgoNeedDoNum += habit.doNum;
-      oneWeekAgoHasDoneNum +=
+    int oneMonthAgoNeedDoNum = 0;
+    int oneMonthAgoHasDoneNum = 0;
+    oneMonthAgoHabits.forEach((habit) {
+      oneMonthAgoNeedDoNum += habit.doNum;
+      oneMonthAgoHasDoneNum +=
           HabitUtil.getDoCountOfHabit(habit.records, start, end);
     });
 
     ///2  month ago
-    Pair<DateTime> towWeekAgo = DateUtil.getMonthStartAndEnd(now, 2);
-    start = towWeekAgo.x0;
-    end = towWeekAgo.x1;
+    Pair<DateTime> towMonthAgo = DateUtil.getMonthStartAndEnd(now, 2);
+    start = towMonthAgo.x0;
+    end = towMonthAgo.x1;
 
-    List<Habit> twoWeekAgoHabits = allHabits
+    List<Habit> twoMonthAgoHabits = allHabits
         .where((element) =>
             element.period == HabitPeriod.month &&
             element.createTime < DateUtil.endOfDay(end).millisecondsSinceEpoch)
         .toList();
 
-    int twoWeekAgoNeedDoNum = 0;
-    int twoWeekAgoHasDoneNum = 0;
-    twoWeekAgoHabits.forEach((habit) {
-      twoWeekAgoNeedDoNum += habit.doNum;
-      twoWeekAgoHasDoneNum +=
+    int twoMonthAgoNeedDoNum = 0;
+    int twoMonthAgoHasDoneNum = 0;
+    twoMonthAgoHabits.forEach((habit) {
+      twoMonthAgoNeedDoNum += habit.doNum;
+      twoMonthAgoHasDoneNum +=
           HabitUtil.getDoCountOfHabit(habit.records, start, end);
     });
 
     List<Pair<int>> rates = [];
-    rates.add(Pair(oneWeekHasDoneNum, oneWeekNeedDoNum));
-    rates.add(Pair(oneWeekAgoHasDoneNum, oneWeekAgoNeedDoNum));
-    rates.add(Pair(twoWeekAgoHasDoneNum, twoWeekAgoNeedDoNum));
+    rates.add(Pair(oneMonthHasDoneNum, oneMonthNeedDoNum));
+    rates.add(Pair(oneMonthAgoHasDoneNum, oneMonthAgoNeedDoNum));
+    rates.add(Pair(twoMonthAgoHasDoneNum, twoMonthAgoNeedDoNum));
     return rates;
   }
 }
