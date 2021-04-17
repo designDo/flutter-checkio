@@ -139,3 +139,37 @@ class HabitsTotalView extends StatelessWidget {
     );
   }
 }
+
+class UserProView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(left: 26, right: 26, top: 32),
+      alignment: Alignment.center,
+      height: 90,
+      decoration: BoxDecoration(
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+                color: Color(0xFF738AE6).withOpacity(0.6),
+                offset: const Offset(5.1, 4.0),
+                blurRadius: 12.0,
+                spreadRadius: 0),
+          ],
+          gradient: LinearGradient(
+            colors: <Color>[
+              Color(0xFF738AE6),
+              Color(0xFF5C5EDD),
+            ],
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(12))),
+      child: Text(
+        '解锁专业版\n成为你自己的英雄',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            color: Colors.white, fontWeight: FontWeight.normal, fontSize: 16),
+      ),
+    );
+  }
+}

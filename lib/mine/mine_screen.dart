@@ -20,6 +20,8 @@ class _MineScreenState extends State<MineScreen> {
         ListView(physics: ClampingScrollPhysics(), children: [
           UserInfoView(),
           HabitsTotalView(),
+          UserProView(),
+
         ]),
         Container(
           alignment: Alignment.centerRight,
