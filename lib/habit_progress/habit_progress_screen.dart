@@ -213,6 +213,9 @@ class MostChecksView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Habit> mostDoNumHabits = HabitUtil.getMostDoNumHabits(habits);
+    if (mostDoNumHabits.length == 0) {
+      return Container();
+    }
     return Container(
       decoration: BoxDecoration(
           shape: BoxShape.rectangle,
