@@ -150,8 +150,8 @@ class UserProView extends StatelessWidget {
       decoration: BoxDecoration(
           boxShadow: <BoxShadow>[
             BoxShadow(
-                color: Color(0xFF738AE6).withOpacity(0.6),
-                offset: const Offset(5.1, 4.0),
+                color: Color(0xFF738AE6).withOpacity(0.3),
+                offset: const Offset(5.1, 6.0),
                 blurRadius: 12.0,
                 spreadRadius: 0),
           ],
@@ -165,10 +165,120 @@ class UserProView extends StatelessWidget {
           ),
           borderRadius: BorderRadius.all(Radius.circular(12))),
       child: Text(
-        '解锁专业版\n成为你自己的英雄',
+        '解锁专业版\n成为自己的英雄',
         textAlign: TextAlign.center,
         style: TextStyle(
             color: Colors.white, fontWeight: FontWeight.normal, fontSize: 16),
+      ),
+    );
+  }
+}
+
+class EnterView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(left: 26, right: 26, top: 26),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                  child: AspectRatio(
+                aspectRatio: 0.8,
+                child: _item(
+                    'assets/images/icon_fivestar.svg', '给TimeFly\n5星好评',
+                    decoration: BoxDecoration(
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                              color: Color(0xFF738AE6).withOpacity(0.3),
+                              offset: const Offset(5.1, 4.0),
+                              blurRadius: 12.0,
+                              spreadRadius: 0),
+                        ],
+                        gradient: LinearGradient(
+                          colors: <Color>[
+                            Color(0xFF738AE6),
+                            Color(0xFF5C5EDD),
+                          ],
+                          begin: Alignment.topRight,
+                          end: Alignment.bottomLeft,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(12))),
+                    colored: true),
+              )),
+              SizedBox(
+                width: 16,
+              ),
+              Expanded(
+                  child: AspectRatio(
+                aspectRatio: 0.8,
+                child: _item('assets/images/icon_theme.svg', '主题\n更多主题色'),
+              ))
+            ],
+          ),
+          SizedBox(
+            height: 18,
+          ),
+          Row(
+            children: [
+              Expanded(
+                  child: AspectRatio(
+                aspectRatio: 0.8,
+                child: _item('assets/images/icon_contect.svg', '联系我\n建议和疑问'),
+              )),
+              SizedBox(
+                width: 16,
+              ),
+              Expanded(
+                  child: AspectRatio(
+                aspectRatio: 0.8,
+                child: _item('assets/images/icon_today.svg', '这一天\n我在这一天...'),
+              ))
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _item(String iconPath, String text,
+      {BoxDecoration decoration, bool colored = false}) {
+    return Container(
+      padding: EdgeInsets.all(16),
+      decoration: decoration == null
+          ? BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(12)),
+              color: Colors.white,
+              boxShadow: <BoxShadow>[
+                  BoxShadow(
+                      color: Colors.black.withOpacity(0.075),
+                      offset: const Offset(5.1, 4.0),
+                      blurRadius: 16.0),
+                ])
+          : decoration,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SvgPicture.asset(
+            iconPath,
+            width: 26,
+            height: 26,
+            color: colored ? Colors.white : Color(0xFF5C5EDD),
+          ),
+          Expanded(child: SizedBox()),
+          Text(
+            text,
+            style: AppTheme.appTheme.textStyle(
+                textColor: colored ? Colors.white : Colors.black,
+                fontWeight: FontWeight.normal,
+                fontSize: 16),
+          ),
+          SizedBox(
+            height: 16,
+          )
+        ],
       ),
     );
   }

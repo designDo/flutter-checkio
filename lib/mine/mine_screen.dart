@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/blocs/theme/theme_bloc.dart';
 import 'package:timefly/blocs/theme/theme_event.dart';
@@ -21,13 +22,17 @@ class _MineScreenState extends State<MineScreen> {
           UserInfoView(),
           HabitsTotalView(),
           UserProView(),
-
+          EnterView(),
+          SizedBox(
+            height: 100,
+          )
         ]),
         Container(
           alignment: Alignment.centerRight,
           margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 26),
           height: 45,
           child: Container(
+            alignment: Alignment.center,
             width: 90,
             decoration: BoxDecoration(
                 shape: BoxShape.rectangle,
@@ -41,6 +46,12 @@ class _MineScreenState extends State<MineScreen> {
                       blurRadius: 12,
                       offset: Offset(10, 2))
                 ]),
+            child: SvgPicture.asset(
+              'assets/images/icon_jiaohuan.svg',
+              width: 25,
+              height: 25,
+              color: Colors.black.withOpacity(0.8),
+            ),
           ),
         )
       ],
