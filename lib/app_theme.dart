@@ -27,16 +27,48 @@ class AppTheme {
   AppThemeColorMode currentColorMode;
   AppFontMode currentFontMode;
 
+  String fontFamliy;
+
+  String numFontFamliy = 'Montserrat';
+
   ThemeData createTheme(AppThemeMode themeMode,
       AppThemeColorMode themeColorMode, AppFontMode fontMode) {
     currentThemeMode = themeMode;
     currentColorMode = themeColorMode;
     currentFontMode = fontMode;
+    fontFamliy = fontFamily(currentFontMode);
     if (themeMode == AppThemeMode.Dark) {
       return darkTheme();
     } else {
       return lightTheme();
     }
+  }
+
+  ///粗体，22
+  TextStyle headline1() {
+    return TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 22,
+        color: isDark() ? Colors.white : Colors.black,
+        fontFamily: fontFamliy);
+  }
+
+  ///数字 粗体 28
+  TextStyle numHeadline1() {
+    return TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 28,
+        color: isDark() ? Colors.white : Colors.black,
+        fontFamily: numFontFamliy);
+  }
+
+  ///数字 粗体 27
+  TextStyle numHeadline2() {
+    return TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 27,
+        color: isDark() ? Colors.white : Colors.black,
+        fontFamily: numFontFamliy);
   }
 
   bool isDark() {
