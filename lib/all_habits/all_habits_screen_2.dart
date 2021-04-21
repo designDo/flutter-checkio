@@ -29,11 +29,7 @@ class _AllHabitScreenState extends State<AllHabitScreen> {
           clipper: BottomClipper(),
           child: Container(
             decoration: BoxDecoration(
-                gradient: LinearGradient(
-              colors: <Color>[
-                Color(0xFF738AE6),
-                Color(0xFF5C5EDD),
-              ],
+                gradient: AppTheme.appTheme.containerGradient(
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
             )),
@@ -53,7 +49,7 @@ class _AllHabitScreenState extends State<AllHabitScreen> {
                   children: [
                     Text(
                       '所有习惯',
-                      style: AppTheme.appTheme.textStyle(
+                      style: AppTheme.appTheme.headline1(
                           textColor: Colors.white,
                           fontSize: 20,
                           fontWeight: FontWeight.bold),
@@ -120,11 +116,15 @@ class _AllHabitScreenState extends State<AllHabitScreen> {
                                       ))
                                   .toList(),
                               labelColor: Colors.white,
-                              labelStyle: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
+                              labelStyle: AppTheme.appTheme.headline1(
+                                  textColor: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16),
                               unselectedLabelColor: Colors.white70,
-                              unselectedLabelStyle: TextStyle(
-                                  fontWeight: FontWeight.normal, fontSize: 16),
+                              unselectedLabelStyle: AppTheme.appTheme.headline1(
+                                  textColor: Colors.white70,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16),
                               indicator: BorderTabIndicator(
                                   indicatorHeight: 36, textScaleFactor: 0.8),
                               isScrollable: true,

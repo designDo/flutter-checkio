@@ -699,10 +699,10 @@ class _HabitEditPageState extends State<HabitEditPage>
               builder: (context, child) {
                 return Text(
                   '${getCurrentCount()}',
-                  style: AppTheme.appTheme.headline1(
+                  style: AppTheme.appTheme.numHeadline1(
                       textColor: Colors.white,
                       fontWeight: FontWeight.w600,
-                      fontSize: 23 * fontAnimationController.value),
+                      fontSize: 20 * fontAnimationController.value),
                 );
               },
               animation: CurvedAnimation(
@@ -749,8 +749,10 @@ class _HabitEditPageState extends State<HabitEditPage>
                       color: AppTheme.appTheme.grandientColorEnd()),
                   child: Text(
                     '${_twoDigits(remindTime.hour)}:${_twoDigits(remindTime.minute)}',
-                    style: AppTheme.appTheme
-                        .headline1(fontWeight: FontWeight.w600, fontSize: 15),
+                    style: AppTheme.appTheme.headline1(
+                        textColor: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15),
                   ),
                 ),
           GestureDetector(
@@ -778,7 +780,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                                 data: CupertinoThemeData(
                                     textTheme: CupertinoTextThemeData(
                                         dateTimePickerTextStyle:
-                                            AppTheme.appTheme.headline1(
+                                            AppTheme.appTheme.numHeadline1(
                                                 textColor: Colors.white,
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 18))),

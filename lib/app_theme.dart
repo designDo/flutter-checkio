@@ -154,20 +154,26 @@ class AppTheme {
   }
 
   ///数字
-  TextStyle numHeadline1({FontWeight fontWeight, double fontSize}) {
+  TextStyle numHeadline1(
+      {FontWeight fontWeight, double fontSize, Color textColor}) {
     return TextStyle(
         fontWeight: fontWeight,
         fontSize: fontSize,
-        color: isDark() ? Colors.white : Colors.black,
+        color: textColor == null
+            ? (isDark() ? Colors.white : Colors.black)
+            : textColor,
         fontFamily: numFontFamliy);
   }
 
   ///数字
-  TextStyle numHeadline2({FontWeight fontWeight, double fontSize}) {
+  TextStyle numHeadline2(
+      {FontWeight fontWeight, double fontSize, Color textColor}) {
     return TextStyle(
         fontWeight: fontWeight,
         fontSize: fontSize,
-        color: isDark() ? Colors.grey : Colors.black,
+        color: textColor == null
+            ? (isDark() ? Colors.grey : Colors.black)
+            : textColor,
         fontFamily: numFontFamliy);
   }
 

@@ -51,12 +51,7 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
       child: AnimatedContainer(
         margin: EdgeInsets.only(left: 18, right: 18),
         decoration: BoxDecoration(
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  offset: const Offset(10, 5.0),
-                  blurRadius: 16.0),
-            ],
+            boxShadow: AppTheme.appTheme.containerBoxShadow(),
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.only(
                 topLeft: _wasOpen ? Radius.circular(15) : Radius.circular(50),
@@ -119,8 +114,8 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                         BoxShadow(
                             color:
                                 Color(widget.habit.mainColor).withOpacity(0.3),
-                            offset: Offset(0, 7),
-                            blurRadius: 10)
+                            offset: Offset(0, 3),
+                            blurRadius: 6)
                       ],
                       shape: BoxShape.circle,
                       color: Color(widget.habit.mainColor).withOpacity(0.5)),
@@ -147,9 +142,9 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                     color: Color(widget.habit.mainColor)),
                 child: Text(
                   '${HabitPeriod.getPeriod(widget.habit.period)}',
-                  style: TextStyle(
+                  style: AppTheme.appTheme.numHeadline1(
                       fontSize: 11,
-                      color: Colors.white,
+                      textColor: Colors.white,
                       fontWeight: FontWeight.bold),
                 ),
               )
@@ -184,7 +179,6 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text('记录',
                       style: AppTheme.appTheme.headline2(

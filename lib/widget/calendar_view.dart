@@ -54,7 +54,7 @@ class _CalendarViewState extends State<CalendarView> {
                   child: Text(
                     '${DateUtil.getWeekendString(index + 1)}',
                     style: AppTheme.appTheme
-                        .textStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                        .headline1(fontWeight: FontWeight.w500, fontSize: 15),
                   ),
                 );
               }
@@ -65,14 +65,12 @@ class _CalendarViewState extends State<CalendarView> {
               alignment: Alignment.center,
               child: Text(
                 '${day.day}',
-                style: AppTheme.appTheme
-                    .textStyle(
-                        textColor: containsDay(days[index])
-                            ? Colors.white
-                            : Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16)
-                    .copyWith(fontFamily: 'Montserrat'),
+                style: AppTheme.appTheme.numHeadline1(
+                    textColor: containsDay(days[index])
+                        ? Colors.white
+                        : AppTheme.appTheme.normalColor(),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16),
               ),
             );
           }),
