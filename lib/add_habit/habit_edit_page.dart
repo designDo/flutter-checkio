@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:timefly/add_habit/Icon_color.dart';
+import 'package:timefly/add_habit/icon_color.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/blocs/habit/habit_bloc.dart';
 import 'package:timefly/blocs/habit/habit_event.dart';
@@ -229,12 +229,10 @@ class _HabitEditPageState extends State<HabitEditPage>
                         maxLength: 10,
                         initValue: _name,
                         hintText: '名字 ...',
-                        hintTextStyle: AppTheme.appTheme.textStyle(
-                            textColor: Colors.black.withOpacity(0.6),
+                        hintTextStyle: AppTheme.appTheme.hint(
                             fontWeight: FontWeight.bold,
                             fontSize: 18),
-                        textStyle: AppTheme.appTheme.textStyle(
-                            textColor: Colors.black,
+                        textStyle: AppTheme.appTheme.headline1(
                             fontWeight: FontWeight.bold,
                             fontSize: 18),
                         containerDecoration: BoxDecoration(
@@ -253,8 +251,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                                   offset: Offset(3, 3),
                                   blurRadius: 6)
                             ]),
-                        numTextStyle: TextStyle(
-                            color: Color(0xFF5C5EDD),
+                        numTextStyle: AppTheme.appTheme.themeText(
                             fontWeight: FontWeight.bold,
                             fontSize: 15),
                         onValueChanged: (value) {
@@ -270,8 +267,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                         margin: EdgeInsets.only(left: 18, top: 8),
                         child: Text(
                           '时段',
-                          style: AppTheme.appTheme.textStyle(
-                              textColor: Colors.black,
+                          style: AppTheme.appTheme.headline1(
                               fontWeight: FontWeight.w600,
                               fontSize: 18),
                         ),
@@ -282,8 +278,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                         margin: EdgeInsets.only(left: 18),
                         child: Text(
                           '周期',
-                          style: AppTheme.appTheme.textStyle(
-                              textColor: Colors.black,
+                          style: AppTheme.appTheme.headline1(
                               fontWeight: FontWeight.w600,
                               fontSize: 18),
                         ),
@@ -294,8 +289,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                         margin: EdgeInsets.only(left: 18),
                         child: Text(
                           '每${HabitPeriod.getPeriod(currentPeriod)}完成次数',
-                          style: AppTheme.appTheme.textStyle(
-                              textColor: Colors.black,
+                          style: AppTheme.appTheme.headline1(
                               fontWeight: FontWeight.w600,
                               fontSize: 18),
                         ),
@@ -306,8 +300,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                         margin: EdgeInsets.only(left: 18, top: 8),
                         child: Text(
                           '提醒时间',
-                          style: AppTheme.appTheme.textStyle(
-                              textColor: Colors.black,
+                          style: AppTheme.appTheme.headline1(
                               fontWeight: FontWeight.w600,
                               fontSize: 18),
                         ),
@@ -318,8 +311,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                         margin: EdgeInsets.only(left: 18, top: 16),
                         child: Text(
                           '写一句话鼓励自己',
-                          style: AppTheme.appTheme.textStyle(
-                              textColor: Colors.black,
+                          style: AppTheme.appTheme.headline1(
                               fontWeight: FontWeight.w600,
                               fontSize: 18),
                         ),
@@ -328,12 +320,10 @@ class _HabitEditPageState extends State<HabitEditPage>
                         maxLength: 50,
                         initValue: _mark,
                         hintText: '千里之行，始于足下 ...',
-                        hintTextStyle: AppTheme.appTheme.textStyle(
-                            textColor: Colors.black.withOpacity(0.6),
+                        hintTextStyle: AppTheme.appTheme.hint(
                             fontWeight: FontWeight.normal,
                             fontSize: 16),
-                        textStyle: AppTheme.appTheme.textStyle(
-                            textColor: Colors.black,
+                        textStyle: AppTheme.appTheme.headline1(
                             fontWeight: FontWeight.normal,
                             fontSize: 16),
                         minHeight: 100,
@@ -353,8 +343,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                                   offset: Offset(3, 3),
                                   blurRadius: 6)
                             ]),
-                        numTextStyle: TextStyle(
-                            color: Color(0xFF5C5EDD),
+                        numTextStyle: AppTheme.appTheme.themeText(
                             fontWeight: FontWeight.bold,
                             fontSize: 15),
                         onValueChanged: (value) {

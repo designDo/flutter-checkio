@@ -44,14 +44,42 @@ class AppTheme {
     }
   }
 
-  ///粗体，22
-  TextStyle headline1() {
+  /// 黑/白
+  TextStyle headline1({FontWeight fontWeight, double fontSize}) {
     return TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 22,
+        fontWeight: fontWeight,
+        fontSize: fontSize,
         color: isDark() ? Colors.white : Colors.black,
         fontFamily: fontFamliy);
   }
+
+  /// 黑/灰色
+  TextStyle headline2({FontWeight fontWeight, double fontSize}) {
+    return TextStyle(
+        fontWeight: fontWeight,
+        fontSize: fontSize,
+        color: isDark() ? Colors.grey : Colors.black,
+        fontFamily: fontFamliy);
+  }
+
+  /// Edit hint text
+  TextStyle hint({FontWeight fontWeight, double fontSize}) {
+    return TextStyle(
+        fontWeight: fontWeight,
+        fontSize: fontSize,
+        color: isDark() ? Colors.white : Colors.black.withOpacity(0.5),
+        fontFamily: fontFamliy);
+  }
+
+  /// Edit hint text
+  TextStyle themeText({FontWeight fontWeight, double fontSize}) {
+    return TextStyle(
+        fontWeight: fontWeight,
+        fontSize: fontSize,
+        color: gradientColorDark(),
+        fontFamily: fontFamliy);
+  }
+
 
   ///数字 粗体 28
   TextStyle numHeadline1() {
