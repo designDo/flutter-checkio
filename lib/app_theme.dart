@@ -41,8 +41,7 @@ class AppTheme {
     GradientColor(AppThemeColorMode.Teal, Color.fromARGB(255, 56, 155, 148),
         Color.fromARGB(255, 80, 201, 145)),
     //Colors.blue
-    GradientColor(AppThemeColorMode.Blue, Color.fromARGB(255, 59, 137, 172),
-        Color.fromARGB(255, 90, 133, 227)),
+    GradientColor(AppThemeColorMode.Blue, Color(0xFF738AE6), Color(0xFF5C5EDD)),
     //Colors.cyan
     GradientColor(AppThemeColorMode.Cyan, Color.fromARGB(255, 21, 177, 202),
         Color.fromARGB(255, 25, 209, 201)),
@@ -210,8 +209,8 @@ class AppTheme {
   LinearGradient containerGradient({Alignment begin, Alignment end}) {
     return LinearGradient(
         colors: [grandientColorStart(), grandientColorEnd()],
-        begin: begin,
-        end: end);
+        begin: begin ?? Alignment.bottomLeft,
+        end: end ?? Alignment.topRight);
   }
 
   ///通一阴影

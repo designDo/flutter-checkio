@@ -343,7 +343,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                 Fluttertoast.showToast(
                     msg: '请输入名字',
                     toastLength: Toast.LENGTH_SHORT,
-                    backgroundColor: AppTheme.appTheme.grandientColorStart(),
+                    backgroundColor: AppTheme.appTheme.grandientColorEnd(),
                     gravity: ToastGravity.CENTER);
                 return;
               }
@@ -408,14 +408,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                 width: 220,
                 decoration: BoxDecoration(
                     boxShadow: AppTheme.appTheme.coloredBoxShadow(),
-                    gradient: LinearGradient(
-                      colors: <Color>[
-                        Color(0xFF738AE6),
-                        Color(0xFF5C5EDD),
-                      ],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
+                    gradient: AppTheme.appTheme.containerGradient(),
                     borderRadius: BorderRadius.all(Radius.circular(35))),
                 child: Text(
                   '保存',
@@ -450,7 +443,6 @@ class _HabitEditPageState extends State<HabitEditPage>
   Widget barView() {
     return Container(
       decoration: BoxDecoration(
-        boxShadow: AppTheme.appTheme.containerBoxShadow(),
         color: AppTheme.appTheme.cardBackgroundColor(),
       ),
       padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
@@ -516,17 +508,16 @@ class _HabitEditPageState extends State<HabitEditPage>
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   shape: BoxShape.rectangle,
                   border: Border.all(
-                      color: AppTheme.appTheme.grandientColorStart(),
-                      width: 1.5),
+                      color: AppTheme.appTheme.grandientColorEnd(), width: 1.5),
                   color: completeTime.isSelect
-                      ? AppTheme.appTheme.grandientColorStart()
+                      ? AppTheme.appTheme.grandientColorEnd()
                       : AppTheme.appTheme.cardBackgroundColor()),
               child: Text(
                 CompleteTime.getTime(completeTime.time),
                 style: AppTheme.appTheme.headline1(
                     textColor: completeTime.isSelect
                         ? AppTheme.appTheme.cardBackgroundColor()
-                        : AppTheme.appTheme.grandientColorStart(),
+                        : AppTheme.appTheme.grandientColorEnd(),
                     fontWeight: FontWeight.normal,
                     fontSize: 15),
               ),
@@ -567,10 +558,10 @@ class _HabitEditPageState extends State<HabitEditPage>
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
                     border: Border.all(
-                        color: AppTheme.appTheme.grandientColorStart(),
+                        color: AppTheme.appTheme.grandientColorEnd(),
                         width: 1.5),
                     color: habitPeroid.isSelect
-                        ? AppTheme.appTheme.grandientColorStart()
+                        ? AppTheme.appTheme.grandientColorEnd()
                         : AppTheme.appTheme.cardBackgroundColor(),
                   ),
                   child: Text(
@@ -578,7 +569,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                     style: AppTheme.appTheme.headline1(
                         textColor: habitPeroid.isSelect
                             ? AppTheme.appTheme.cardBackgroundColor()
-                            : AppTheme.appTheme.grandientColorStart(),
+                            : AppTheme.appTheme.grandientColorEnd(),
                         fontWeight: FontWeight.normal,
                         fontSize: 15),
                   ),
@@ -620,17 +611,16 @@ class _HabitEditPageState extends State<HabitEditPage>
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                      color: AppTheme.appTheme.grandientColorStart(),
-                      width: 1.5),
+                      color: AppTheme.appTheme.grandientColorEnd(), width: 1.5),
                   color: completeDay.isSelect
-                      ? AppTheme.appTheme.grandientColorStart()
+                      ? AppTheme.appTheme.grandientColorEnd()
                       : AppTheme.appTheme.cardBackgroundColor()),
               child: Text(
                 CompleteDay.getDay(completeDay.day),
                 style: AppTheme.appTheme.headline1(
                     textColor: completeDay.isSelect
                         ? AppTheme.appTheme.cardBackgroundColor()
-                        : AppTheme.appTheme.grandientColorStart(),
+                        : AppTheme.appTheme.grandientColorEnd(),
                     fontWeight: FontWeight.normal,
                     fontSize: 13),
               ),
@@ -704,12 +694,13 @@ class _HabitEditPageState extends State<HabitEditPage>
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
                 shape: BoxShape.rectangle,
-                color: AppTheme.appTheme.grandientColorStart()),
+                color: AppTheme.appTheme.grandientColorEnd()),
             child: AnimatedBuilder(
               builder: (context, child) {
                 return Text(
                   '${getCurrentCount()}',
                   style: AppTheme.appTheme.headline1(
+                      textColor: Colors.white,
                       fontWeight: FontWeight.w600,
                       fontSize: 23 * fontAnimationController.value),
                 );
@@ -755,7 +746,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                   decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.all(Radius.circular(25)),
-                      color: AppTheme.appTheme.grandientColorStart()),
+                      color: AppTheme.appTheme.grandientColorEnd()),
                   child: Text(
                     '${_twoDigits(remindTime.hour)}:${_twoDigits(remindTime.minute)}',
                     style: AppTheme.appTheme
@@ -788,6 +779,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                                     textTheme: CupertinoTextThemeData(
                                         dateTimePickerTextStyle:
                                             AppTheme.appTheme.headline1(
+                                                textColor: Colors.white,
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 18))),
                                 child: CupertinoDatePicker(
