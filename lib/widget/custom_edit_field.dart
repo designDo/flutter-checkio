@@ -100,7 +100,7 @@ class _CustomEditFieldState extends State<CustomEditField>
               keyboardType: (widget.maxLines == null || widget.maxLines == 1)
                   ? TextInputType.name
                   : TextInputType.multiline,
-              cursorColor: AppTheme.appTheme.gradientColorDark(),
+              cursorColor: AppTheme.appTheme.grandientColorStart(),
               onChanged: (value) async {
                 setState(() {
                   _value = value;

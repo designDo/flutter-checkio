@@ -172,10 +172,8 @@ class _OneDayScreenState extends State<OneDayScreen>
             margin: EdgeInsets.only(left: 16, top: 10),
             child: Text(
               title,
-              style: AppTheme.appTheme.textStyle(
-                  textColor: AppTheme.appTheme.textColorSecond(),
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16),
+              style: AppTheme.appTheme
+                  .headline2(fontWeight: FontWeight.w600, fontSize: 16),
             ),
           ),
         );

@@ -16,9 +16,38 @@ enum AppFontMode {
 }
 
 ///颜色模式，特定view背景颜色
-enum AppThemeColorMode { Blue, Purple }
+enum AppThemeColorMode { Indigo, Orange, Pink, Teal, Blue, Cyan, Purple }
+
+class GradientColor {
+  final AppThemeColorMode mode;
+  final Color start;
+  final Color end;
+
+  GradientColor(this.mode, this.start, this.end);
+}
 
 class AppTheme {
+  static List<GradientColor> gradientColors = [
+    //Colors.indigo
+    GradientColor(AppThemeColorMode.Indigo, Color.fromARGB(255, 101, 89, 184),
+        Color.fromARGB(255, 112, 113, 228)),
+    //Colors.orange
+    GradientColor(AppThemeColorMode.Orange, Color.fromARGB(255, 253, 145, 141),
+        Color.fromARGB(255, 252, 178, 146)),
+    //Colors.pink
+    GradientColor(AppThemeColorMode.Pink, Color.fromARGB(255, 242, 79, 136),
+        Color.fromARGB(255, 249, 88, 110)),
+    //Colors.teal
+    GradientColor(AppThemeColorMode.Teal, Color.fromARGB(255, 56, 155, 148),
+        Color.fromARGB(255, 80, 201, 145)),
+    //Colors.blue
+    GradientColor(AppThemeColorMode.Blue, Color.fromARGB(255, 59, 137, 172),
+        Color.fromARGB(255, 90, 133, 227)),
+    //Colors.cyan
+    GradientColor(AppThemeColorMode.Cyan, Color.fromARGB(255, 21, 177, 202),
+        Color.fromARGB(255, 25, 209, 201)),
+  ];
+
   AppTheme._();
 
   static final AppTheme appTheme = AppTheme._();
@@ -31,12 +60,15 @@ class AppTheme {
 
   String numFontFamliy = 'Montserrat';
 
+  GradientColor gradientColor;
+
   ThemeData createTheme(AppThemeMode themeMode,
       AppThemeColorMode themeColorMode, AppFontMode fontMode) {
     currentThemeMode = themeMode;
     currentColorMode = themeColorMode;
     currentFontMode = fontMode;
     fontFamliy = fontFamily(currentFontMode);
+    gradientColor = getGradientColor(currentColorMode);
     if (themeMode == AppThemeMode.Dark) {
       return darkTheme();
     } else {
@@ -44,6 +76,42 @@ class AppTheme {
     }
   }
 
+  bool isDark() {
+    return currentThemeMode == AppThemeMode.Dark;
+  }
+
+  ThemeData lightTheme() {
+    return ThemeData.light().copyWith(
+        primaryColor: Color(0xFFF2F7FB),
+        primaryColorDark: Color(0xFF6B6B6B),
+        primaryColorLight: Colors.blueAccent);
+  }
+
+  ThemeData darkTheme() {
+    return ThemeData.dark().copyWith(
+      primaryColor: Color(0xFF17262A),
+      primaryColorDark: Color(0xFF6B6B6B),
+    );
+  }
+
+  String fontFamily(AppFontMode fontMode) {
+    switch (fontMode) {
+      case AppFontMode.MaShanZheng:
+        return 'MaShanZheng';
+    }
+    return 'Roboto';
+  }
+
+  GradientColor getGradientColor(AppThemeColorMode mode) {
+    for (var value in gradientColors) {
+      if (mode == value.mode) {
+        return value;
+      }
+    }
+    return gradientColors.first;
+  }
+
+  ///------------字体------------
   /// 黑/白
   TextStyle headline1({FontWeight fontWeight, double fontSize}) {
     return TextStyle(
@@ -71,36 +139,31 @@ class AppTheme {
         fontFamily: fontFamliy);
   }
 
-  /// Edit hint text
+  /// theme color text
   TextStyle themeText({FontWeight fontWeight, double fontSize}) {
     return TextStyle(
         fontWeight: fontWeight,
         fontSize: fontSize,
-        color: gradientColorDark(),
+        color: grandientColorStart(),
         fontFamily: fontFamliy);
   }
 
-
-  ///数字 粗体 28
-  TextStyle numHeadline1() {
+  ///数字
+  TextStyle numHeadline1({FontWeight fontWeight, double fontSize}) {
     return TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 28,
+        fontWeight: fontWeight,
+        fontSize: fontSize,
         color: isDark() ? Colors.white : Colors.black,
         fontFamily: numFontFamliy);
   }
 
-  ///数字 粗体 27
-  TextStyle numHeadline2() {
+  ///数字
+  TextStyle numHeadline2({FontWeight fontWeight, double fontSize}) {
     return TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 27,
-        color: isDark() ? Colors.white : Colors.black,
+        fontWeight: fontWeight,
+        fontSize: fontSize,
+        color: isDark() ? Colors.grey : Colors.black,
         fontFamily: numFontFamliy);
-  }
-
-  bool isDark() {
-    return currentThemeMode == AppThemeMode.Dark;
   }
 
   TextStyle textStyle(
@@ -112,166 +175,48 @@ class AppTheme {
         color: textColor ?? (isDark() ? Colors.white70 : Colors.black));
   }
 
-  Color textColorMain() {
-    return isDark() ? Color(0xFFF2F7FB) : Color(0xFF294261);
-  }
-
-  Color textColorSecond() {
-    return isDark() ? Colors.white30 : Colors.black54;
-  }
-
+  ///-------------背景--------------
+  ///容器背景颜色
   Color containerBackgroundColor() {
     return isDark() ? Color(0xFF233355) : Color(0xFFF2F7FB);
   }
 
+  ///所有卡片背景颜色
   Color cardBackgroundColor() {
     return isDark() ? Color(0xFF294261) : Colors.white;
+  }
+
+  ///渐变开始颜色
+  Color grandientColorStart() {
+    return gradientColor.start;
+  }
+
+  ///渐变结束颜色
+  Color grandientColorEnd() {
+    return gradientColor.end;
+  }
+
+  ///背景统一渐变色
+  LinearGradient containerGradient({Alignment begin, Alignment end}) {
+    return LinearGradient(
+        colors: [grandientColorStart(), grandientColorEnd()],
+        begin: begin,
+        end: end);
+  }
+
+  ///通一阴影
+  List<BoxShadow> containerBoxShadow() {
+    return [
+      BoxShadow(
+          color: Colors.black.withOpacity(0.1),
+          offset: Offset(5, 5),
+          blurRadius: 16)
+    ];
   }
 
   Color selectColor() {
     return isDark() ? Colors.white : Colors.black;
   }
 
-  Color addHabitSheetBgDark() {
-    if (isDark()) {
-      return Color(0xFF233355);
-    }
-    return gradientColorDark();
-  }
-
-  Color addHabitSheetBgLight() {
-    if (isDark()) {
-      return Color(0xFF294261);
-    }
-    return gradientColorLight();
-  }
-
-  Color gradientColorDark() {
-    switch (currentColorMode) {
-      case AppThemeColorMode.Blue:
-        return Color(0xFF5C5EDD);
-      case AppThemeColorMode.Purple:
-        return Colors.deepPurple;
-    }
-    return Colors.white70;
-  }
-
-  Color gradientColorLight() {
-    switch (currentColorMode) {
-      case AppThemeColorMode.Blue:
-        return Color(0xFF738AE6);
-      case AppThemeColorMode.Purple:
-        return Colors.purple;
-    }
-    return Colors.white70;
-  }
-
   static const Color iconColor = Colors.grey;
-
-  ThemeData lightTheme() {
-    return ThemeData.light().copyWith(
-        primaryColor: Color(0xFFF2F7FB),
-        primaryColorDark: Color(0xFF6B6B6B),
-        primaryColorLight: Colors.blueAccent);
-  }
-
-  ThemeData darkTheme() {
-    return ThemeData.dark().copyWith(
-      primaryColor: Color(0xFF17262A),
-      primaryColorDark: Color(0xFF6B6B6B),
-    );
-  }
-
-  String fontFamily(AppFontMode fontMode) {
-    switch (fontMode) {
-      case AppFontMode.MaShanZheng:
-        return 'MaShanZheng';
-    }
-    return 'Roboto';
-  }
-
-  static const Color nearlyWhite = Color(0xFFFAFAFA);
-  static const Color white = Color(0xFFFFFFFF);
-  static const Color background = Color(0xFFF2F3F8);
-  static const Color nearlyDarkBlue = Color(0xFF2633C5);
-
-  static const Color nearlyBlue = Color(0xFF00B6F0);
-  static const Color nearlyBlack = Color(0xFF213333);
-  static const Color grey = Color(0xFF3A5160);
-  static const Color dark_grey = Color(0xFF313A44);
-
-  static const Color darkText = Color(0xFF253840);
-  static const Color darkerText = Color(0xFF17262A);
-  static const Color lightText = Color(0xFF4A6572);
-  static const Color deactivatedText = Color(0xFF767676);
-  static const Color dismissibleBackground = Color(0xFF364A54);
-  static const Color spacer = Color(0xFFF2F2F2);
-  static const String fontName = 'Roboto';
-
-  static const TextTheme textTheme = TextTheme(
-    headline4: display1,
-    headline5: headline,
-    headline6: title,
-    subtitle2: subtitle,
-    bodyText2: body2,
-    bodyText1: body1,
-    caption: caption,
-  );
-
-  static const TextStyle display1 = TextStyle(
-    fontFamily: fontName,
-    fontWeight: FontWeight.bold,
-    fontSize: 36,
-    letterSpacing: 0.4,
-    height: 0.9,
-    color: Colors.deepPurple,
-  );
-
-  static const TextStyle headline = TextStyle(
-    fontFamily: fontName,
-    fontWeight: FontWeight.bold,
-    fontSize: 24,
-    letterSpacing: 0.27,
-    color: darkerText,
-  );
-
-  static const TextStyle title = TextStyle(
-    fontFamily: fontName,
-    fontWeight: FontWeight.bold,
-    fontSize: 16,
-    letterSpacing: 0.18,
-    color: darkerText,
-  );
-
-  static const TextStyle subtitle = TextStyle(
-    fontFamily: fontName,
-    fontWeight: FontWeight.w400,
-    fontSize: 14,
-    letterSpacing: -0.04,
-    color: darkText,
-  );
-
-  static const TextStyle body2 = TextStyle(
-    fontFamily: fontName,
-    fontWeight: FontWeight.w400,
-    fontSize: 14,
-    letterSpacing: 0.2,
-    color: darkText,
-  );
-
-  static const TextStyle body1 = TextStyle(
-    fontFamily: fontName,
-    fontWeight: FontWeight.w400,
-    fontSize: 16,
-    letterSpacing: -0.05,
-    color: darkText,
-  );
-
-  static const TextStyle caption = TextStyle(
-    fontFamily: fontName,
-    fontWeight: FontWeight.w400,
-    fontSize: 12,
-    letterSpacing: 0.2,
-    color: lightText, // was lightText
-  );
 }

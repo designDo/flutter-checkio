@@ -36,7 +36,7 @@ class _HabitProgressScreenState extends State<HabitProgressScreen>
   Widget build(BuildContext context) {
     SystemUtil.changeStateBarMode(Brightness.light);
     return Container(
-      color: AppTheme.background,
+      color: AppTheme.appTheme.containerBackgroundColor(),
       child: BlocBuilder<HabitsBloc, HabitsState>(builder: (context, state) {
         if (state is HabitsLoadInProgress) {
           return CupertinoActivityIndicator();

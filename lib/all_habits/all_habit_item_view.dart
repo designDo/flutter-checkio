@@ -174,10 +174,8 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
             child: Text(widget.habit.name,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: AppTheme.appTheme.textStyle(
-                    textColor: AppTheme.appTheme.textColorMain(),
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600)),
+                style: AppTheme.appTheme
+                    .headline1(fontSize: 18, fontWeight: FontWeight.w600)),
           ),
           SizedBox(
             width: 16,
@@ -189,28 +187,20 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text('记录',
-                      style: AppTheme.appTheme.textStyle(
-                          textColor: AppTheme.appTheme.textColorSecond(),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600)),
+                      style: AppTheme.appTheme.headline2(
+                          fontSize: 14, fontWeight: FontWeight.w600)),
                   SizedBox(
                     width: 3,
                   ),
                   Text('${HabitUtil.getMonthDoNums(widget.habit.records)}',
-                      style: AppTheme.appTheme
-                          .textStyle(
-                              textColor: AppTheme.appTheme.textColorMain(),
-                              fontSize: 22,
-                              fontWeight: FontWeight.w600)
-                          .copyWith(fontFamily: 'Montserrat')),
+                      style: AppTheme.appTheme.numHeadline1(
+                          fontSize: 22, fontWeight: FontWeight.w600)),
                   SizedBox(
                     width: 3,
                   ),
                   Text('次',
-                      style: AppTheme.appTheme.textStyle(
-                          textColor: AppTheme.appTheme.textColorSecond(),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600)),
+                      style: AppTheme.appTheme.headline2(
+                          fontSize: 14, fontWeight: FontWeight.w600)),
                 ],
               ),
               SizedBox(
@@ -219,29 +209,21 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
               Row(
                 children: [
                   Text('连续',
-                      style: AppTheme.appTheme.textStyle(
-                          textColor: AppTheme.appTheme.textColorSecond(),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600)),
+                      style: AppTheme.appTheme.headline2(
+                          fontSize: 14, fontWeight: FontWeight.w600)),
                   SizedBox(
                     width: 3,
                   ),
                   Text(
                       '${HabitUtil.getNowStreaks(HabitUtil.combinationRecords(widget.habit.records))}',
-                      style: AppTheme.appTheme
-                          .textStyle(
-                              textColor: AppTheme.appTheme.textColorMain(),
-                              fontSize: 22,
-                              fontWeight: FontWeight.w600)
-                          .copyWith(fontFamily: 'Montserrat')),
+                      style: AppTheme.appTheme.numHeadline1(
+                          fontSize: 22, fontWeight: FontWeight.w600)),
                   SizedBox(
                     width: 3,
                   ),
                   Text('天',
-                      style: AppTheme.appTheme.textStyle(
-                          textColor: AppTheme.appTheme.textColorSecond(),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600))
+                      style: AppTheme.appTheme
+                          .headline2(fontSize: 14, fontWeight: FontWeight.w600))
                 ],
               ),
             ],
@@ -266,10 +248,8 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
             Text(widget.habit.name,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: AppTheme.appTheme.textStyle(
-                    textColor: AppTheme.appTheme.textColorMain(),
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600)),
+                style: AppTheme.appTheme
+                    .headline1(fontSize: 18, fontWeight: FontWeight.w600)),
             Expanded(
               child: SizedBox(),
             ),
@@ -316,28 +296,20 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text('记录',
-                        style: AppTheme.appTheme.textStyle(
-                            textColor: AppTheme.appTheme.textColorSecond(),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600)),
+                        style: AppTheme.appTheme.headline2(
+                            fontSize: 14, fontWeight: FontWeight.w600)),
                     SizedBox(
                       width: 3,
                     ),
                     Text('${HabitUtil.getMonthDoNums(widget.habit.records)}',
-                        style: AppTheme.appTheme
-                            .textStyle(
-                                textColor: AppTheme.appTheme.textColorMain(),
-                                fontSize: 22,
-                                fontWeight: FontWeight.w600)
-                            .copyWith(fontFamily: 'Montserrat')),
+                        style: AppTheme.appTheme.numHeadline1(
+                            fontSize: 22, fontWeight: FontWeight.w600)),
                     SizedBox(
                       width: 3,
                     ),
                     Text('次',
-                        style: AppTheme.appTheme.textStyle(
-                            textColor: AppTheme.appTheme.textColorSecond(),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600)),
+                        style: AppTheme.appTheme.headline2(
+                            fontSize: 14, fontWeight: FontWeight.w600)),
                   ],
                 ),
               ],

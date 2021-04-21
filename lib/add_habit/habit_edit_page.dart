@@ -229,12 +229,10 @@ class _HabitEditPageState extends State<HabitEditPage>
                         maxLength: 10,
                         initValue: _name,
                         hintText: '名字 ...',
-                        hintTextStyle: AppTheme.appTheme.hint(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18),
+                        hintTextStyle: AppTheme.appTheme
+                            .hint(fontWeight: FontWeight.bold, fontSize: 18),
                         textStyle: AppTheme.appTheme.headline1(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18),
+                            fontWeight: FontWeight.bold, fontSize: 18),
                         containerDecoration: BoxDecoration(
                             shape: BoxShape.rectangle,
                             borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -252,8 +250,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                                   blurRadius: 6)
                             ]),
                         numTextStyle: AppTheme.appTheme.themeText(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15),
+                            fontWeight: FontWeight.bold, fontSize: 15),
                         onValueChanged: (value) {
                           _name = value;
                           print('change');
@@ -268,8 +265,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                         child: Text(
                           '时段',
                           style: AppTheme.appTheme.headline1(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18),
+                              fontWeight: FontWeight.w600, fontSize: 18),
                         ),
                       ),
                       timeView(),
@@ -279,8 +275,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                         child: Text(
                           '周期',
                           style: AppTheme.appTheme.headline1(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18),
+                              fontWeight: FontWeight.w600, fontSize: 18),
                         ),
                       ),
                       periodChooseView(),
@@ -290,8 +285,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                         child: Text(
                           '每${HabitPeriod.getPeriod(currentPeriod)}完成次数',
                           style: AppTheme.appTheme.headline1(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18),
+                              fontWeight: FontWeight.w600, fontSize: 18),
                         ),
                       ),
                       completeCountView(),
@@ -301,8 +295,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                         child: Text(
                           '提醒时间',
                           style: AppTheme.appTheme.headline1(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18),
+                              fontWeight: FontWeight.w600, fontSize: 18),
                         ),
                       ),
                       timeReminderView(),
@@ -312,20 +305,17 @@ class _HabitEditPageState extends State<HabitEditPage>
                         child: Text(
                           '写一句话鼓励自己',
                           style: AppTheme.appTheme.headline1(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18),
+                              fontWeight: FontWeight.w600, fontSize: 18),
                         ),
                       ),
                       CustomEditField(
                         maxLength: 50,
                         initValue: _mark,
                         hintText: '千里之行，始于足下 ...',
-                        hintTextStyle: AppTheme.appTheme.hint(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 16),
+                        hintTextStyle: AppTheme.appTheme
+                            .hint(fontWeight: FontWeight.normal, fontSize: 16),
                         textStyle: AppTheme.appTheme.headline1(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 16),
+                            fontWeight: FontWeight.normal, fontSize: 16),
                         minHeight: 100,
                         containerDecoration: BoxDecoration(
                             shape: BoxShape.rectangle,
@@ -344,8 +334,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                                   blurRadius: 6)
                             ]),
                         numTextStyle: AppTheme.appTheme.themeText(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15),
+                            fontWeight: FontWeight.bold, fontSize: 15),
                         onValueChanged: (value) {
                           _mark = value;
                         },
@@ -788,11 +777,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                     DateTime currentTime = DateTime.now();
                     return Container(
                         decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: <Color>[
-                                AppTheme.appTheme.addHabitSheetBgLight(),
-                                AppTheme.appTheme.addHabitSheetBgDark()
-                              ],
+                            gradient: AppTheme.appTheme.containerGradient(
                               begin: Alignment.bottomLeft,
                               end: Alignment.topRight,
                             ),

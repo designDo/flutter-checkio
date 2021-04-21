@@ -65,7 +65,7 @@ class _EditFiledViewState extends State<EditFiledView> {
           Navigator.of(context).pop();
         },
         child: Icon(Icons.done),
-        backgroundColor: AppTheme.appTheme.gradientColorDark(),
+        backgroundColor: AppTheme.appTheme.grandientColorStart(),
       ),
     );
   }
