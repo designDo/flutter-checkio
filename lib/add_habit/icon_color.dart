@@ -58,7 +58,7 @@ class _IconAndColorPageState extends State<IconAndColorPage> {
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.all(Radius.circular(20)),
-          color: Colors.white,
+          color: AppTheme.appTheme.cardBackgroundColor(),
         ),
         child: Column(
           children: [
@@ -138,7 +138,8 @@ class _IconAndColorPageState extends State<IconAndColorPage> {
                             border: Border.all(
                                 color: habitColor.isSelect
                                     ? habitColor.color
-                                    : Colors.white.withOpacity(0.3),
+                                    : AppTheme.appTheme
+                                        .containerBackgroundColor(),
                                 width: habitColor.isSelect ? 3 : 1.5),
                             color: Colors.transparent),
                         child: habitColor.isSelect
@@ -171,7 +172,7 @@ class _IconAndColorPageState extends State<IconAndColorPage> {
                   'assets/images/duigou.svg',
                   width: 35,
                   height: 35,
-                  color: Colors.black,
+                  color: AppTheme.appTheme.normalColor(),
                 ),
               ),
             )

@@ -27,7 +27,7 @@ class _EditFiledViewState extends State<EditFiledView> {
           decoration: BoxDecoration(
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.all(Radius.circular(15)),
-              color: Colors.white),
+              color: AppTheme.appTheme.cardBackgroundColor()),
           child: CustomEditField(
             maxLength: 50,
             autoFucus: true,
@@ -44,14 +44,9 @@ class _EditFiledViewState extends State<EditFiledView> {
                 color: AppTheme.appTheme.containerBackgroundColor()),
             numDecoration: BoxDecoration(
                 shape: BoxShape.rectangle,
-                color: Colors.white,
+                color: AppTheme.appTheme.cardBackgroundColor(),
                 borderRadius: BorderRadius.all(Radius.circular(15)),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.black26,
-                      offset: Offset(3, 3),
-                      blurRadius: 6)
-                ]),
+                boxShadow: AppTheme.appTheme.containerBoxShadow()),
             numTextStyle: AppTheme.appTheme
                 .themeText(fontWeight: FontWeight.bold, fontSize: 15),
             onValueChanged: (value) {

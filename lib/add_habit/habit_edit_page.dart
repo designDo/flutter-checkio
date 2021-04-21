@@ -180,9 +180,9 @@ class _HabitEditPageState extends State<HabitEditPage>
                               padding: EdgeInsets.all(10),
                               decoration: BoxDecoration(boxShadow: <BoxShadow>[
                                 BoxShadow(
-                                    color: _habitColor.withOpacity(0.3),
-                                    offset: Offset(0, 7),
-                                    blurRadius: 10)
+                                    color: _habitColor.withOpacity(0.1),
+                                    offset: Offset(3, 2),
+                                    blurRadius: 16)
                               ], shape: BoxShape.circle, color: _habitColor),
                               width: 60,
                               height: 60,
@@ -212,7 +212,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                                 },
                                 child: SvgPicture.asset(
                                   'assets/images/bianji.svg',
-                                  color: Colors.black,
+                                  color: AppTheme.appTheme.normalColor(),
                                   width: 30,
                                   height: 30,
                                 ),
@@ -241,19 +241,13 @@ class _HabitEditPageState extends State<HabitEditPage>
                                 .withOpacity(0.6)),
                         numDecoration: BoxDecoration(
                             shape: BoxShape.rectangle,
-                            color: Colors.white,
+                            color: AppTheme.appTheme.cardBackgroundColor(),
                             borderRadius: BorderRadius.all(Radius.circular(15)),
-                            boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                  color: Colors.black26,
-                                  offset: Offset(3, 3),
-                                  blurRadius: 6)
-                            ]),
+                            boxShadow: AppTheme.appTheme.containerBoxShadow()),
                         numTextStyle: AppTheme.appTheme.themeText(
                             fontWeight: FontWeight.bold, fontSize: 15),
                         onValueChanged: (value) {
                           _name = value;
-                          print('change');
                         },
                       ),
                       SizedBox(
@@ -325,14 +319,9 @@ class _HabitEditPageState extends State<HabitEditPage>
                                 .withOpacity(0.6)),
                         numDecoration: BoxDecoration(
                             shape: BoxShape.rectangle,
-                            color: Colors.white,
+                            color: AppTheme.appTheme.cardBackgroundColor(),
                             borderRadius: BorderRadius.all(Radius.circular(15)),
-                            boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                  color: Colors.black26,
-                                  offset: Offset(3, 3),
-                                  blurRadius: 6)
-                            ]),
+                            boxShadow: AppTheme.appTheme.containerBoxShadow()),
                         numTextStyle: AppTheme.appTheme.themeText(
                             fontWeight: FontWeight.bold, fontSize: 15),
                         onValueChanged: (value) {
@@ -354,7 +343,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                 Fluttertoast.showToast(
                     msg: '请输入名字',
                     toastLength: Toast.LENGTH_SHORT,
-                    backgroundColor: Color(0xFF738AE6),
+                    backgroundColor: AppTheme.appTheme.grandientColorStart(),
                     gravity: ToastGravity.CENTER);
                 return;
               }
@@ -418,12 +407,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                 height: 55,
                 width: 220,
                 decoration: BoxDecoration(
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                          color: Color(0xFF738AE6).withOpacity(0.5),
-                          offset: const Offset(5.1, 4.0),
-                          blurRadius: 16.0),
-                    ],
+                    boxShadow: AppTheme.appTheme.coloredBoxShadow(),
                     gradient: LinearGradient(
                       colors: <Color>[
                         Color(0xFF738AE6),
@@ -435,7 +419,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                     borderRadius: BorderRadius.all(Radius.circular(35))),
                 child: Text(
                   '保存',
-                  style: AppTheme.appTheme.textStyle(
+                  style: AppTheme.appTheme.headline1(
                       textColor: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.w600),
@@ -465,6 +449,10 @@ class _HabitEditPageState extends State<HabitEditPage>
 
   Widget barView() {
     return Container(
+      decoration: BoxDecoration(
+        boxShadow: AppTheme.appTheme.containerBoxShadow(),
+        color: AppTheme.appTheme.cardBackgroundColor(),
+      ),
       padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
       height: 60 + MediaQuery.of(context).padding.top,
       child: Row(
@@ -479,7 +467,7 @@ class _HabitEditPageState extends State<HabitEditPage>
               },
               child: SvgPicture.asset(
                 'assets/images/fanhui.svg',
-                color: Colors.black,
+                color: AppTheme.appTheme.normalColor(),
                 width: 30,
                 height: 30,
               ),
@@ -490,10 +478,8 @@ class _HabitEditPageState extends State<HabitEditPage>
               alignment: Alignment.center,
               child: Text(
                 '${widget.isModify ? '编辑习惯' : '新建习惯'}',
-                style: AppTheme.appTheme.textStyle(
-                    textColor: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
+                style: AppTheme.appTheme
+                    .headline1(fontWeight: FontWeight.bold, fontSize: 20),
               ),
             ),
           ),
@@ -529,15 +515,18 @@ class _HabitEditPageState extends State<HabitEditPage>
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   shape: BoxShape.rectangle,
-                  border: Border.all(color: Color(0xFF5C5EDD), width: 1.5),
-                  color:
-                      completeTime.isSelect ? Color(0xFF5C5EDD) : Colors.white),
+                  border: Border.all(
+                      color: AppTheme.appTheme.grandientColorStart(),
+                      width: 1.5),
+                  color: completeTime.isSelect
+                      ? AppTheme.appTheme.grandientColorStart()
+                      : AppTheme.appTheme.cardBackgroundColor()),
               child: Text(
                 CompleteTime.getTime(completeTime.time),
-                style: AppTheme.appTheme.textStyle(
+                style: AppTheme.appTheme.headline1(
                     textColor: completeTime.isSelect
-                        ? Colors.white
-                        : Color(0xFF5C5EDD),
+                        ? AppTheme.appTheme.cardBackgroundColor()
+                        : AppTheme.appTheme.grandientColorStart(),
                     fontWeight: FontWeight.normal,
                     fontSize: 15),
               ),
@@ -577,16 +566,19 @@ class _HabitEditPageState extends State<HabitEditPage>
                   width: 68,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
-                    border: Border.all(color: Color(0xFF5C5EDD), width: 1.5),
-                    color:
-                        habitPeroid.isSelect ? Color(0xFF5C5EDD) : Colors.white,
+                    border: Border.all(
+                        color: AppTheme.appTheme.grandientColorStart(),
+                        width: 1.5),
+                    color: habitPeroid.isSelect
+                        ? AppTheme.appTheme.grandientColorStart()
+                        : AppTheme.appTheme.cardBackgroundColor(),
                   ),
                   child: Text(
                     HabitPeriod.getPeriod(habitPeroid.period),
-                    style: AppTheme.appTheme.textStyle(
+                    style: AppTheme.appTheme.headline1(
                         textColor: habitPeroid.isSelect
-                            ? Colors.white
-                            : Color(0xFF5C5EDD),
+                            ? AppTheme.appTheme.cardBackgroundColor()
+                            : AppTheme.appTheme.grandientColorStart(),
                         fontWeight: FontWeight.normal,
                         fontSize: 15),
                   ),
@@ -627,14 +619,18 @@ class _HabitEditPageState extends State<HabitEditPage>
               height: 40,
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: Color(0xFF5C5EDD), width: 1.5),
-                  color:
-                      completeDay.isSelect ? Color(0xFF5C5EDD) : Colors.white),
+                  border: Border.all(
+                      color: AppTheme.appTheme.grandientColorStart(),
+                      width: 1.5),
+                  color: completeDay.isSelect
+                      ? AppTheme.appTheme.grandientColorStart()
+                      : AppTheme.appTheme.cardBackgroundColor()),
               child: Text(
                 CompleteDay.getDay(completeDay.day),
-                style: AppTheme.appTheme.textStyle(
-                    textColor:
-                        completeDay.isSelect ? Colors.white : Color(0xFF5C5EDD),
+                style: AppTheme.appTheme.headline1(
+                    textColor: completeDay.isSelect
+                        ? AppTheme.appTheme.cardBackgroundColor()
+                        : AppTheme.appTheme.grandientColorStart(),
                     fontWeight: FontWeight.normal,
                     fontSize: 13),
               ),
@@ -696,7 +692,7 @@ class _HabitEditPageState extends State<HabitEditPage>
             },
             child: SvgPicture.asset(
               'assets/images/jian.svg',
-              color: Colors.black,
+              color: AppTheme.appTheme.normalColor(),
               width: 32,
               height: 32,
             ),
@@ -708,13 +704,12 @@ class _HabitEditPageState extends State<HabitEditPage>
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
                 shape: BoxShape.rectangle,
-                color: Color(0xFF5C5EDD)),
+                color: AppTheme.appTheme.grandientColorStart()),
             child: AnimatedBuilder(
               builder: (context, child) {
                 return Text(
                   '${getCurrentCount()}',
-                  style: AppTheme.appTheme.textStyle(
-                      textColor: Colors.white,
+                  style: AppTheme.appTheme.headline1(
                       fontWeight: FontWeight.w600,
                       fontSize: 23 * fontAnimationController.value),
                 );
@@ -732,7 +727,7 @@ class _HabitEditPageState extends State<HabitEditPage>
             },
             child: SvgPicture.asset(
               'assets/images/jia.svg',
-              color: Colors.black,
+              color: AppTheme.appTheme.normalColor(),
               width: 32,
               height: 32,
             ),
@@ -760,13 +755,11 @@ class _HabitEditPageState extends State<HabitEditPage>
                   decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.all(Radius.circular(25)),
-                      color: Color(0xFF5C5EDD)),
+                      color: AppTheme.appTheme.grandientColorStart()),
                   child: Text(
                     '${_twoDigits(remindTime.hour)}:${_twoDigits(remindTime.minute)}',
-                    style: AppTheme.appTheme.textStyle(
-                        textColor: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15),
+                    style: AppTheme.appTheme
+                        .headline1(fontWeight: FontWeight.w600, fontSize: 15),
                   ),
                 ),
           GestureDetector(
@@ -793,10 +786,10 @@ class _HabitEditPageState extends State<HabitEditPage>
                               child: CupertinoTheme(
                                 data: CupertinoThemeData(
                                     textTheme: CupertinoTextThemeData(
-                                        dateTimePickerTextStyle: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18))),
+                                        dateTimePickerTextStyle:
+                                            AppTheme.appTheme.headline1(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18))),
                                 child: CupertinoDatePicker(
                                   mode: CupertinoDatePickerMode.time,
                                   onDateTimeChanged: (time) {
@@ -835,7 +828,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                 margin: EdgeInsets.only(left: 8),
                 child: SvgPicture.asset(
                   'assets/images/jia.svg',
-                  color: Colors.black,
+                  color: AppTheme.appTheme.normalColor(),
                   width: 32,
                   height: 32,
                 )),

@@ -113,20 +113,26 @@ class AppTheme {
 
   ///------------字体------------
   /// 黑/白
-  TextStyle headline1({FontWeight fontWeight, double fontSize}) {
+  TextStyle headline1(
+      {FontWeight fontWeight, double fontSize, Color textColor}) {
     return TextStyle(
         fontWeight: fontWeight,
         fontSize: fontSize,
-        color: isDark() ? Colors.white : Colors.black,
+        color: textColor == null
+            ? (isDark() ? Colors.white : Colors.black)
+            : textColor,
         fontFamily: fontFamliy);
   }
 
   /// 黑/灰色
-  TextStyle headline2({FontWeight fontWeight, double fontSize}) {
+  TextStyle headline2(
+      {FontWeight fontWeight, double fontSize, Color textColor}) {
     return TextStyle(
         fontWeight: fontWeight,
         fontSize: fontSize,
-        color: isDark() ? Colors.grey : Colors.black,
+        color: textColor == null
+            ? (isDark() ? Colors.grey : Colors.black)
+            : textColor,
         fontFamily: fontFamliy);
   }
 
@@ -186,6 +192,10 @@ class AppTheme {
     return isDark() ? Color(0xFF294261) : Colors.white;
   }
 
+  Color normalColor() {
+    return isDark() ? Colors.white : Colors.black;
+  }
+
   ///渐变开始颜色
   Color grandientColorStart() {
     return gradientColor.start;
@@ -209,6 +219,16 @@ class AppTheme {
     return [
       BoxShadow(
           color: Colors.black.withOpacity(0.1),
+          offset: Offset(5, 5),
+          blurRadius: 16)
+    ];
+  }
+
+  ///带颜色阴影
+  List<BoxShadow> coloredBoxShadow() {
+    return [
+      BoxShadow(
+          color: grandientColorStart().withOpacity(0.1),
           offset: Offset(5, 5),
           blurRadius: 16)
     ];
