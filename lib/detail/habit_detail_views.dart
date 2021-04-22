@@ -41,13 +41,8 @@ class HabitBaseInfoView extends StatelessWidget {
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.all(Radius.circular(
                       HabitUtil.containAllDay(habit) ? 35 : 45)),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        offset: const Offset(10, 5.0),
-                        blurRadius: 16.0)
-                  ]),
+                  color: AppTheme.appTheme.cardBackgroundColor(),
+                  boxShadow: AppTheme.appTheme.containerBoxShadow()),
               margin: EdgeInsets.all(16),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -66,13 +61,8 @@ class HabitBaseInfoView extends StatelessWidget {
           padding: EdgeInsets.all(5),
           decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.white,
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    offset: const Offset(10, 5.0),
-                    blurRadius: 16.0),
-              ]),
+              color: AppTheme.appTheme.cardBackgroundColor(),
+              boxShadow: AppTheme.appTheme.containerBoxShadow()),
           width: 60,
           height: 60,
           child: Stack(
@@ -84,12 +74,10 @@ class HabitBaseInfoView extends StatelessWidget {
                   value: progress / habit.doNum),
               Text(
                 '${((progress / habit.doNum) * 100).toInt()}%',
-                style: AppTheme.appTheme
-                    .textStyle(
-                      textColor: Colors.black,
-                      fontSize: 14,
-                    )
-                    .copyWith(fontFamily: 'Montserrat'),
+                style: AppTheme.appTheme.numHeadline1(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 14,
+                ),
               )
             ],
           ),
@@ -110,10 +98,8 @@ class HabitBaseInfoView extends StatelessWidget {
                     children: [
                       Text(
                         '${CompleteDay.getSimpleDay(index + 1)}',
-                        style: AppTheme.appTheme.textStyle(
-                            textColor: Colors.black87,
-                            fontSize: 11,
-                            fontWeight: FontWeight.w300),
+                        style: AppTheme.appTheme.headline2(
+                            fontSize: 11, fontWeight: FontWeight.w300),
                       ),
                       Container(
                         width: 5,
@@ -144,8 +130,8 @@ class HabitBaseInfoView extends StatelessWidget {
         width: double.infinity,
         child: Text(
           '今天不在记录周期内',
-          style: AppTheme.appTheme.textStyle(
-            textColor: Colors.black,
+          style: AppTheme.appTheme.headline1(
+            fontWeight: FontWeight.normal,
             fontSize: 14,
           ),
         ),
@@ -156,8 +142,8 @@ class HabitBaseInfoView extends StatelessWidget {
       children: [
         Text(
           tip,
-          style: AppTheme.appTheme.textStyle(
-            textColor: Colors.black,
+          style: AppTheme.appTheme.headline1(
+            fontWeight: FontWeight.normal,
             fontSize: 14,
           ),
         ),
@@ -165,26 +151,26 @@ class HabitBaseInfoView extends StatelessWidget {
           width: 3,
         ),
         Text('${habit.doNum}',
-            style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Montserrat')),
+            style: AppTheme.appTheme.numHeadline1(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            )),
         SizedBox(
           width: 3,
         ),
         Text('已完成',
-            style: AppTheme.appTheme.textStyle(
-              textColor: Colors.black,
+            style: AppTheme.appTheme.headline1(
+              fontWeight: FontWeight.normal,
               fontSize: 14,
             )),
         SizedBox(
           width: 3,
         ),
         Text('$recordLength',
-            style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Montserrat')),
+            style: AppTheme.appTheme.numHeadline1(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            )),
       ],
     );
   }
@@ -236,13 +222,8 @@ class _HabitCompleteRateViewState extends State<HabitCompleteRateView> {
               decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.all(Radius.circular(45)),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        offset: const Offset(10, 5.0),
-                        blurRadius: 16.0)
-                  ]),
+                  color: AppTheme.appTheme.cardBackgroundColor(),
+                  boxShadow: AppTheme.appTheme.containerBoxShadow()),
               margin: EdgeInsets.only(left: 16, right: 16, bottom: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -253,7 +234,7 @@ class _HabitCompleteRateViewState extends State<HabitCompleteRateView> {
                     },
                     child: SvgPicture.asset(
                       'assets/images/navigation_left.svg',
-                      color: Colors.indigo,
+                      color: AppTheme.appTheme.grandientColorEnd(),
                       width: 25,
                       height: 25,
                     ),
@@ -263,18 +244,12 @@ class _HabitCompleteRateViewState extends State<HabitCompleteRateView> {
                       children: [
                         Text(
                           _timeString(period),
-                          style: AppTheme.appTheme.textStyle(
-                              textColor: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
+                          style: AppTheme.appTheme.headline1(
+                              fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         Text(_dateString(period),
-                            style: AppTheme.appTheme
-                                .textStyle(
-                                    textColor: Colors.black,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 16)
-                                .copyWith(fontFamily: 'Montserrat'))
+                            style: AppTheme.appTheme.numHeadline1(
+                                fontWeight: FontWeight.w300, fontSize: 16))
                       ],
                     ),
                   ),
@@ -290,8 +265,8 @@ class _HabitCompleteRateViewState extends State<HabitCompleteRateView> {
                                     currentWeekIndex == 0) ||
                                 (period == HabitPeriod.month &&
                                     currentMonthIndex == 0))
-                            ? Colors.grey
-                            : Colors.indigo,
+                            ? AppTheme.appTheme.containerBackgroundColor()
+                            : AppTheme.appTheme.grandientColorEnd(),
                         width: 25,
                         height: 25,
                       ))
@@ -305,13 +280,8 @@ class _HabitCompleteRateViewState extends State<HabitCompleteRateView> {
           padding: EdgeInsets.all(5),
           decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.white,
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    offset: const Offset(10, 5.0),
-                    blurRadius: 16.0),
-              ]),
+              color: AppTheme.appTheme.cardBackgroundColor(),
+              boxShadow: AppTheme.appTheme.containerBoxShadow()),
           width: 60,
           height: 60,
           child: Stack(
@@ -323,12 +293,11 @@ class _HabitCompleteRateViewState extends State<HabitCompleteRateView> {
                   value: _doCount(period) / widget.habit.doNum),
               Text(
                 '${((_doCount(period) / widget.habit.doNum) * 100).toInt()}%',
-                style: AppTheme.appTheme
-                    .textStyle(
-                      textColor: Colors.black,
-                      fontSize: 14,
-                    )
-                    .copyWith(fontFamily: 'Montserrat'),
+                style: AppTheme.appTheme.numHeadline1(
+                  textColor: Colors.black,
+                  fontWeight: FontWeight.normal,
+                  fontSize: 14,
+                ),
               )
             ],
           ),
@@ -516,10 +485,8 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView>
             margin: EdgeInsets.only(left: 20),
             child: Text(
               '${months[currentIndex].year}年${months[currentIndex].month}月',
-              style: AppTheme.appTheme.textStyle(
-                  textColor: Colors.black,
-                  fontWeight: FontWeight.w300,
-                  fontSize: 17),
+              style: AppTheme.appTheme
+                  .headline1(fontWeight: FontWeight.w300, fontSize: 17),
             ),
           ),
         ),
@@ -593,18 +560,13 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView>
                             padding: EdgeInsets.only(left: 16, right: 16),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: AppTheme.appTheme.cardBackgroundColor(),
                               shape: BoxShape.rectangle,
                               borderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(30),
                                   topLeft: Radius.circular(30),
                                   bottomRight: Radius.circular(30)),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    offset: const Offset(1, 1),
-                                    blurRadius: 12.0)
-                              ],
+                              boxShadow: AppTheme.appTheme.containerBoxShadow(),
                             ),
                             child:
                                 _tipContainer(months[index], checkNum(records)),
@@ -650,10 +612,8 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView>
         DateTime(createTime.year, createTime.month, 1).millisecondsSinceEpoch;
     if (createTimeMonth > month.millisecondsSinceEpoch) {
       return Text('暂无统计数据',
-          style: AppTheme.appTheme.textStyle(
-              textColor: Colors.black,
-              fontWeight: FontWeight.w300,
-              fontSize: 14));
+          style: AppTheme.appTheme
+              .headline1(fontWeight: FontWeight.w300, fontSize: 14));
     }
     int needDoNum;
     if (widget.habit.period == HabitPeriod.day) {
@@ -678,19 +638,13 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView>
                   : RichText(
                       text: TextSpan(
                           text: '本月需完成  ',
-                          style: AppTheme.appTheme.textStyle(
-                              textColor: Colors.black,
-                              fontWeight: FontWeight.w300,
-                              fontSize: 14),
+                          style: AppTheme.appTheme.headline1(
+                              fontWeight: FontWeight.w300, fontSize: 14),
                           children: [
                             TextSpan(
                                 text: '$needDoNum',
-                                style: AppTheme.appTheme
-                                    .textStyle(
-                                        textColor: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 22)
-                                    .copyWith(fontFamily: 'Montserrat')),
+                                style: AppTheme.appTheme.numHeadline1(
+                                    fontWeight: FontWeight.bold, fontSize: 22)),
                             TextSpan(
                               text: '  次',
                             )
@@ -699,19 +653,13 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView>
               RichText(
                 text: TextSpan(
                     text: '已经完成  ',
-                    style: AppTheme.appTheme.textStyle(
-                        textColor: Colors.black,
-                        fontWeight: FontWeight.w300,
-                        fontSize: 14),
+                    style: AppTheme.appTheme
+                        .headline1(fontWeight: FontWeight.w300, fontSize: 14),
                     children: [
                       TextSpan(
                           text: '$checkNum',
-                          style: AppTheme.appTheme
-                              .textStyle(
-                                  textColor: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 22)
-                              .copyWith(fontFamily: 'Montserrat')),
+                          style: AppTheme.appTheme.numHeadline1(
+                              fontWeight: FontWeight.bold, fontSize: 22)),
                       TextSpan(
                         text: '  次',
                       )
@@ -754,11 +702,7 @@ class HabitCheckInfoView extends StatelessWidget {
             child: Text(
               '${DateUtil.getDayString(habit.createTime)} - ${DateUtil.formDateTime(DateTime.now())}',
               style: AppTheme.appTheme
-                  .textStyle(
-                      textColor: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16)
-                  .copyWith(fontFamily: 'Montserrat'),
+                  .numHeadline1(fontWeight: FontWeight.bold, fontSize: 16),
             ),
           ),
         ),
@@ -777,34 +721,23 @@ class HabitCheckInfoView extends StatelessWidget {
                     decoration: BoxDecoration(
                         shape: BoxShape.rectangle,
                         borderRadius: BorderRadius.all(Radius.circular(16)),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black.withOpacity(.1),
-                              blurRadius: 16,
-                              offset: Offset(4, 4))
-                        ]),
+                        color: AppTheme.appTheme.cardBackgroundColor(),
+                        boxShadow: AppTheme.appTheme.containerBoxShadow()),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           '${habit.records.length}',
-                          style: AppTheme.appTheme
-                              .textStyle(
-                                  textColor: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 28)
-                              .copyWith(fontFamily: 'Montserrat'),
+                          style: AppTheme.appTheme.numHeadline1(
+                              fontWeight: FontWeight.bold, fontSize: 28),
                         ),
                         SizedBox(
                           height: 8,
                         ),
                         Text(
                           '总记录(次)',
-                          style: AppTheme.appTheme.textStyle(
-                              textColor: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
+                          style: AppTheme.appTheme.headline1(
+                              fontWeight: FontWeight.bold, fontSize: 16),
                         )
                       ],
                     ),
@@ -828,34 +761,23 @@ class HabitCheckInfoView extends StatelessWidget {
                     decoration: BoxDecoration(
                         shape: BoxShape.rectangle,
                         borderRadius: BorderRadius.all(Radius.circular(16)),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black.withOpacity(.1),
-                              blurRadius: 16,
-                              offset: Offset(4, 4))
-                        ]),
+                        color: AppTheme.appTheme.cardBackgroundColor(),
+                        boxShadow: AppTheme.appTheme.containerBoxShadow()),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           '${HabitUtil.combinationRecords(habit.records).keys.length}',
-                          style: AppTheme.appTheme
-                              .textStyle(
-                                  textColor: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 28)
-                              .copyWith(fontFamily: 'Montserrat'),
+                          style: AppTheme.appTheme.numHeadline1(
+                              fontWeight: FontWeight.bold, fontSize: 28),
                         ),
                         SizedBox(
                           height: 8,
                         ),
                         Text(
                           '总记录(天)',
-                          style: AppTheme.appTheme.textStyle(
-                              textColor: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
+                          style: AppTheme.appTheme.headline1(
+                              fontWeight: FontWeight.bold, fontSize: 16),
                         )
                       ],
                     ),
@@ -901,13 +823,8 @@ class HabitStreakInfoView extends StatelessWidget {
             decoration: BoxDecoration(
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.all(Radius.circular(16)),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.black.withOpacity(.1),
-                      blurRadius: 16,
-                      offset: Offset(4, 4))
-                ]),
+                color: AppTheme.appTheme.cardBackgroundColor(),
+                boxShadow: AppTheme.appTheme.containerBoxShadow()),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -915,31 +832,23 @@ class HabitStreakInfoView extends StatelessWidget {
                   children: [
                     Text(
                       '当前连续',
-                      style: AppTheme.appTheme.textStyle(
-                          textColor: Colors.black,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 14),
+                      style: AppTheme.appTheme.headline1(
+                          fontWeight: FontWeight.normal, fontSize: 14),
                     ),
                     SizedBox(
                       width: 3,
                     ),
                     Text(
                       '${HabitUtil.getNowStreaks(records)}',
-                      style: AppTheme.appTheme
-                          .textStyle(
-                              textColor: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22)
-                          .copyWith(fontFamily: 'Montserrat'),
+                      style: AppTheme.appTheme.numHeadline1(
+                          fontWeight: FontWeight.bold, fontSize: 22),
                     )
                   ],
                 ),
                 Text(
                   '历史连续',
-                  style: AppTheme.appTheme.textStyle(
-                      textColor: Colors.black,
-                      fontWeight: FontWeight.normal,
-                      fontSize: 14),
+                  style: AppTheme.appTheme
+                      .headline1(fontWeight: FontWeight.normal, fontSize: 14),
                 ),
                 streaks.length == 0
                     ? SizedBox()
@@ -965,7 +874,7 @@ class HabitStreakInfoView extends StatelessWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.2),
+                    color: AppTheme.appTheme.containerBackgroundColor(),
                     shape: BoxShape.rectangle,
                     borderRadius: BorderRadius.all(Radius.circular(10))),
                 height: 10,
@@ -1000,11 +909,7 @@ class HabitStreakInfoView extends StatelessWidget {
             Text(
               '$count',
               style: AppTheme.appTheme
-                  .textStyle(
-                      textColor: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22)
-                  .copyWith(fontFamily: 'Montserrat'),
+                  .numHeadline1(fontWeight: FontWeight.bold, fontSize: 22),
             ),
             SizedBox(
               width: 10,
@@ -1013,11 +918,7 @@ class HabitStreakInfoView extends StatelessWidget {
               '${str[0].replaceAll('-', '.')} - ${str[1].substring(str[1].indexOf('-') + 1).replaceAll('-', '.')}',
               maxLines: 2,
               style: AppTheme.appTheme
-                  .textStyle(
-                      textColor: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w300)
-                  .copyWith(fontFamily: 'Montserrat'),
+                  .numHeadline1(fontSize: 16, fontWeight: FontWeight.w300),
             )
           ],
         )
@@ -1048,13 +949,12 @@ class HabitRecentRecordsView extends StatelessWidget {
     if (habit.records != null && habit.records.length > 0) {
       children.addAll(habit.records.take(5).map((e) => _recordView(e)));
     } else {
-      children.add(
-        Text('暂无记录...',
-            style: AppTheme.appTheme.textStyle(
-                textColor: Colors.black,
-                fontWeight: FontWeight.normal,
-                fontSize: 14)),
-      );
+      children.add(Container(
+        margin: EdgeInsets.all(16),
+        child: Text('暂无记录...',
+            style: AppTheme.appTheme
+                .headline1(fontWeight: FontWeight.normal, fontSize: 14)),
+      ));
     }
     return children;
   }
@@ -1063,10 +963,8 @@ class HabitRecentRecordsView extends StatelessWidget {
     return Row(
       children: [
         Text('最近记录',
-            style: AppTheme.appTheme.textStyle(
-                textColor: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 16)),
+            style: AppTheme.appTheme
+                .headline1(fontWeight: FontWeight.bold, fontSize: 16)),
         Expanded(
           child: SizedBox(),
         ),
@@ -1078,12 +976,12 @@ class HabitRecentRecordsView extends StatelessWidget {
             children: [
               Text('查看全部',
                   style: AppTheme.appTheme.textStyle(
-                      textColor: Colors.black,
+                      textColor: AppTheme.appTheme.normalColor(),
                       fontWeight: FontWeight.normal,
                       fontSize: 14)),
               Icon(
                 Icons.arrow_forward,
-                color: Colors.black,
+                color: AppTheme.appTheme.normalColor(),
                 size: 23,
               )
             ],
@@ -1099,13 +997,8 @@ class HabitRecentRecordsView extends StatelessWidget {
         decoration: BoxDecoration(
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.all(Radius.circular(15)),
-            color: Colors.white,
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  offset: const Offset(5.1, 6.0),
-                  blurRadius: 14.0),
-            ]),
+            color: AppTheme.appTheme.cardBackgroundColor(),
+            boxShadow: AppTheme.appTheme.containerBoxShadow()),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1114,11 +1007,7 @@ class HabitRecentRecordsView extends StatelessWidget {
               child: Text(
                 '${DateUtil.parseHourAndMinAndSecond(record.time)}',
                 style: AppTheme.appTheme
-                    .textStyle(
-                        textColor: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18)
-                    .copyWith(fontFamily: 'Montserrat'),
+                    .numHeadline1(fontWeight: FontWeight.bold, fontSize: 18),
               ),
             ),
             Container(
@@ -1126,11 +1015,7 @@ class HabitRecentRecordsView extends StatelessWidget {
               child: Text(
                 '${DateUtil.parseYearAndMonthAndDay(record.time)}',
                 style: AppTheme.appTheme
-                    .textStyle(
-                        textColor: Colors.black45,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16)
-                    .copyWith(fontFamily: 'Montserrat'),
+                    .numHeadline2(fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ),
             Container(
@@ -1145,12 +1030,11 @@ class HabitRecentRecordsView extends StatelessWidget {
               constraints: BoxConstraints(minHeight: 60),
               child: Text(
                 '${record.content.length == 0 ? '' : record.content}',
-                style: AppTheme.appTheme.textStyle(
-                    textColor: record.content.length == 0
-                        ? Colors.black54
-                        : Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500),
+                style: record.content.length == 0
+                    ? AppTheme.appTheme
+                        .headline2(fontSize: 16, fontWeight: FontWeight.w500)
+                    : AppTheme.appTheme
+                        .headline1(fontSize: 16, fontWeight: FontWeight.w500),
               ),
             ),
             SizedBox(

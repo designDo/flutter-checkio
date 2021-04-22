@@ -78,7 +78,9 @@ class _HabitDetailPageState extends State<HabitDetailPage>
             onPressed: () {
               Navigator.of(context).pop();
             }),
-        backgroundColor: Color(habit.mainColor).withOpacity(0.8),
+        backgroundColor: AppTheme.appTheme.isDark()
+            ? AppTheme.appTheme.cardBackgroundColor()
+            : Color(habit.mainColor).withOpacity(0.8),
         actions: [
           IconButton(
             iconSize: 33,

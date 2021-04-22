@@ -130,7 +130,7 @@ class AppTheme {
         fontWeight: fontWeight,
         fontSize: fontSize,
         color: textColor == null
-            ? (isDark() ? Colors.grey : Colors.black)
+            ? (isDark() ? Colors.white70 : Colors.black54)
             : textColor,
         fontFamily: fontFamliy);
   }
@@ -172,7 +172,7 @@ class AppTheme {
         fontWeight: fontWeight,
         fontSize: fontSize,
         color: textColor == null
-            ? (isDark() ? Colors.grey : Colors.black)
+            ? (isDark() ? Colors.white70 : Colors.black54)
             : textColor,
         fontFamily: numFontFamliy);
   }

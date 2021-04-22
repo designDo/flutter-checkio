@@ -65,8 +65,10 @@ class _HabitDetailCalendarViewState extends State<HabitDetailCalendarView> {
                   alignment: Alignment.center,
                   child: Text(
                     '${DateUtil.getWeekendString(index + 1)}',
-                    style: AppTheme.appTheme
-                        .textStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                    style: AppTheme.appTheme.numHeadline1(
+                        textColor: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15),
                   ),
                 );
               }
@@ -78,7 +80,7 @@ class _HabitDetailCalendarViewState extends State<HabitDetailCalendarView> {
                   Fluttertoast.showToast(
                       msg: '超出时间范围',
                       toastLength: Toast.LENGTH_SHORT,
-                      backgroundColor: Color(0xFF738AE6),
+                      backgroundColor: AppTheme.appTheme.grandientColorEnd(),
                       gravity: ToastGravity.CENTER);
                   return;
                 }
@@ -87,7 +89,7 @@ class _HabitDetailCalendarViewState extends State<HabitDetailCalendarView> {
                   Fluttertoast.showToast(
                       msg: '超出创建时间',
                       toastLength: Toast.LENGTH_SHORT,
-                      backgroundColor: Color(0xFF738AE6),
+                      backgroundColor: AppTheme.appTheme.grandientColorEnd(),
                       gravity: ToastGravity.CENTER);
                   return;
                 }
@@ -97,7 +99,7 @@ class _HabitDetailCalendarViewState extends State<HabitDetailCalendarView> {
                   Fluttertoast.showToast(
                       msg: '不在记录周期',
                       toastLength: Toast.LENGTH_SHORT,
-                      backgroundColor: Color(0xFF738AE6),
+                      backgroundColor: AppTheme.appTheme.grandientColorEnd(),
                       gravity: ToastGravity.CENTER);
                   return;
                 }
@@ -125,13 +127,10 @@ class _HabitDetailCalendarViewState extends State<HabitDetailCalendarView> {
                       alignment: Alignment.center,
                       child: Text(
                         '${DateUtil.isToday(day.millisecondsSinceEpoch) ? '今' : day.day}',
-                        style: AppTheme.appTheme
-                            .textStyle(
-                                textColor:
-                                    contains.s ? Colors.white : Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15)
-                            .copyWith(fontFamily: 'Montserrat'),
+                        style: AppTheme.appTheme.numHeadline1(
+                            textColor: contains.s ? Colors.white : Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15),
                       ),
                     ),
                   ),
