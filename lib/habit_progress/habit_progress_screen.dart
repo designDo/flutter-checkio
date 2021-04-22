@@ -121,34 +121,23 @@ class TotalCheckAndDaysView extends StatelessWidget {
                 decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
                     borderRadius: BorderRadius.all(Radius.circular(16)),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black.withOpacity(.1),
-                          blurRadius: 16,
-                          offset: Offset(4, 4))
-                    ]),
+                    color: AppTheme.appTheme.cardBackgroundColor(),
+                    boxShadow: AppTheme.appTheme.containerBoxShadow()),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       '${HabitUtil.getTotalDoNumsOfHistory(habits)}',
-                      style: AppTheme.appTheme
-                          .textStyle(
-                              textColor: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 28)
-                          .copyWith(fontFamily: 'Montserrat'),
+                      style: AppTheme.appTheme.numHeadline1(
+                          fontWeight: FontWeight.bold, fontSize: 28),
                     ),
                     SizedBox(
                       height: 8,
                     ),
                     Text(
                       '总记录(次)',
-                      style: AppTheme.appTheme.textStyle(
-                          textColor: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),
+                      style: AppTheme.appTheme
+                          .headline1(fontWeight: FontWeight.bold, fontSize: 16),
                     )
                   ],
                 ),
@@ -165,34 +154,23 @@ class TotalCheckAndDaysView extends StatelessWidget {
                 decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
                     borderRadius: BorderRadius.all(Radius.circular(16)),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black.withOpacity(.1),
-                          blurRadius: 16,
-                          offset: Offset(4, 4))
-                    ]),
+                    color: AppTheme.appTheme.cardBackgroundColor(),
+                    boxShadow: AppTheme.appTheme.containerBoxShadow()),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       '${HabitUtil.getTotalDaysOfHistory(habits)}',
-                      style: AppTheme.appTheme
-                          .textStyle(
-                              textColor: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 28)
-                          .copyWith(fontFamily: 'Montserrat'),
+                      style: AppTheme.appTheme.numHeadline1(
+                          fontWeight: FontWeight.bold, fontSize: 28),
                     ),
                     SizedBox(
                       height: 8,
                     ),
                     Text(
                       '总记录(天)',
-                      style: AppTheme.appTheme.textStyle(
-                          textColor: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),
+                      style: AppTheme.appTheme
+                          .headline1(fontWeight: FontWeight.bold, fontSize: 16),
                     )
                   ],
                 ),
@@ -220,13 +198,8 @@ class MostChecksView extends StatelessWidget {
       decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.all(Radius.circular(16)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black.withOpacity(.1),
-                blurRadius: 16,
-                offset: Offset(4, 4))
-          ]),
+          color: AppTheme.appTheme.cardBackgroundColor(),
+          boxShadow: AppTheme.appTheme.containerBoxShadow()),
       width: double.infinity,
       padding: EdgeInsets.all(16),
       margin: EdgeInsets.only(left: 24, right: 24, top: 8, bottom: 16),
@@ -240,10 +213,8 @@ class MostChecksView extends StatelessWidget {
               children: [
                 Text(
                   '记录次数最多',
-                  style: AppTheme.appTheme.textStyle(
-                      textColor: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
+                  style: AppTheme.appTheme
+                      .headline1(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
                   height: 16,
@@ -265,11 +236,7 @@ class MostChecksView extends StatelessWidget {
             child: Text(
               '${mostDoNumHabits.length == 0 ? 0 : mostDoNumHabits[0].records.length}',
               style: AppTheme.appTheme
-                  .textStyle(
-                      textColor: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 28)
-                  .copyWith(fontFamily: 'Montserrat'),
+                  .numHeadline1(fontWeight: FontWeight.bold, fontSize: 28),
             ),
           )
         ],
@@ -294,13 +261,8 @@ class MostStreaksView extends StatelessWidget {
       decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.all(Radius.circular(16)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black.withOpacity(.1),
-                blurRadius: 16,
-                offset: Offset(4, 4))
-          ]),
+          color: AppTheme.appTheme.cardBackgroundColor(),
+          boxShadow: AppTheme.appTheme.containerBoxShadow()),
       width: double.infinity,
       padding: EdgeInsets.all(16),
       margin: EdgeInsets.only(left: 24, right: 24, top: 8, bottom: 16),
@@ -314,10 +276,8 @@ class MostStreaksView extends StatelessWidget {
               children: [
                 Text(
                   '当前连续天数最多',
-                  style: AppTheme.appTheme.textStyle(
-                      textColor: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
+                  style: AppTheme.appTheme
+                      .headline1(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
                   height: 16,
@@ -339,11 +299,7 @@ class MostStreaksView extends StatelessWidget {
             child: Text(
               '${mostStreakHabits.s}',
               style: AppTheme.appTheme
-                  .textStyle(
-                      textColor: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 28)
-                  .copyWith(fontFamily: 'Montserrat'),
+                  .numHeadline1(fontWeight: FontWeight.bold, fontSize: 28),
             ),
           )
         ],
@@ -392,7 +348,7 @@ class HabitItemView extends StatelessWidget {
             width: 4,
           ),
           Text(habit.name,
-              style: AppTheme.appTheme.textStyle(
+              style: AppTheme.appTheme.headline1(
                   textColor: Colors.white,
                   fontSize: 14,
                   fontWeight: FontWeight.normal))

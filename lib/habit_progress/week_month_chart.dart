@@ -6,6 +6,7 @@ import 'package:timefly/models/complete_time.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/utils/date_util.dart';
 import 'package:timefly/utils/habit_util.dart';
+import 'package:timefly/utils/hex_color.dart';
 import 'package:timefly/utils/pair.dart';
 import 'package:timefly/widget/clip/bottom_cliper.dart';
 import 'package:timefly/widget/tab_indicator.dart';
@@ -56,11 +57,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
           clipper: BottomClipper(),
           child: Container(
             decoration: BoxDecoration(
-                gradient: LinearGradient(
-              colors: <Color>[
-                Color(0xFF738AE6),
-                Color(0xFF5C5EDD),
-              ],
+                gradient: AppTheme.appTheme.containerGradient(
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
             )),
@@ -146,15 +143,16 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                   width: 6,
                   height: 6,
                   decoration: BoxDecoration(
-                      shape: BoxShape.circle, color: Colors.indigo),
+                      shape: BoxShape.circle,
+                      color: HexColor.darken(AppTheme.appTheme.grandientColorEnd(),0.05)),
                 ),
                 SizedBox(
                   width: 5,
                 ),
                 Text(
                   currentChart == 0 ? '上一周' : '上一月',
-                  style: AppTheme.appTheme.textStyle(
-                    textColor: Colors.indigo,
+                  style: AppTheme.appTheme.headline1(
+                    textColor: HexColor.darken(AppTheme.appTheme.grandientColorEnd(),0.05),
                     fontWeight: FontWeight.bold,
                     fontSize: 12,
                   ),
@@ -167,13 +165,8 @@ class _WeekMonthChartState extends State<WeekMonthChart>
               padding: EdgeInsets.only(left: 32, right: 24),
               height: 90,
               decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black.withOpacity(.1),
-                        blurRadius: 16,
-                        offset: Offset(8, 4))
-                  ],
-                  color: Colors.white,
+                  boxShadow: AppTheme.appTheme.containerBoxShadow(),
+                  color: AppTheme.appTheme.cardBackgroundColor(),
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.all(Radius.circular(16))),
               child: Row(
@@ -185,8 +178,8 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                     children: [
                       Text(
                         getWeekOrMonthStr(),
-                        style: AppTheme.appTheme.textStyle(
-                            textColor: Color(0xFF5C5EDD),
+                        style: AppTheme.appTheme.headline1(
+                            textColor: AppTheme.appTheme.grandientColorEnd(),
                             fontWeight: FontWeight.bold,
                             fontSize: 16),
                       ),
@@ -199,12 +192,12 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                                   _now, currentWeekIndex)
                               : DateUtil.getMonthPeriodString(
                                   _now, currentMonthIndex),
-                          style: AppTheme.appTheme
-                              .textStyle(
-                                  textColor: Color(0xFF5C5EDD).withOpacity(0.9),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18)
-                              .copyWith(fontFamily: 'Montserrat'))
+                          style: AppTheme.appTheme.numHeadline1(
+                              textColor: AppTheme.appTheme
+                                  .grandientColorEnd()
+                                  .withOpacity(0.9),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18))
                     ],
                   ),
                   Expanded(
@@ -224,7 +217,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                     },
                     child: SvgPicture.asset(
                       'assets/images/navigation_left.svg',
-                      color: Colors.indigo,
+                      color: AppTheme.appTheme.grandientColorEnd(),
                       width: 28,
                       height: 28,
                     ),
@@ -254,8 +247,8 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                         'assets/images/navigation_right.svg',
                         color: ((currentChart == 0 && currentWeekIndex == 0) ||
                                 (currentChart == 1 && currentMonthIndex == 0))
-                            ? Colors.grey
-                            : Colors.indigo,
+                            ? AppTheme.appTheme.containerBackgroundColor()
+                            : AppTheme.appTheme.grandientColorEnd(),
                         width: 28,
                         height: 28,
                       ))
@@ -326,15 +319,14 @@ class _WeekMonthChartState extends State<WeekMonthChart>
             tooltipRoundedRadius: 16,
             tooltipBottomMargin: 8,
             tooltipPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            tooltipBgColor: Colors.white,
+            tooltipBgColor: AppTheme.appTheme.cardBackgroundColor(),
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
               return BarTooltipItem(
                   (rod.y - 1).toInt().toString(),
-                  TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Montserrat'));
+                  AppTheme.appTheme.numHeadline1(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ));
             }),
         touchCallback: (barTouchResponse) {
           setState(() {
@@ -352,8 +344,10 @@ class _WeekMonthChartState extends State<WeekMonthChart>
         show: true,
         bottomTitles: SideTitles(
           showTitles: true,
-          getTextStyles: (value) => const TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+          getTextStyles: (value) => AppTheme.appTheme.headline1(
+              textColor: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 14),
           margin: 16,
           getTitles: (double value) {
             return CompleteDay.getSimpleDay(value.toInt() + 1);
@@ -403,7 +397,9 @@ class _WeekMonthChartState extends State<WeekMonthChart>
           y: isTouched
               ? (previousY > 0 ? previousY + 1 : 1)
               : (previousY > 0 ? previousY : 1),
-          colors: [Colors.indigo],
+          colors: [
+            HexColor.darken(AppTheme.appTheme.grandientColorEnd(), 0.05)
+          ],
           width: width,
           backDrawRodData: BackgroundBarChartRodData(
             show: false,
@@ -475,6 +471,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
             touchTooltipData: LineTouchTooltipData(
                 tooltipPadding: EdgeInsets.all(8),
                 tooltipRoundedRadius: 16,
+                tooltipBgColor: AppTheme.appTheme.cardBackgroundColor(),
                 fitInsideVertically: true,
                 fitInsideHorizontally: true,
                 getTooltipItems: (spots) {
@@ -482,12 +479,8 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                       .map((spot) => (spot.barIndex == 1
                           ? LineTooltipItem(
                               '${(spot.y - 1).toInt()}\n${getMonthByIndex(spot.x.toInt())}',
-                              AppTheme.appTheme
-                                  .textStyle(
-                                      textColor: Colors.black,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold)
-                                  .copyWith(fontFamily: 'Montserrat'))
+                              AppTheme.appTheme.numHeadline1(
+                                  fontSize: 20, fontWeight: FontWeight.bold))
                           : null))
                       .toList();
                 })),
@@ -497,11 +490,11 @@ class _WeekMonthChartState extends State<WeekMonthChart>
             bottomTitles: SideTitles(
                 showTitles: true,
                 reservedSize: 22,
-                getTextStyles: (value) => const TextStyle(
-                      color: Colors.white,
+                getTextStyles: (value) => AppTheme.appTheme.numHeadline1(
+                      textColor: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
-                    ).copyWith(fontFamily: 'Montserrat'),
+                    ),
                 margin: 20,
                 getTitles: (value) {
                   switch (value.toInt()) {
@@ -549,7 +542,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
         curveSmoothness: .33,
         isCurved: true,
         colors: [
-          Colors.indigo,
+          HexColor.darken(AppTheme.appTheme.grandientColorEnd(), 0.05),
         ],
         barWidth: 2,
         isStrokeCapRound: true,

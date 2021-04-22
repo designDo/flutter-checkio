@@ -24,13 +24,8 @@ class ProgressRateView extends StatelessWidget {
       decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.all(Radius.circular(16)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black.withOpacity(.1),
-                blurRadius: 16,
-                offset: Offset(4, 4))
-          ]),
+          color: AppTheme.appTheme.cardBackgroundColor(),
+          boxShadow: AppTheme.appTheme.containerBoxShadow()),
       width: double.infinity,
       padding: EdgeInsets.all(16),
       margin: EdgeInsets.only(left: 24, right: 24, top: 8, bottom: 16),
@@ -40,10 +35,8 @@ class ProgressRateView extends StatelessWidget {
         children: [
           Text(
             _title(),
-            style: AppTheme.appTheme.textStyle(
-                textColor: Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.bold),
+            style: AppTheme.appTheme
+                .headline1(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           SizedBox(
             height: 10,
@@ -143,32 +136,20 @@ class ProgressRateView extends StatelessWidget {
             Text(
               '${_periodString(index)}',
               style: AppTheme.appTheme
-                  .textStyle(
-                      textColor: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold)
-                  .copyWith(fontFamily: 'Montserrat'),
+                  .numHeadline1(fontSize: 14, fontWeight: FontWeight.bold),
             ),
             Row(
               children: [
                 Text(
                     '${rate.x1 == 0 ? '0%' : '${(rate.x0 / rate.x1 * 100).toInt()}%'}',
-                    style: AppTheme.appTheme
-                        .textStyle(
-                            textColor: Colors.black.withOpacity(0.7),
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold)
-                        .copyWith(fontFamily: 'Montserrat')),
+                    style: AppTheme.appTheme.numHeadline2(
+                        fontSize: 12, fontWeight: FontWeight.bold)),
                 SizedBox(
                   width: 5,
                 ),
                 Text('${rate.x0}/${rate.x1}',
-                    style: AppTheme.appTheme
-                        .textStyle(
-                            textColor: Colors.black.withOpacity(0.7),
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold)
-                        .copyWith(fontFamily: 'Montserrat')),
+                    style: AppTheme.appTheme.numHeadline2(
+                        fontSize: 12, fontWeight: FontWeight.bold)),
               ],
             ),
           ],
