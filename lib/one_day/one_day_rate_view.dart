@@ -40,13 +40,8 @@ class OneDayRateView extends StatelessWidget {
               decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.all(Radius.circular(35)),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        offset: const Offset(10, 5.0),
-                        blurRadius: 16.0)
-                  ]),
+                  color: AppTheme.appTheme.cardBackgroundColor(),
+                  boxShadow: AppTheme.appTheme.coloredBoxShadow()),
               child: _tipView(hasDoNum, needCompleteNnm),
             )),
             SizedBox(
@@ -57,13 +52,8 @@ class OneDayRateView extends StatelessWidget {
               padding: EdgeInsets.all(5),
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white,
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        offset: const Offset(10, 5.0),
-                        blurRadius: 16.0),
-                  ]),
+                  color: AppTheme.appTheme.cardBackgroundColor(),
+                  boxShadow: AppTheme.appTheme.containerBoxShadow()),
               width: 60,
               height: 60,
               child: Stack(
@@ -72,16 +62,12 @@ class OneDayRateView extends StatelessWidget {
                   CircleProgressBar(
                       backgroundColor:
                           AppTheme.appTheme.containerBackgroundColor(),
-                      foregroundColor: Color(0xFF5C5EDD),
+                      foregroundColor: AppTheme.appTheme.grandientColorEnd(),
                       value: hasDoNum / needCompleteNnm),
                   Text(
                     '${((hasDoNum / needCompleteNnm) * 100).toInt()}%',
-                    style: AppTheme.appTheme
-                        .textStyle(
-                          textColor: Colors.black,
-                          fontSize: 14,
-                        )
-                        .copyWith(fontFamily: 'Montserrat'),
+                    style: AppTheme.appTheme.numHeadline1(
+                        fontSize: 14, fontWeight: FontWeight.normal),
                   )
                 ],
               ),
@@ -114,35 +100,31 @@ class OneDayRateView extends StatelessWidget {
           children: [
             Text(
               '共需完成',
-              style: AppTheme.appTheme.textStyle(
-                textColor: Colors.black,
-                fontSize: 14,
-              ),
+              style: AppTheme.appTheme
+                  .headline1(fontSize: 14, fontWeight: FontWeight.normal),
             ),
             SizedBox(
               width: 3,
             ),
             Text('$needCompleteNum',
-                style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Montserrat')),
-            SizedBox(
-              width: 3,
-            ),
-            Text('已完成',
-                style: AppTheme.appTheme.textStyle(
-                  textColor: Colors.black,
-                  fontSize: 14,
+                style: AppTheme.appTheme.numHeadline1(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
                 )),
             SizedBox(
               width: 3,
             ),
+            Text('已完成',
+                style: AppTheme.appTheme
+                    .headline1(fontSize: 14, fontWeight: FontWeight.normal)),
+            SizedBox(
+              width: 3,
+            ),
             Text('$hasDoNum',
-                style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Montserrat')),
+                style: AppTheme.appTheme.numHeadline1(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                )),
           ],
         )
       ],

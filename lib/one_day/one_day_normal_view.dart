@@ -96,17 +96,8 @@ class OneDayTipsView extends StatelessWidget {
                 alignment: Alignment.center,
                 height: 100,
                 decoration: BoxDecoration(
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                          color: Color(0xFF738AE6).withOpacity(0.8),
-                          offset: const Offset(13.1, 4.0),
-                          blurRadius: 16.0),
-                    ],
-                    gradient: LinearGradient(
-                      colors: <Color>[
-                        Color(0xFF738AE6),
-                        Color(0xFF5C5EDD),
-                      ],
+                    boxShadow: AppTheme.appTheme.coloredBoxShadow(),
+                    gradient: AppTheme.appTheme.containerGradient(
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                     ),
@@ -115,8 +106,8 @@ class OneDayTipsView extends StatelessWidget {
                         bottomLeft: Radius.circular(20))),
                 child: Text(
                   '点击添加一个习惯吧...',
-                  style: TextStyle(
-                      color: Colors.white,
+                  style: AppTheme.appTheme.headline1(
+                      textColor: Colors.white,
                       fontWeight: FontWeight.normal,
                       fontSize: 18),
                 ),

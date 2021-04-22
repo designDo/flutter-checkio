@@ -202,13 +202,8 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
                         EdgeInsets.only(top: 16, left: 8, right: 8, bottom: 18),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              offset: const Offset(13.1, 4.0),
-                              blurRadius: 16.0),
-                        ],
+                        color: AppTheme.appTheme.cardBackgroundColor(),
+                        boxShadow: AppTheme.appTheme.containerBoxShadow(),
                         borderRadius: const BorderRadius.only(
                           bottomRight: Radius.circular(8.0),
                           bottomLeft: Radius.circular(8.0),
@@ -254,9 +249,9 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
                                       color: Color(widget.habit.mainColor)),
                                   child: Text(
                                     '${HabitPeriod.getPeriod(widget.habit.period)}',
-                                    style: TextStyle(
+                                    style: AppTheme.appTheme.headline1(
                                         fontSize: 11,
-                                        color: Colors.white,
+                                        textColor: Colors.white,
                                         fontWeight: FontWeight.bold),
                                   ),
                                 )
@@ -271,8 +266,7 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
                               child: Text(
                                 '${widget.habit.name}',
                                 maxLines: 2,
-                                style: AppTheme.appTheme.textStyle(
-                                    textColor: Colors.black,
+                                style: AppTheme.appTheme.headline1(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -283,11 +277,9 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
                             Text(
                               getReminderTime(),
                               style: AppTheme.appTheme
-                                  .textStyle(
-                                      textColor: Colors.black54,
+                                  .numHeadline2(
                                       fontSize: 14,
-                                      fontWeight: FontWeight.w600)
-                                  .copyWith(fontFamily: 'Montserrat'),
+                                      fontWeight: FontWeight.w600),
                             ),
                             SizedBox(
                               height: 8,
@@ -302,11 +294,9 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
                                       '$_initValue/${widget.habit.doNum}',
                                       maxLines: 1,
                                       style: AppTheme.appTheme
-                                          .textStyle(
-                                              textColor: Colors.black,
+                                          .numHeadline1(
                                               fontSize: 18,
-                                              fontWeight: FontWeight.w600)
-                                          .copyWith(fontFamily: 'Montserrat')),
+                                              fontWeight: FontWeight.w600)),
                                 )),
                                 Expanded(
                                     child: Padding(

@@ -77,7 +77,7 @@ class _HabitCheckViewState extends State<HabitCheckView> {
                       },
                       child: SvgPicture.asset(
                         'assets/images/guanbi.svg',
-                        color: Colors.black,
+                        color: AppTheme.appTheme.normalColor(),
                         width: 40,
                         height: 40,
                       ),
@@ -117,7 +117,7 @@ class _HabitCheckViewState extends State<HabitCheckView> {
                       duration: Duration(milliseconds: 500),
                       curve: Curves.fastOutSlowIn);
                 },
-                backgroundColor: Colors.blueAccent,
+                backgroundColor: AppTheme.appTheme.grandientColorEnd(),
                 child: SvgPicture.asset(
                   'assets/images/jia.svg',
                   color: Colors.white,
@@ -139,13 +139,15 @@ class _HabitCheckViewState extends State<HabitCheckView> {
       sizeFactor:
           CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn),
       child: TimelineTile(
-        beforeLineStyle: LineStyle(thickness: 2, color: Colors.black26),
+        beforeLineStyle: LineStyle(
+            thickness: 2,
+            color: AppTheme.appTheme.normalColor().withOpacity(0.5)),
         indicatorStyle: IndicatorStyle(
           width: 35,
           color: AppTheme.appTheme.containerBackgroundColor(),
           indicatorXY: 0.5,
           iconStyle: IconStyle(
-            color: Colors.black,
+            color: AppTheme.appTheme.normalColor(),
             iconData: Icons.check_circle_outline,
           ),
         ),
@@ -199,13 +201,8 @@ class _HabitCheckViewState extends State<HabitCheckView> {
                   decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.all(Radius.circular(15)),
-                      color: Colors.white,
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            offset: const Offset(5.1, 6.0),
-                            blurRadius: 14.0),
-                      ]),
+                      color: AppTheme.appTheme.cardBackgroundColor(),
+                      boxShadow: AppTheme.appTheme.containerBoxShadow()),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -213,24 +210,16 @@ class _HabitCheckViewState extends State<HabitCheckView> {
                         margin: EdgeInsets.only(left: 16, top: 16),
                         child: Text(
                           '${DateUtil.parseHourAndMinAndSecond(record.time)}',
-                          style: AppTheme.appTheme
-                              .textStyle(
-                                  textColor: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18)
-                              .copyWith(fontFamily: 'Montserrat'),
+                          style: AppTheme.appTheme.numHeadline1(
+                              fontWeight: FontWeight.bold, fontSize: 18),
                         ),
                       ),
                       Container(
                         margin: EdgeInsets.only(left: 24),
                         child: Text(
                           '${DateUtil.parseYearAndMonthAndDay(record.time)}',
-                          style: AppTheme.appTheme
-                              .textStyle(
-                                  textColor: Colors.black45,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16)
-                              .copyWith(fontFamily: 'Montserrat'),
+                          style: AppTheme.appTheme.numHeadline2(
+                              fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                       ),
                       GestureDetector(
@@ -252,12 +241,11 @@ class _HabitCheckViewState extends State<HabitCheckView> {
                           constraints: BoxConstraints(minHeight: 60),
                           child: Text(
                             '${record.content.length == 0 ? '记录些什么...' : record.content}',
-                            style: AppTheme.appTheme.textStyle(
-                                textColor: record.content.length == 0
-                                    ? Colors.black54
-                                    : Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500),
+                            style: record.content.length == 0
+                                ? AppTheme.appTheme.headline2(
+                                    fontSize: 16, fontWeight: FontWeight.w500)
+                                : AppTheme.appTheme.headline1(
+                                    fontSize: 16, fontWeight: FontWeight.w500),
                           ),
                         ),
                       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:timefly/app_theme.dart';
 
 class FloatingModal extends StatelessWidget {
   final Widget child;
@@ -20,7 +21,8 @@ class FloatingModal extends StatelessWidget {
               height: 5,
               width: 45,
               decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(6)),
+                  color: AppTheme.appTheme.containerBackgroundColor(),
+                  borderRadius: BorderRadius.circular(6)),
             ),
           ),
           SizedBox(height: 8),
@@ -53,14 +55,15 @@ Future<T> showFloatingModalBottomSheet<T>({
   Color barrierColor,
 }) async {
   final result = await showCustomModalBottomSheet(
-      context: context,
-      builder: builder,
-      barrierColor: barrierColor,
-      containerWidget: (_, animation, child) => FloatingModal(
-            child: child,
-          ),
-      expand: true,
-      enableDrag: true,);
+    context: context,
+    builder: builder,
+    barrierColor: barrierColor,
+    containerWidget: (_, animation, child) => FloatingModal(
+      child: child,
+    ),
+    expand: true,
+    enableDrag: true,
+  );
 
   return result;
 }
