@@ -29,10 +29,8 @@ class UserInfoView extends StatelessWidget {
           ),
           Text(
             '亚索',
-            style: AppTheme.appTheme.textStyle(
-                textColor: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 22),
+            style: AppTheme.appTheme
+                .headline1(fontWeight: FontWeight.bold, fontSize: 22),
           )
         ],
       ),
@@ -72,22 +70,16 @@ class HabitsTotalView extends StatelessWidget {
                       children: [
                         Text(
                           '$habitNum',
-                          style: AppTheme.appTheme
-                              .textStyle(
-                                  textColor: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 27)
-                              .copyWith(fontFamily: 'Montserrat'),
+                          style: AppTheme.appTheme.numHeadline1(
+                              fontWeight: FontWeight.bold, fontSize: 27),
                         ),
                         SizedBox(
                           height: 5,
                         ),
                         Text(
                           '习惯',
-                          style: AppTheme.appTheme.textStyle(
-                              textColor: Colors.black.withOpacity(0.5),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
+                          style: AppTheme.appTheme.headline2(
+                              fontWeight: FontWeight.bold, fontSize: 18),
                         )
                       ],
                     )
@@ -108,22 +100,16 @@ class HabitsTotalView extends StatelessWidget {
                       children: [
                         Text(
                           '$checkNum',
-                          style: AppTheme.appTheme
-                              .textStyle(
-                                  textColor: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 27)
-                              .copyWith(fontFamily: 'Montserrat'),
+                          style: AppTheme.appTheme.numHeadline1(
+                              fontWeight: FontWeight.bold, fontSize: 27),
                         ),
                         SizedBox(
                           height: 5,
                         ),
                         Text(
                           '记录',
-                          style: AppTheme.appTheme.textStyle(
-                              textColor: Colors.black.withOpacity(0.5),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
+                          style: AppTheme.appTheme.headline2(
+                              fontWeight: FontWeight.bold, fontSize: 18),
                         )
                       ],
                     )
@@ -148,18 +134,8 @@ class UserProView extends StatelessWidget {
       alignment: Alignment.center,
       height: 90,
       decoration: BoxDecoration(
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Color(0xFF738AE6).withOpacity(0.3),
-                offset: const Offset(5.1, 6.0),
-                blurRadius: 12.0,
-                spreadRadius: 0),
-          ],
-          gradient: LinearGradient(
-            colors: <Color>[
-              Color(0xFF738AE6),
-              Color(0xFF5C5EDD),
-            ],
+          boxShadow: AppTheme.appTheme.coloredBoxShadow(),
+          gradient: AppTheme.appTheme.containerGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
           ),
@@ -167,8 +143,10 @@ class UserProView extends StatelessWidget {
       child: Text(
         '解锁专业版\n成为自己的英雄',
         textAlign: TextAlign.center,
-        style: TextStyle(
-            color: Colors.white, fontWeight: FontWeight.normal, fontSize: 16),
+        style: AppTheme.appTheme.headline1(
+            textColor: Colors.white,
+            fontWeight: FontWeight.normal,
+            fontSize: 16),
       ),
     );
   }
@@ -189,18 +167,8 @@ class EnterView extends StatelessWidget {
                 child: _item(
                     'assets/images/icon_fivestar.svg', '给TimeFly\n5星好评',
                     decoration: BoxDecoration(
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                              color: Color(0xFF738AE6).withOpacity(0.3),
-                              offset: const Offset(5.1, 4.0),
-                              blurRadius: 12.0,
-                              spreadRadius: 0),
-                        ],
-                        gradient: LinearGradient(
-                          colors: <Color>[
-                            Color(0xFF738AE6),
-                            Color(0xFF5C5EDD),
-                          ],
+                        boxShadow: AppTheme.appTheme.coloredBoxShadow(),
+                        gradient: AppTheme.appTheme.containerGradient(
                           begin: Alignment.topRight,
                           end: Alignment.bottomLeft,
                         ),
@@ -250,13 +218,8 @@ class EnterView extends StatelessWidget {
           ? BoxDecoration(
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.all(Radius.circular(12)),
-              color: Colors.white,
-              boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.black.withOpacity(0.075),
-                      offset: const Offset(5.1, 4.0),
-                      blurRadius: 16.0),
-                ])
+              color: AppTheme.appTheme.cardBackgroundColor(),
+              boxShadow: AppTheme.appTheme.containerBoxShadow())
           : decoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,13 +228,15 @@ class EnterView extends StatelessWidget {
             iconPath,
             width: 26,
             height: 26,
-            color: colored ? Colors.white : Color(0xFF5C5EDD),
+            color:
+                colored ? Colors.white : AppTheme.appTheme.grandientColorEnd(),
           ),
           Expanded(child: SizedBox()),
           Text(
             text,
-            style: AppTheme.appTheme.textStyle(
-                textColor: colored ? Colors.white : Colors.black,
+            style: AppTheme.appTheme.headline1(
+                textColor:
+                    colored ? Colors.white : AppTheme.appTheme.normalColor(),
                 fontWeight: FontWeight.normal,
                 fontSize: 16),
           ),

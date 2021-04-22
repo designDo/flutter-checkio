@@ -39,18 +39,13 @@ class _MineScreenState extends State<MineScreen> {
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(26),
                     bottomLeft: Radius.circular(26)),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 12,
-                      offset: Offset(10, 2))
-                ]),
+                color: AppTheme.appTheme.cardBackgroundColor(),
+                boxShadow: AppTheme.appTheme.containerBoxShadow()),
             child: SvgPicture.asset(
               'assets/images/icon_jiaohuan.svg',
               width: 25,
               height: 25,
-              color: Colors.black.withOpacity(0.8),
+              color: AppTheme.appTheme.normalColor().withOpacity(0.8),
             ),
           ),
         )
