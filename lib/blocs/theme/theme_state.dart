@@ -1,12 +1,16 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+
+import '../../app_theme.dart';
 
 class ThemeState extends Equatable {
-
-  ThemeState(this.themeData);
+  ThemeState(this.appTheme);
 
   @override
-  List<Object> get props => [themeData];
+  List<Object> get props => [
+        appTheme.currentThemeMode,
+        appTheme.currentColorMode,
+        appTheme.currentFontMode
+      ];
 
-  final ThemeData themeData;
+  final AppTheme appTheme;
 }

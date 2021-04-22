@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
               title: 'Time Fly',
               debugShowCheckedModeBanner: false,
               theme:
-                  themeState.themeData.copyWith(platform: TargetPlatform.iOS),
+                  themeState.appTheme.themeData().copyWith(platform: TargetPlatform.iOS),
               home: HomeScreen(),
             );
           },

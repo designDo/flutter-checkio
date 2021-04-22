@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:timefly/app_theme.dart';
-import 'package:timefly/blocs/theme/theme_bloc.dart';
-import 'package:timefly/blocs/theme/theme_event.dart';
 import 'package:timefly/mine/mine_screen_views.dart';
 import 'package:timefly/utils/system_util.dart';
 
@@ -50,37 +47,6 @@ class _MineScreenState extends State<MineScreen> {
           ),
         )
       ],
-    );
-
-    return Container(
-      child: Column(
-        children: [
-          Container(
-            alignment: Alignment.centerLeft,
-            height: 100,
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: AppThemeMode.values.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.all(10),
-                    child: GestureDetector(
-                      onTap: () {
-                        BlocProvider.of<ThemeBloc>(context).add(
-                            ThemeChangeEvent(AppThemeMode.values[index],
-                                AppThemeColorMode.Blue, AppFontMode.Roboto));
-                      },
-                      child: Container(
-                        width: 50,
-                        height: 50,
-                        color: AppTheme.appTheme.containerBackgroundColor(),
-                      ),
-                    ),
-                  );
-                }),
-          ),
-        ],
-      ),
     );
   }
 }

@@ -27,6 +27,17 @@ class GradientColor {
 }
 
 class AppTheme {
+  static Color modeMainColor(AppThemeMode mode) {
+    if (mode == AppThemeMode.Dark) {
+      return Colors.black;
+    }
+    return Colors.white;
+  }
+
+  static Color themeMainColor(AppThemeColorMode mode) {
+    return getGradientColor(mode).end;
+  }
+
   static List<GradientColor> gradientColors = [
     //Colors.indigo
     GradientColor(AppThemeColorMode.Indigo, Color.fromARGB(255, 101, 89, 184),
@@ -61,14 +72,18 @@ class AppTheme {
 
   GradientColor gradientColor;
 
-  ThemeData createTheme(AppThemeMode themeMode,
-      AppThemeColorMode themeColorMode, AppFontMode fontMode) {
+  AppTheme createTheme(AppThemeMode themeMode, AppThemeColorMode themeColorMode,
+      AppFontMode fontMode) {
     currentThemeMode = themeMode;
     currentColorMode = themeColorMode;
     currentFontMode = fontMode;
     fontFamliy = fontFamily(currentFontMode);
     gradientColor = getGradientColor(currentColorMode);
-    if (themeMode == AppThemeMode.Dark) {
+    return this;
+  }
+
+  ThemeData themeData() {
+    if (currentThemeMode == AppThemeMode.Dark) {
       return darkTheme();
     } else {
       return lightTheme();
@@ -101,7 +116,7 @@ class AppTheme {
     return 'Roboto';
   }
 
-  GradientColor getGradientColor(AppThemeColorMode mode) {
+  static GradientColor getGradientColor(AppThemeColorMode mode) {
     for (var value in gradientColors) {
       if (mode == value.mode) {
         return value;
