@@ -3,14 +3,12 @@ import 'package:equatable/equatable.dart';
 import '../../app_theme.dart';
 
 class ThemeState extends Equatable {
-  ThemeState(this.appTheme);
+  ThemeState(this.themeMode, this.themeColorMode, this.fontMode);
 
   @override
-  List<Object> get props => [
-        appTheme.currentThemeMode,
-        appTheme.currentColorMode,
-        appTheme.currentFontMode
-      ];
+  List<Object> get props => [themeMode, themeColorMode, fontMode];
 
-  final AppTheme appTheme;
+  final AppThemeMode themeMode;
+  final AppThemeColorMode themeColorMode;
+  final AppFontMode fontMode;
 }

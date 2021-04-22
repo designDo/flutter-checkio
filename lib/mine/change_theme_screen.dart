@@ -13,8 +13,9 @@ class ChangeThemePage extends StatelessWidget {
       backgroundColor: AppTheme.appTheme.containerBackgroundColor(),
       body: BlocBuilder<ThemeBloc, ThemeState>(
         builder: (context, state) {
-          AppTheme appTheme = state.appTheme;
-
+          AppThemeMode appThemeMode = state.themeMode;
+          AppThemeColorMode appThemeColorMode = state.themeColorMode;
+          AppFontMode appFontMode = state.fontMode;
           return ListView(
             children: [
               Row(
@@ -23,16 +24,14 @@ class ChangeThemePage extends StatelessWidget {
                           onTap: () {
                             BlocProvider.of<ThemeBloc>(context).add(
                                 ThemeChangeEvent(
-                                    mode,
-                                    appTheme.currentColorMode,
-                                    appTheme.currentFontMode));
+                                    mode, appThemeColorMode, appFontMode));
                           },
                           child: Container(
                             margin: EdgeInsets.only(left: 32),
                             width: 100,
                             height: 100,
                             color: AppTheme.modeMainColor(mode),
-                            child: mode == appTheme.currentThemeMode
+                            child: mode == appThemeMode
                                 ? Icon(Icons.check)
                                 : SizedBox(),
                           ),
@@ -50,10 +49,8 @@ class ChangeThemePage extends StatelessWidget {
                     return GestureDetector(
                       onTap: () {
                         BlocProvider.of<ThemeBloc>(context).add(
-                            ThemeChangeEvent(
-                                appTheme.currentThemeMode,
-                                AppThemeColorMode.values[index],
-                                appTheme.currentFontMode));
+                            ThemeChangeEvent(appThemeMode,
+                                AppThemeColorMode.values[index], appFontMode));
                       },
                       child: Container(
                         margin: EdgeInsets.only(left: 32),
@@ -61,10 +58,10 @@ class ChangeThemePage extends StatelessWidget {
                         width: 100,
                         color: AppTheme.themeMainColor(
                             AppThemeColorMode.values[index]),
-                        child: AppThemeColorMode.values[index] ==
-                                appTheme.currentColorMode
-                            ? Icon(Icons.check)
-                            : SizedBox(),
+                        child:
+                            AppThemeColorMode.values[index] == appThemeColorMode
+                                ? Icon(Icons.check)
+                                : SizedBox(),
                       ),
                     );
                   },

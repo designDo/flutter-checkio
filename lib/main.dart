@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:timefly/app_theme.dart';
 import 'package:timefly/blocs/habit/habit_bloc.dart';
 import 'package:timefly/blocs/habit/habit_event.dart';
 import 'package:timefly/blocs/theme/theme_bloc.dart';
@@ -40,8 +41,9 @@ class MyApp extends StatelessWidget {
             return MaterialApp(
               title: 'Time Fly',
               debugShowCheckedModeBanner: false,
-              theme:
-                  themeState.appTheme.themeData().copyWith(platform: TargetPlatform.iOS),
+              theme: AppTheme.appTheme
+                  .themeData()
+                  .copyWith(platform: TargetPlatform.iOS),
               home: HomeScreen(),
             );
           },

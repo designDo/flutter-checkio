@@ -72,14 +72,13 @@ class AppTheme {
 
   GradientColor gradientColor;
 
-  AppTheme createTheme(AppThemeMode themeMode, AppThemeColorMode themeColorMode,
+  void setThemeState(AppThemeMode themeMode, AppThemeColorMode themeColorMode,
       AppFontMode fontMode) {
     currentThemeMode = themeMode;
     currentColorMode = themeColorMode;
     currentFontMode = fontMode;
     fontFamliy = fontFamily(currentFontMode);
     gradientColor = getGradientColor(currentColorMode);
-    return this;
   }
 
   ThemeData themeData() {
@@ -98,14 +97,14 @@ class AppTheme {
     return ThemeData.light().copyWith(
         primaryColor: Color(0xFFF2F7FB),
         primaryColorDark: Color(0xFF6B6B6B),
-        primaryColorLight: Colors.blueAccent);
+        accentColor: grandientColorEnd());
   }
 
   ThemeData darkTheme() {
     return ThemeData.dark().copyWith(
-      primaryColor: Color(0xFF17262A),
-      primaryColorDark: Color(0xFF6B6B6B),
-    );
+        primaryColor: Color(0xFF17262A),
+        primaryColorDark: Color(0xFF6B6B6B),
+        accentColor: grandientColorEnd());
   }
 
   String fontFamily(AppFontMode fontMode) {
