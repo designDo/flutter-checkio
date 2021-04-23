@@ -15,9 +15,10 @@ class MineScreen extends StatefulWidget {
 class _MineScreenState extends State<MineScreen> {
   @override
   Widget build(BuildContext context) {
-    SystemUtil.changeStateBarMode(Brightness.dark);
     return BlocBuilder<ThemeBloc, ThemeState>(
       builder: (context, state) {
+        SystemUtil.changeStateBarMode(
+            AppTheme.appTheme.isDark() ? Brightness.light : Brightness.dark);
         return Stack(
           children: [
             ListView(physics: ClampingScrollPhysics(), children: [

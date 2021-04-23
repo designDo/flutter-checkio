@@ -48,7 +48,8 @@ class _HabitDetailPageState extends State<HabitDetailPage>
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUtil.getSystemUiOverlayStyle(Brightness.dark),
+      value: SystemUtil.getSystemUiOverlayStyle(
+          AppTheme.appTheme.isDark() ? Brightness.light : Brightness.dark),
       child: BlocBuilder<HabitsBloc, HabitsState>(
         builder: (context, state) {
           if (state is HabitsLoadInProgress) {

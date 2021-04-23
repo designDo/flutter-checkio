@@ -34,27 +34,18 @@ class TimeAndWordView extends StatelessWidget {
                   child: Text(
                     '${DateUtil.getNowTimeString()}好，',
                     style: AppTheme.appTheme
-                        .textStyle(
-                            textColor: Colors.grey,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 23)
-                        .copyWith(fontFamily: 'Montserrat'),
+                        .headline1(fontWeight: FontWeight.bold, fontSize: 23),
                   ),
                 ),
                 Text(
                   '且随疾风前行，身后亦须留心。',
-                  style: AppTheme.appTheme.textStyle(
-                      textColor: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.normal),
+                  style: AppTheme.appTheme
+                      .headline1(fontSize: 16, fontWeight: FontWeight.normal),
                 ),
                 Text(
                   'Follow the wind, but watch your back.',
                   style: AppTheme.appTheme
-                      .textStyle(
-                          textColor: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal)
+                      .numHeadline1(fontSize: 16, fontWeight: FontWeight.normal)
                       .copyWith(fontFamily: 'Montserrat'),
                 )
               ],

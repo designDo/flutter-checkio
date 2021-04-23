@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:timefly/app_theme.dart';
 
 class SystemUtil {
   static void changeStateBarMode(Brightness brightness) {
@@ -9,10 +10,10 @@ class SystemUtil {
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: brightness,
       statusBarBrightness:
-      Platform.isAndroid ? Brightness.dark : Brightness.light,
-      systemNavigationBarColor: Colors.white,
+          Platform.isAndroid ? Brightness.dark : Brightness.light,
+      systemNavigationBarColor: AppTheme.appTheme.cardBackgroundColor(),
       systemNavigationBarDividerColor: Colors.grey,
-      systemNavigationBarIconBrightness: Brightness.dark,
+      systemNavigationBarIconBrightness: brightness,
     ));
   }
 
@@ -21,11 +22,10 @@ class SystemUtil {
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: brightness,
       statusBarBrightness:
-      Platform.isAndroid ? Brightness.dark : Brightness.light,
-      systemNavigationBarColor: Colors.white,
+          Platform.isAndroid ? Brightness.dark : Brightness.light,
+      systemNavigationBarColor: AppTheme.appTheme.cardBackgroundColor(),
       systemNavigationBarDividerColor: Colors.grey,
-      systemNavigationBarIconBrightness: Brightness.dark,
+      systemNavigationBarIconBrightness: brightness,
     );
-
   }
 }

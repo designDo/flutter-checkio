@@ -22,7 +22,8 @@ class AllHabitScreen extends StatefulWidget {
 class _AllHabitScreenState extends State<AllHabitScreen> {
   @override
   Widget build(BuildContext context) {
-    SystemUtil.changeStateBarMode(Brightness.light);
+    SystemUtil.changeStateBarMode(
+        AppTheme.appTheme.isDark() ? Brightness.light : Brightness.dark);
     return Stack(
       children: [
         ClipPath(

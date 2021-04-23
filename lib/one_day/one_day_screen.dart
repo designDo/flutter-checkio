@@ -42,7 +42,8 @@ class _OneDayScreenState extends State<OneDayScreen>
 
   @override
   Widget build(BuildContext context) {
-    SystemUtil.changeStateBarMode(Brightness.dark);
+    SystemUtil.changeStateBarMode(
+        AppTheme.appTheme.isDark() ? Brightness.light : Brightness.dark);
     return Container(
       child: BlocBuilder<HabitsBloc, HabitsState>(
         builder: (context, state) {

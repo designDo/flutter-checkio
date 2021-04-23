@@ -34,7 +34,8 @@ class _HabitProgressScreenState extends State<HabitProgressScreen>
 
   @override
   Widget build(BuildContext context) {
-    SystemUtil.changeStateBarMode(Brightness.light);
+    SystemUtil.changeStateBarMode(
+        AppTheme.appTheme.isDark() ? Brightness.light : Brightness.dark);
     return Container(
       color: AppTheme.appTheme.containerBackgroundColor(),
       child: BlocBuilder<HabitsBloc, HabitsState>(builder: (context, state) {

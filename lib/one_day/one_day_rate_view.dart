@@ -41,7 +41,7 @@ class OneDayRateView extends StatelessWidget {
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.all(Radius.circular(35)),
                   color: AppTheme.appTheme.cardBackgroundColor(),
-                  boxShadow: AppTheme.appTheme.coloredBoxShadow()),
+                  boxShadow: AppTheme.appTheme.containerBoxShadow()),
               child: _tipView(hasDoNum, needCompleteNnm),
             )),
             SizedBox(
