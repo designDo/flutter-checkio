@@ -1,11 +1,10 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_peroid.dart';
 import 'package:timefly/one_day/habit_check_view.dart';
 import 'package:timefly/utils/date_util.dart';
-import 'package:timefly/utils/habit_util.dart';
+import 'package:timefly/utils/flash_helper.dart';
 import 'package:timefly/utils/pair.dart';
 import 'package:timefly/widget/float_modal.dart';
 
@@ -75,32 +74,20 @@ class _HabitDetailCalendarViewState extends State<HabitDetailCalendarView> {
               return Container();
             }
             return GestureDetector(
-              onTap: () {
+              onTap: () async {
                 if (DateUtil.isFuture(day)) {
-                  Fluttertoast.showToast(
-                      msg: '超出时间范围',
-                      toastLength: Toast.LENGTH_SHORT,
-                      backgroundColor: AppTheme.appTheme.grandientColorEnd(),
-                      gravity: ToastGravity.CENTER);
+                  FlashHelper.toast(context, '超出时间范围');
                   return;
                 }
                 if (DateUtil.isLast(day,
                     DateTime.fromMillisecondsSinceEpoch(widget.createTime))) {
-                  Fluttertoast.showToast(
-                      msg: '超出创建时间',
-                      toastLength: Toast.LENGTH_SHORT,
-                      backgroundColor: AppTheme.appTheme.grandientColorEnd(),
-                      gravity: ToastGravity.CENTER);
+                  FlashHelper.toast(context, '超出创建时间');
                   return;
                 }
                 if (widget.period != HabitPeriod.month &&
                     widget.completeDays.length != 7 &&
                     !widget.completeDays.contains(day.weekday)) {
-                  Fluttertoast.showToast(
-                      msg: '不在记录周期',
-                      toastLength: Toast.LENGTH_SHORT,
-                      backgroundColor: AppTheme.appTheme.grandientColorEnd(),
-                      gravity: ToastGravity.CENTER);
+                  FlashHelper.toast(context, '不在记录周期');
                   return;
                 }
                 showFloatingModalBottomSheet(

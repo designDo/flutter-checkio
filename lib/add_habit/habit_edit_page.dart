@@ -1,10 +1,8 @@
 import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:timefly/add_habit/icon_color.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/blocs/habit/habit_bloc.dart';
@@ -15,6 +13,7 @@ import 'package:timefly/models/habit_color.dart';
 import 'package:timefly/models/habit_icon.dart';
 import 'package:timefly/models/habit_peroid.dart';
 import 'package:timefly/utils/date_util.dart';
+import 'package:timefly/utils/flash_helper.dart';
 import 'package:timefly/utils/uuid.dart';
 import 'package:timefly/widget/custom_edit_field.dart';
 
@@ -340,11 +339,7 @@ class _HabitEditPageState extends State<HabitEditPage>
           GestureDetector(
             onTap: () async {
               if (_name.length == 0) {
-                Fluttertoast.showToast(
-                    msg: '请输入名字',
-                    toastLength: Toast.LENGTH_SHORT,
-                    backgroundColor: AppTheme.appTheme.grandientColorEnd(),
-                    gravity: ToastGravity.CENTER);
+                FlashHelper.toast(context, '请输入名字');
                 return;
               }
               if (widget.isModify) {
