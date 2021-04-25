@@ -264,7 +264,7 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                               color:
                                   widget.habit.completeDays.contains(index + 1)
                                       ? Color(widget.habit.mainColor)
-                                      : Colors.white,
+                                      : AppTheme.appTheme.cardBackgroundColor(),
                               shape: BoxShape.rectangle,
                               border:
                                   widget.habit.completeDays.contains(index + 1)
@@ -287,7 +287,6 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                   height: 6,
                 ),
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text('记录',
                         style: AppTheme.appTheme.headline2(

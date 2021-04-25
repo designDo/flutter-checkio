@@ -38,6 +38,8 @@ class _WeekMonthChartState extends State<WeekMonthChart>
   ///当前Chart类型 0 周 1 月
   int currentChart = 0;
 
+  double darken = 0.15;
+
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
@@ -144,7 +146,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                   height: 6,
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: HexColor.darken(AppTheme.appTheme.grandientColorEnd(),0.05)),
+                      color: HexColor.darken(AppTheme.appTheme.grandientColorEnd(),darken)),
                 ),
                 SizedBox(
                   width: 5,
@@ -152,7 +154,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                 Text(
                   currentChart == 0 ? '上一周' : '上一月',
                   style: AppTheme.appTheme.headline1(
-                    textColor: HexColor.darken(AppTheme.appTheme.grandientColorEnd(),0.05),
+                    textColor: HexColor.darken(AppTheme.appTheme.grandientColorEnd(),darken),
                     fontWeight: FontWeight.bold,
                     fontSize: 12,
                   ),
@@ -398,7 +400,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
               ? (previousY > 0 ? previousY + 1 : 1)
               : (previousY > 0 ? previousY : 1),
           colors: [
-            HexColor.darken(AppTheme.appTheme.grandientColorEnd(), 0.05)
+            HexColor.darken(AppTheme.appTheme.grandientColorEnd(),darken)
           ],
           width: width,
           backDrawRodData: BackgroundBarChartRodData(
@@ -542,7 +544,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
         curveSmoothness: .33,
         isCurved: true,
         colors: [
-          HexColor.darken(AppTheme.appTheme.grandientColorEnd(), 0.05),
+          HexColor.darken(AppTheme.appTheme.grandientColorEnd(), darken),
         ],
         barWidth: 2,
         isStrokeCapRound: true,
