@@ -43,6 +43,7 @@ dependencies:
     git:
       url: https://github.com/designDo/alarm_calendar2.git
       ref: 'master'
+  permission_handler: ^5.1.0+2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
