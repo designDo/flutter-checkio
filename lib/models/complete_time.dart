@@ -88,6 +88,34 @@ class CompleteDay {
     return dayString;
   }
 
+  static String getEnDay(int day) {
+    String dayString = 'MO';
+    switch (day) {
+      case 1:
+        dayString = 'MO';
+        break;
+      case 2:
+        dayString = 'TU';
+        break;
+      case 3:
+        dayString = 'WE';
+        break;
+      case 4:
+        dayString = 'TH';
+        break;
+      case 5:
+        dayString = 'FR';
+        break;
+      case 6:
+        dayString = 'SA';
+        break;
+      case 7:
+        dayString = 'SU';
+        break;
+    }
+    return dayString;
+  }
+
   static String getSimpleDay(int day) {
     String dayString = '';
     switch (day) {
@@ -114,5 +142,20 @@ class CompleteDay {
         break;
     }
     return dayString;
+  }
+
+  static String DEFAULT_RRULE =
+      'FREQ=DAILY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR,SA,SU';
+
+  static String getRRULE(List<int> days) {
+    String pre = 'FREQ=DAILY;INTERVAL=1;BYDAY=';
+
+    for (int i = 0; i < days.length; i++) {
+      pre += getEnDay(days[i]);
+      if (days.length > 1 && i < days.length - 1) {
+        pre += ',';
+      }
+    }
+    return pre;
   }
 }

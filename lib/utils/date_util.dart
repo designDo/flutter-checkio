@@ -317,4 +317,8 @@ class DateUtil {
     }
     return dayNum;
   }
+
+  static DateTime addMin(DateTime time, int min) {
+    return time + min.minutes;
+  }
 }

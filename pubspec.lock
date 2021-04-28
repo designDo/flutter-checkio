@@ -6,10 +6,10 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "3eb36bd4436b9ab485000a091bf358e838d55789"
-      url: "https://github.com/designDo/alarm_calendar.git"
+      resolved-ref: "503eb7160290889fd1f005626b44ff71a1b28de4"
+      url: "https://github.com/designDo/alarm_calendar2.git"
     source: git
-    version: "0.0.3"
+    version: "0.0.1"
   async:
     dependency: transitive
     description:

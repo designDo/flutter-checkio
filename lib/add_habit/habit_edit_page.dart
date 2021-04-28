@@ -1,9 +1,11 @@
 import 'dart:math';
+import 'package:alarm_calendar/calendar_event.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:timefly/add_habit/icon_color.dart';
+import 'package:timefly/add_habit/insert_calendar_dialog.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/blocs/habit/habit_bloc.dart';
 import 'package:timefly/blocs/habit/habit_event.dart';
@@ -363,8 +365,20 @@ class _HabitEditPageState extends State<HabitEditPage>
                   modifyTime: DateTime.now().millisecondsSinceEpoch,
                   completed: false,
                 );
-                BlocProvider.of<HabitsBloc>(context).add(HabitUpdate(newHabit));
-                Navigator.of(context).pop();
+                await showDialog(
+                    context: context,
+                    barrierColor:
+                        AppTheme.appTheme.grandientColorEnd().withOpacity(0.1),
+                    barrierDismissible: true,
+                    useRootNavigator: false,
+                    builder: (context) {
+                      return AddHabitLoadingDialog(
+                        habit: newHabit,
+                        calendarEvent: cerateCalendarEvent(newHabit.id),
+                      );
+                    });
+                Future.delayed(Duration(milliseconds: 500),
+                    () => Navigator.of(context).pop());
                 return;
               }
 
@@ -389,8 +403,20 @@ class _HabitEditPageState extends State<HabitEditPage>
                   createTime: DateTime.now().millisecondsSinceEpoch,
                   completed: false,
                   records: []);
-              BlocProvider.of<HabitsBloc>(context).add(HabitsAdd(habit));
-              Navigator.of(context).pop();
+              await showDialog(
+                  context: context,
+                  barrierColor:
+                      AppTheme.appTheme.grandientColorEnd().withOpacity(0.1),
+                  barrierDismissible: true,
+                  useRootNavigator: false,
+                  builder: (context) {
+                    return AddHabitLoadingDialog(
+                      habit: habit,
+                      calendarEvent: cerateCalendarEvent(habit.id),
+                    );
+                  });
+              Future.delayed(Duration(milliseconds: 500),
+                  () => Navigator.of(context).pop());
             },
             child: ScaleTransition(
               scale: CurvedAnimation(
@@ -418,6 +444,22 @@ class _HabitEditPageState extends State<HabitEditPage>
         ],
       ),
     );
+  }
+
+  CalendarEvent cerateCalendarEvent(String habitId) {
+    if (remindTime == null) {
+      return null;
+    }
+    if (currentPeriod == HabitPeriod.month) {
+      return CalendarEvent(habitId, _name, habitId, remindTime,
+          DateUtil.addMin(remindTime, 1), CompleteDay.DEFAULT_RRULE);
+    }
+    List<int> completeDays = _completeDays();
+    if (completeDays.length > 0) {
+      return CalendarEvent(habitId, _name, habitId, remindTime,
+          DateUtil.addMin(remindTime, 1), CompleteDay.getRRULE(completeDays));
+    }
+    return null;
   }
 
   List<int> _completeDays() {
