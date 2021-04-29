@@ -3,6 +3,7 @@ import 'package:alarm_calendar/calendar_event.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/blocs/habit/habit_bloc.dart';
 import 'package:timefly/blocs/habit/habit_event.dart';
@@ -50,7 +51,7 @@ class _AddHabitLoadingDialogState extends State<AddHabitLoadingDialog>
     int end = DateTime.now().millisecondsSinceEpoch;
 
     if (end - satrt < 500) {
-      Future.delayed(Duration(milliseconds: 500), () => insertCalendar());
+      Future.delayed(Duration(milliseconds: 1000), () => insertCalendar());
     }
   }
 
@@ -59,20 +60,26 @@ class _AddHabitLoadingDialogState extends State<AddHabitLoadingDialog>
       Navigator.of(context).pop();
       return;
     }
-    //TODO check permission
     setState(() {
       message = '正在设置日历提醒事件';
     });
-    int satrt = DateTime.now().millisecondsSinceEpoch;
-    CalendarInsertResult result =
-        await AlarmCalendar.insertEvent(widget.calendarEvent);
-    FlashHelper.toast(context, result.message);
-    int end = DateTime.now().millisecondsSinceEpoch;
-    if (end - satrt < 500) {
-      Future.delayed(
-          Duration(milliseconds: 500), () => Navigator.of(context).pop());
+    var readCalendarState = await Permission.calendar.request();
+    if (readCalendarState.isGranted) {
+      int satrt = DateTime.now().millisecondsSinceEpoch;
+      CalendarInsertResult result =
+          await AlarmCalendar.insertEvent(widget.calendarEvent);
+      FlashHelper.toast(context, result.message);
+      int end = DateTime.now().millisecondsSinceEpoch;
+      if (end - satrt < 500) {
+        Future.delayed(
+            Duration(milliseconds: 1000), () => Navigator.of(context).pop());
+      } else {
+        Navigator.of(context).pop();
+      }
     } else {
-      Navigator.of(context).pop();
+      FlashHelper.toast(context, '您拒绝了日历权限，无法添加日历事件');
+      Future.delayed(
+          Duration(milliseconds: 1000), () => Navigator.of(context).pop());
     }
   }
 
@@ -85,6 +92,7 @@ class _AddHabitLoadingDialogState extends State<AddHabitLoadingDialog>
               .animate(CurvedAnimation(
                   parent: animationController, curve: Curves.fastOutSlowIn)),
           child: Container(
+            alignment: Alignment.center,
             decoration: BoxDecoration(
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.all(Radius.circular(16)),
@@ -93,7 +101,13 @@ class _AddHabitLoadingDialogState extends State<AddHabitLoadingDialog>
             height: 200,
             margin: EdgeInsets.only(left: 32, right: 32),
             child: Column(
-              children: [Text('$message')],
+              children: [
+                Text(
+                  '$message',
+                  style: AppTheme.appTheme
+                      .headline1(fontWeight: FontWeight.bold, fontSize: 16),
+                )
+              ],
             ),
           ),
         ),

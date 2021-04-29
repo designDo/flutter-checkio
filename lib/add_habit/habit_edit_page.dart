@@ -374,10 +374,12 @@ class _HabitEditPageState extends State<HabitEditPage>
                     builder: (context) {
                       return AddHabitLoadingDialog(
                         habit: newHabit,
+                        isModify: widget.isModify,
                         calendarEvent: cerateCalendarEvent(newHabit.id),
                       );
                     });
-                Future.delayed(Duration(milliseconds: 500),
+                FlashHelper.toast(context, '保存成功');
+                Future.delayed(Duration(milliseconds: 2000),
                     () => Navigator.of(context).pop());
                 return;
               }
@@ -412,10 +414,12 @@ class _HabitEditPageState extends State<HabitEditPage>
                   builder: (context) {
                     return AddHabitLoadingDialog(
                       habit: habit,
+                      isModify: widget.isModify,
                       calendarEvent: cerateCalendarEvent(habit.id),
                     );
                   });
-              Future.delayed(Duration(milliseconds: 500),
+              FlashHelper.toast(context, '保存成功');
+              Future.delayed(Duration(milliseconds: 2000),
                   () => Navigator.of(context).pop());
             },
             child: ScaleTransition(
@@ -455,6 +459,7 @@ class _HabitEditPageState extends State<HabitEditPage>
           DateUtil.addMin(remindTime, 1), CompleteDay.DEFAULT_RRULE);
     }
     List<int> completeDays = _completeDays();
+    print(completeDays);
     if (completeDays.length > 0) {
       return CalendarEvent(habitId, _name, habitId, remindTime,
           DateUtil.addMin(remindTime, 1), CompleteDay.getRRULE(completeDays));

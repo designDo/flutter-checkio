@@ -148,7 +148,7 @@ class CompleteDay {
       'FREQ=DAILY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR,SA,SU';
 
   static String getRRULE(List<int> days) {
-    String pre = 'FREQ=DAILY;INTERVAL=1;BYDAY=';
+    String pre = 'FREQ=WEEKLY;BYDAY=';
 
     for (int i = 0; i < days.length; i++) {
       pre += getEnDay(days[i]);
@@ -156,6 +156,7 @@ class CompleteDay {
         pre += ',';
       }
     }
-    return pre;
+    print(pre);
+    return pre+';UNTIL=20251230T235959Z';
   }
 }
