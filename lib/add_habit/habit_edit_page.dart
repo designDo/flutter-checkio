@@ -1,14 +1,11 @@
 import 'dart:math';
-import 'package:alarm_calendar/calendar_event.dart';
+import 'package:alarm_plugin/alarm_event.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:timefly/add_habit/icon_color.dart';
 import 'package:timefly/add_habit/insert_calendar_dialog.dart';
 import 'package:timefly/app_theme.dart';
-import 'package:timefly/blocs/habit/habit_bloc.dart';
-import 'package:timefly/blocs/habit/habit_event.dart';
 import 'package:timefly/models/complete_time.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_color.dart';
@@ -375,7 +372,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                       return AddHabitLoadingDialog(
                         habit: newHabit,
                         isModify: widget.isModify,
-                        calendarEvent: cerateCalendarEvent(newHabit.id),
+                        alarmEvent: cerateAlarmEvent(newHabit.id),
                       );
                     });
                 FlashHelper.toast(context, '保存成功');
@@ -415,7 +412,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                     return AddHabitLoadingDialog(
                       habit: habit,
                       isModify: widget.isModify,
-                      calendarEvent: cerateCalendarEvent(habit.id),
+                      alarmEvent: cerateAlarmEvent(habit.id),
                     );
                   });
               FlashHelper.toast(context, '保存成功');
@@ -450,19 +447,24 @@ class _HabitEditPageState extends State<HabitEditPage>
     );
   }
 
-  CalendarEvent cerateCalendarEvent(String habitId) {
+  AlarmEvent cerateAlarmEvent(String habitId) {
     if (remindTime == null) {
       return null;
     }
+    AlarmEvent event = AlarmEvent();
+    event.title = _name;
+    event.description = _name;
+    event.hour = remindTime.hour;
+    event.minutes = remindTime.minute;
+
     if (currentPeriod == HabitPeriod.month) {
-      return CalendarEvent(habitId, _name, habitId, remindTime,
-          DateUtil.addMin(remindTime, 1), CompleteDay.DEFAULT_RRULE);
+      event.days = CompleteDay.DEFAULT_DAYS;
+      return event;
     }
     List<int> completeDays = _completeDays();
-    print(completeDays);
     if (completeDays.length > 0) {
-      return CalendarEvent(habitId, _name, habitId, remindTime,
-          DateUtil.addMin(remindTime, 1), CompleteDay.getRRULE(completeDays));
+      event.days = completeDays;
+      return event;
     }
     return null;
   }

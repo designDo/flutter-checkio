@@ -1,9 +1,8 @@
-import 'package:alarm_calendar/alarm_calendar.dart';
-import 'package:alarm_calendar/calendar_event.dart';
+import 'package:alarm_plugin/alarm_event.dart';
+import 'package:alarm_plugin/alarm_plugin.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/blocs/habit/habit_bloc.dart';
 import 'package:timefly/blocs/habit/habit_event.dart';
@@ -12,11 +11,11 @@ import 'package:timefly/utils/flash_helper.dart';
 
 class AddHabitLoadingDialog extends StatefulWidget {
   final Habit habit;
-  final CalendarEvent calendarEvent;
+  final AlarmEvent alarmEvent;
   final bool isModify;
 
   const AddHabitLoadingDialog(
-      {Key key, this.habit, this.calendarEvent, this.isModify})
+      {Key key, this.habit, this.alarmEvent, this.isModify})
       : super(key: key);
 
   @override
@@ -51,35 +50,27 @@ class _AddHabitLoadingDialogState extends State<AddHabitLoadingDialog>
     int end = DateTime.now().millisecondsSinceEpoch;
 
     if (end - satrt < 500) {
-      Future.delayed(Duration(milliseconds: 1000), () => insertCalendar());
+      Future.delayed(Duration(milliseconds: 1000), () => add2Alarm());
     }
   }
 
-  void insertCalendar() async {
-    if (widget.calendarEvent == null) {
+  void add2Alarm() async {
+    if (widget.alarmEvent == null) {
       Navigator.of(context).pop();
       return;
     }
     setState(() {
-      message = '正在设置日历提醒事件';
+      message = '正在设置闹钟提醒';
     });
-    var readCalendarState = await Permission.calendar.request();
-    if (readCalendarState.isGranted) {
-      int satrt = DateTime.now().millisecondsSinceEpoch;
-      CalendarInsertResult result =
-          await AlarmCalendar.insertEvent(widget.calendarEvent);
-      FlashHelper.toast(context, result.message);
-      int end = DateTime.now().millisecondsSinceEpoch;
-      if (end - satrt < 500) {
-        Future.delayed(
-            Duration(milliseconds: 1000), () => Navigator.of(context).pop());
-      } else {
-        Navigator.of(context).pop();
-      }
-    } else {
-      FlashHelper.toast(context, '您拒绝了日历权限，无法添加日历事件');
+    int satrt = DateTime.now().millisecondsSinceEpoch;
+    var result = await AlarmPlugin.add2Alarm(widget.alarmEvent);
+    FlashHelper.toast(context, result);
+    int end = DateTime.now().millisecondsSinceEpoch;
+    if (end - satrt < 500) {
       Future.delayed(
           Duration(milliseconds: 1000), () => Navigator.of(context).pop());
+    } else {
+      Navigator.of(context).pop();
     }
   }
 

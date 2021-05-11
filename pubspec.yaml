@@ -39,9 +39,9 @@ dependencies:
   flutter_slidable: ^0.5.7
   flash: ^1.2.0
   fl_chart: ^0.12.2
-  alarm_calendar:
+  alarm_plugin:
     git:
-      url: https://github.com/designDo/alarm_calendar2.git
+      url: https://github.com/designDo/alarm_plugin.git
       ref: 'master'
   permission_handler: ^5.1.0+2
 
