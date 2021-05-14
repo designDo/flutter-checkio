@@ -39,9 +39,13 @@ class OneDayRateView extends StatelessWidget {
               padding: EdgeInsets.only(left: 16, right: 16, bottom: 8, top: 8),
               decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.all(Radius.circular(35)),
-                  color: AppTheme.appTheme.cardBackgroundColor(),
-                  boxShadow: AppTheme.appTheme.containerBoxShadow()),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(25),
+                      topRight: Radius.circular(35),
+                      bottomRight: Radius.circular(35),
+                      bottomLeft: Radius.circular(15)),
+                  gradient: AppTheme.appTheme.containerGradient(),
+                  boxShadow: AppTheme.appTheme.coloredBoxShadow()),
               child: _tipView(hasDoNum, needCompleteNnm),
             )),
             SizedBox(
@@ -89,8 +93,8 @@ class OneDayRateView extends StatelessWidget {
       children: [
         Text(
           tip,
-          style: AppTheme.appTheme.textStyle(
-            textColor: Colors.grey,
+          style: AppTheme.appTheme.headline1(
+            textColor: Colors.white70,
             fontSize: 15,
           ),
         ),
@@ -100,8 +104,10 @@ class OneDayRateView extends StatelessWidget {
           children: [
             Text(
               '共需完成',
-              style: AppTheme.appTheme
-                  .headline1(fontSize: 14, fontWeight: FontWeight.normal),
+              style: AppTheme.appTheme.headline1(
+                  textColor: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.normal),
             ),
             SizedBox(
               width: 3,
@@ -109,20 +115,24 @@ class OneDayRateView extends StatelessWidget {
             Text('$needCompleteNum',
                 style: AppTheme.appTheme.numHeadline1(
                   fontSize: 22,
+                  textColor: Colors.white,
                   fontWeight: FontWeight.bold,
                 )),
             SizedBox(
               width: 3,
             ),
             Text('已完成',
-                style: AppTheme.appTheme
-                    .headline1(fontSize: 14, fontWeight: FontWeight.normal)),
+                style: AppTheme.appTheme.headline1(
+                    textColor: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal)),
             SizedBox(
               width: 3,
             ),
             Text('$hasDoNum',
                 style: AppTheme.appTheme.numHeadline1(
                   fontSize: 22,
+                  textColor: Colors.white,
                   fontWeight: FontWeight.bold,
                 )),
           ],

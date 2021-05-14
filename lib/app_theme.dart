@@ -247,7 +247,7 @@ class AppTheme {
   List<BoxShadow> coloredBoxShadow() {
     return [
       BoxShadow(
-          color: grandientColorStart().withOpacity(0.1),
+          color: grandientColorStart().withOpacity(0.3),
           offset: Offset(5, 5),
           blurRadius: 16)
     ];
