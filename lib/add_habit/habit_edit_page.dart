@@ -30,6 +30,8 @@ class HabitEditPage extends StatefulWidget {
 
 class _HabitEditPageState extends State<HabitEditPage>
     with TickerProviderStateMixin, WidgetsBindingObserver {
+  ///修改之前的原始数据，在编辑条件下，保存时对比，判断是否需要更新闹钟提醒
+  Habit originHabit;
   String _habitIcon;
   Color _habitColor;
 
@@ -54,6 +56,7 @@ class _HabitEditPageState extends State<HabitEditPage>
   void initState() {
     print(widget.habit);
     if (widget.isModify) {
+      originHabit = widget.habit.copyWith();
       _name = widget.habit.name;
       _mark = widget.habit.mark;
       if (widget.habit.period == HabitPeriod.day) {
