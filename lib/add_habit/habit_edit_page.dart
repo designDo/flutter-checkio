@@ -772,6 +772,7 @@ class _HabitEditPageState extends State<HabitEditPage>
     );
   }
 
+  DateTime originRemindTime;
   DateTime remindTime;
 
   Widget timeReminderView() {
