@@ -1,11 +1,15 @@
 import 'dart:math';
 import 'package:alarm_plugin/alarm_event.dart';
+import 'package:alarm_plugin/alarm_plugin.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:timefly/add_habit/icon_color.dart';
-import 'package:timefly/add_habit/insert_calendar_dialog.dart';
+import 'package:timefly/add_habit/modify_change_dialog.dart';
 import 'package:timefly/app_theme.dart';
+import 'package:timefly/blocs/habit/habit_bloc.dart';
+import 'package:timefly/blocs/habit/habit_event.dart';
 import 'package:timefly/models/complete_time.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_color.dart';
@@ -13,6 +17,8 @@ import 'package:timefly/models/habit_icon.dart';
 import 'package:timefly/models/habit_peroid.dart';
 import 'package:timefly/utils/date_util.dart';
 import 'package:timefly/utils/flash_helper.dart';
+import 'package:timefly/utils/list_utils.dart';
+import 'package:timefly/utils/pair.dart';
 import 'package:timefly/utils/uuid.dart';
 import 'package:timefly/widget/custom_edit_field.dart';
 
@@ -38,12 +44,15 @@ class _HabitEditPageState extends State<HabitEditPage>
   List<CompleteTime> completeTimes = [];
   List<CompleteDay> weekCompleteDays = [];
   List<CompleteDay> dayCompleteDays = [];
-
+  List<CompleteDay> monthCompleteDays = CompleteDay.getCompleteDays();
   List<HabitPeriod> habitPeriods = [];
   int currentPeriod = HabitPeriod.day;
 
   String _name = '';
   String _mark = '';
+
+  List<DateTime> originRemindTimes = [];
+  List<DateTime> remindTimes = [];
 
   int countByDay = 1;
   int countByWeek = 7;
@@ -70,8 +79,12 @@ class _HabitEditPageState extends State<HabitEditPage>
       }
       if (widget.habit.remindTimes != null &&
           widget.habit.remindTimes.length > 0) {
-        remindTime =
-            DateUtil.parseHourAndMinWithString(widget.habit.remindTimes[0]);
+        remindTimes = widget.habit.remindTimes
+            .map((e) => DateUtil.parseHourAndMinWithString(e))
+            .toList();
+        remindTimes.sort(
+            (a, b) => a.millisecondsSinceEpoch - b.millisecondsSinceEpoch);
+        originRemindTimes = List<DateTime>.from(remindTimes).toList();
       }
     }
 
@@ -344,6 +357,10 @@ class _HabitEditPageState extends State<HabitEditPage>
                 FlashHelper.toast(context, '请输入名字');
                 return;
               }
+              if (_completeDays().isEmpty) {
+                FlashHelper.toast(context, '请选择周期');
+                return;
+              }
               if (widget.isModify) {
                 Habit newHabit = widget.habit.copyWith(
                   name: _name,
@@ -357,30 +374,32 @@ class _HabitEditPageState extends State<HabitEditPage>
                       .first
                       .time,
                   completeDays: _completeDays(),
-                  remindTimes: remindTime == null
-                      ? []
-                      : [
-                          '${_twoDigits(remindTime.hour)}:${_twoDigits(remindTime.minute)}'
-                        ],
+                  remindTimes: remindTimes
+                      .map((e) =>
+                          '${_twoDigits(e.hour)}:${_twoDigits(e.minute)}')
+                      .toList(),
                   modifyTime: DateTime.now().millisecondsSinceEpoch,
                   completed: false,
                 );
-                await showDialog(
-                    context: context,
-                    barrierColor:
-                        AppTheme.appTheme.grandientColorEnd().withOpacity(0.1),
-                    barrierDismissible: true,
-                    useRootNavigator: false,
-                    builder: (context) {
-                      return AddHabitLoadingDialog(
-                        habit: newHabit,
-                        isModify: widget.isModify,
-                        alarmEvent: cerateAlarmEvent(newHabit.id),
-                      );
-                    });
-                FlashHelper.toast(context, '保存成功');
-                Future.delayed(Duration(milliseconds: 2000),
-                    () => Navigator.of(context).pop());
+                Pair2<List<String>, List<DateTime>> tipReminders =
+                    _updateHabit(newHabit);
+
+                if (tipReminders != null) {
+                  if (tipReminders.s != null) {
+                    await showDialog(
+                        context: context,
+                        builder: (context) {
+                          return ModifyChangeDialog(
+                            title: tipReminders.s[0],
+                            subTitle: tipReminders.s[1],
+                          );
+                        });
+                  }
+                  await createAlarmEvents(tipReminders.t, newHabit.name);
+                }
+                BlocProvider.of<HabitsBloc>(context).add(HabitUpdate(newHabit));
+                await FlashHelper.toast(context, '保存成功');
+                Navigator.of(context).pop();
                 return;
               }
 
@@ -397,27 +416,15 @@ class _HabitEditPageState extends State<HabitEditPage>
                       .first
                       .time,
                   completeDays: _completeDays(),
-                  remindTimes: remindTime == null
-                      ? []
-                      : [
-                          '${_twoDigits(remindTime.hour)}:${_twoDigits(remindTime.minute)}'
-                        ],
+                  remindTimes: remindTimes
+                      .map((e) =>
+                          '${_twoDigits(e.hour)}:${_twoDigits(e.minute)}')
+                      .toList(),
                   createTime: DateTime.now().millisecondsSinceEpoch,
                   completed: false,
                   records: []);
-              await showDialog(
-                  context: context,
-                  barrierColor:
-                      AppTheme.appTheme.grandientColorEnd().withOpacity(0.1),
-                  barrierDismissible: true,
-                  useRootNavigator: false,
-                  builder: (context) {
-                    return AddHabitLoadingDialog(
-                      habit: habit,
-                      isModify: widget.isModify,
-                      alarmEvent: cerateAlarmEvent(habit.id),
-                    );
-                  });
+              await createAlarmEvents(remindTimes, habit.name);
+              BlocProvider.of<HabitsBloc>(context).add(HabitsAdd(habit));
               FlashHelper.toast(context, '保存成功');
               Future.delayed(Duration(milliseconds: 2000),
                   () => Navigator.of(context).pop());
@@ -450,26 +457,72 @@ class _HabitEditPageState extends State<HabitEditPage>
     );
   }
 
-  AlarmEvent cerateAlarmEvent(String habitId) {
-    if (remindTime == null) {
-      return null;
+  Pair2<List<String>, List<DateTime>> _updateHabit(Habit newHabit) {
+    if (originHabit.name != newHabit.name) {
+      print('名字不同,新建全部提醒');
+      return Pair2(
+          ['您修改了名字', '您可能需要手动删除名字为${originHabit.name}的闹钟'], remindTimes);
     }
-    AlarmEvent event = AlarmEvent();
-    event.title = _name;
-    event.description = _name;
-    event.hour = remindTime.hour;
-    event.minutes = remindTime.minute;
 
-    if (currentPeriod == HabitPeriod.month) {
-      event.days = CompleteDay.DEFAULT_DAYS;
-      return event;
+    ///_completeDays() 和 origin 对比
+    if (!ListUtils.equals(_completeDays(), originHabit.completeDays)) {
+      print('周期不同,新建全部提醒');
+      return Pair2(['您修改了周期', '您可能需要手动删除周期为${originHabit.completeDays}的闹钟'],
+          remindTimes);
     }
-    List<int> completeDays = _completeDays();
-    if (completeDays.length > 0) {
-      event.days = completeDays;
-      return event;
+
+    if (remindTimes.length == 0 && originRemindTimes.length > 0) {
+      return Pair2(
+          ['您删除了提醒时间', '您可能需要手动删除名字为${originHabit.name}的闹钟'], remindTimes);
+    }
+
+    ///只是添加或修改了提醒时间
+    ///对比 originRemindTimes and remindTimes
+    List<DateTime> newRemindTimes = [];
+    for (var remindTime in remindTimes) {
+      if (ListUtils.containsRemindTime(originRemindTimes, remindTime)) {
+        originRemindTimes.removeWhere((element) =>
+            element.hour == remindTime.hour &&
+            element.minute == remindTime.minute);
+      } else {
+        newRemindTimes.add(remindTime);
+      }
+    }
+    if (newRemindTimes.length == 0) {
+      print('没有要添加的提醒');
+      return Pair2(null, remindTimes);
+    }
+    if (newRemindTimes.length > 0) {
+      print('添加新提醒时间');
+      print(newRemindTimes);
+
+      String tips = '新的提醒将会添加到闹钟';
+      if (originRemindTimes.length > 0) {
+        print('提醒将被删除');
+        print(originRemindTimes);
+        tips += '\n您可能需要手动删除时间为${originHabit.remindTimes}的闹钟';
+      }
+      return Pair2(['您更新了提醒时间', tips], remindTimes);
     }
     return null;
+  }
+
+  createAlarmEvents(List<DateTime> remindTimes, String name) async {
+    if (remindTimes == null || remindTimes.length == 0) {
+      return;
+    }
+    List<AlarmEvent> events = remindTimes.map((remindTime) {
+      AlarmEvent event = AlarmEvent();
+      event.title = _name;
+      event.description = _name;
+      event.hour = remindTime.hour;
+      event.minutes = remindTime.minute;
+      event.days = _completeDays();
+      return event;
+    }).toList();
+    for (var value in events) {
+      await AlarmPlugin.add2Alarm(value);
+    }
   }
 
   List<int> _completeDays() {
@@ -484,7 +537,7 @@ class _HabitEditPageState extends State<HabitEditPage>
           .map((e) => e.day)
           .toList();
     }
-    return <int>[];
+    return monthCompleteDays.map((e) => e.day).toList();
   }
 
   Widget barView() {
@@ -775,109 +828,164 @@ class _HabitEditPageState extends State<HabitEditPage>
     );
   }
 
-  DateTime originRemindTime;
-  DateTime remindTime;
-
   Widget timeReminderView() {
     return Container(
-      margin: EdgeInsets.only(left: 16, top: 8),
+      margin: EdgeInsets.only(top: 8),
       height: 40,
-      child: Row(
-        children: [
-          remindTime == null
-              ? SizedBox()
-              : Container(
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.only(left: 16),
-                  width: 68,
-                  height: 40,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.all(Radius.circular(25)),
-                      color: AppTheme.appTheme.grandientColorEnd()),
-                  child: Text(
-                    '${_twoDigits(remindTime.hour)}:${_twoDigits(remindTime.minute)}',
-                    style: AppTheme.appTheme.headline1(
-                        textColor: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15),
-                  ),
-                ),
-          GestureDetector(
-            onTap: () async {
-              DateTime dateTime = await showCupertinoModalPopup(
-                  context: context,
-                  builder: (context) {
-                    DateTime currentTime = DateTime.now();
-                    return Container(
-                        decoration: BoxDecoration(
-                            gradient: AppTheme.appTheme.containerGradient(
-                              begin: Alignment.bottomLeft,
-                              end: Alignment.topRight,
-                            ),
-                            shape: BoxShape.rectangle,
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(20),
-                                topLeft: Radius.circular(20))),
-                        height: 318,
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 230,
-                              child: CupertinoTheme(
-                                data: CupertinoThemeData(
-                                    textTheme: CupertinoTextThemeData(
-                                        dateTimePickerTextStyle:
-                                            AppTheme.appTheme.numHeadline1(
-                                                textColor: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18))),
-                                child: CupertinoDatePicker(
-                                  mode: CupertinoDatePickerMode.time,
-                                  onDateTimeChanged: (time) {
-                                    currentTime = time;
-                                  },
-                                ),
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 16, bottom: 32),
-                              height: 40,
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).pop(currentTime);
-                                },
-                                child: SvgPicture.asset(
-                                  'assets/images/duigou.svg',
-                                  width: 35,
-                                  height: 35,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            )
-                          ],
-                        ));
+      child: ListView.builder(
+        padding: EdgeInsets.only(left: 16),
+        itemBuilder: (context, index) {
+          if (index <= remindTimes.length - 1) {
+            DateTime remindTime = remindTimes[index];
+            return GestureDetector(
+              onTap: () async {
+                DateTime dateTime = await _showDatePicker(context, remindTime);
+                if (dateTime == null) {
+                  ///delete
+                  setState(() {
+                    remindTimes.remove(remindTime);
                   });
-              if (dateTime == null) {
-                return;
-              }
-              setState(() {
-                remindTime = dateTime;
-              });
-            },
-            child: Container(
+                } else {
+                  setState(() {
+                    _updateDateTime(dateTime, index);
+                  });
+                }
+              },
+              child: Container(
                 alignment: Alignment.center,
-                margin: EdgeInsets.only(left: 8),
-                child: SvgPicture.asset(
-                  'assets/images/jia.svg',
-                  color: AppTheme.appTheme.normalColor(),
-                  width: 32,
-                  height: 32,
-                )),
-          )
-        ],
+                margin: EdgeInsets.only(left: 16),
+                width: 68,
+                height: 40,
+                decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.all(Radius.circular(25)),
+                    color: AppTheme.appTheme.grandientColorEnd()),
+                child: Text(
+                  '${_twoDigits(remindTime.hour)}:${_twoDigits(remindTime.minute)}',
+                  style: AppTheme.appTheme.headline1(
+                      textColor: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15),
+                ),
+              ),
+            );
+          } else {
+            return GestureDetector(
+              onTap: () async {
+                DateTime dateTime =
+                    await _showDatePicker(context, DateTime.now());
+                if (dateTime == null) {
+                  return;
+                }
+                setState(() {
+                  _addDateTime(dateTime);
+                });
+              },
+              child: Container(
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.only(left: 8),
+                  child: SvgPicture.asset(
+                    'assets/images/jia.svg',
+                    color: AppTheme.appTheme.normalColor(),
+                    width: 32,
+                    height: 32,
+                  )),
+            );
+          }
+        },
+        scrollDirection: Axis.horizontal,
+        itemCount: remindTimes.length + 1,
       ),
     );
+  }
+
+  void _addDateTime(DateTime dateTime) {
+    bool containsDate = false;
+    for (var value in remindTimes) {
+      if (value.hour == dateTime.hour && value.minute == dateTime.minute) {
+        containsDate = true;
+        break;
+      }
+    }
+    if (!containsDate) {
+      remindTimes.add(dateTime);
+      remindTimes
+          .sort((a, b) => a.millisecondsSinceEpoch - b.millisecondsSinceEpoch);
+    }
+  }
+
+  void _updateDateTime(DateTime dateTime, int index) {
+    bool containsDate = false;
+    for (var value in remindTimes) {
+      if (value.hour == dateTime.hour && value.minute == dateTime.minute) {
+        containsDate = true;
+        break;
+      }
+    }
+    if (containsDate) {
+      return;
+    }
+    remindTimes[index] = dateTime;
+    remindTimes
+        .sort((a, b) => a.millisecondsSinceEpoch - b.millisecondsSinceEpoch);
+  }
+
+  Future<DateTime> _showDatePicker(
+      BuildContext context, DateTime initDateTime) async {
+    return showCupertinoModalPopup(
+        context: context,
+        builder: (context) {
+          DateTime currentTime = DateTime.now();
+          return Container(
+              decoration: BoxDecoration(
+                  gradient: AppTheme.appTheme.containerGradient(
+                    begin: Alignment.bottomLeft,
+                    end: Alignment.topRight,
+                  ),
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(20),
+                      topLeft: Radius.circular(20))),
+              height: 318,
+              child: Column(
+                children: [
+                  Container(
+                    height: 230,
+                    child: CupertinoTheme(
+                      data: CupertinoThemeData(
+                          textTheme: CupertinoTextThemeData(
+                              dateTimePickerTextStyle: AppTheme.appTheme
+                                  .numHeadline1(
+                                      textColor: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18))),
+                      child: CupertinoDatePicker(
+                        initialDateTime: initDateTime,
+                        mode: CupertinoDatePickerMode.time,
+                        onDateTimeChanged: (time) {
+                          currentTime = time;
+                        },
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 16, bottom: 32),
+                    height: 40,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop(currentTime);
+                      },
+                      child: SvgPicture.asset(
+                        'assets/images/duigou.svg',
+                        width: 35,
+                        height: 35,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
+                ],
+              ));
+        });
   }
 
   String _twoDigits(int n) {

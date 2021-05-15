@@ -143,6 +143,4 @@ class CompleteDay {
     }
     return dayString;
   }
-
-  static List<int> DEFAULT_DAYS = [1, 2, 3, 4, 5, 6, 7];
 }
