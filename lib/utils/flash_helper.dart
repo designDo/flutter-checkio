@@ -7,7 +7,7 @@ class FlashHelper {
   static Future<T> toast<T>(BuildContext context, String message) async {
     return showFlash<T>(
         context: context,
-        duration: Duration(milliseconds: 1500),
+        duration: Duration(milliseconds: 2000),
         builder: (context, controller) {
           return Flash.bar(
               style: FlashStyle.floating,
