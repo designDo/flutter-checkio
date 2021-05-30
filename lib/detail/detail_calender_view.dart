@@ -93,7 +93,7 @@ class _HabitDetailCalendarViewState extends State<HabitDetailCalendarView> {
                 showFloatingModalBottomSheet(
                     barrierColor: Colors.black87,
                     context: context,
-                    builder: (context, scroller) {
+                    builder: (context) {
                       return HabitCheckView(
                         habitId: widget.habitId,
                         isFromDetail: true,

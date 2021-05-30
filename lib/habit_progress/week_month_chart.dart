@@ -319,7 +319,6 @@ class _WeekMonthChartState extends State<WeekMonthChart>
             fitInsideHorizontally: true,
             fitInsideVertically: true,
             tooltipRoundedRadius: 16,
-            tooltipBottomMargin: 8,
             tooltipPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             tooltipBgColor: AppTheme.appTheme.cardBackgroundColor(),
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
@@ -332,9 +331,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
             }),
         touchCallback: (barTouchResponse) {
           setState(() {
-            if (barTouchResponse.spot != null &&
-                barTouchResponse.touchInput is! FlPanEnd &&
-                barTouchResponse.touchInput is! FlLongPressEnd) {
+            if (barTouchResponse.spot != null) {
               touchedIndex = barTouchResponse.spot.touchedBarGroupIndex;
             } else {
               touchedIndex = -1;

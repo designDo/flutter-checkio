@@ -23,22 +23,22 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  bloc: ^6.0.2
-  flutter_bloc: ^6.0.1
-  equatable: ^1.2.3
-  rxdart: ^0.24.1
+  bloc: ^7.0.0
+  flutter_bloc: ^7.0.1
+  equatable: ^2.0.2
+  rxdart: ^0.27.0
   sqflite:
   path:
-  modal_bottom_sheet: ^0.2.0+1
-  flutter_svg: ^0.18.1
-  sleek_circular_slider: ^1.1.0
-  flutter_local_notifications: ^2.0.0+1
-  time: "^1.3.0"
-  shared_preferences: ^0.5.12+4
-  timeline_tile: ^1.0.0
-  flutter_slidable: ^0.5.7
-  flash: ^1.2.0
-  fl_chart: ^0.12.2
+  modal_bottom_sheet: ^2.0.0
+  flutter_svg: ^0.22.0
+  sleek_circular_slider: ^2.0.0
+  flutter_local_notifications: ^6.0.0
+  time: ^2.0.0
+  shared_preferences: ^2.0.6
+  timeline_tile: ^2.0.0
+  flutter_slidable: ^0.6.0
+  flash: ^2.0.0
+  fl_chart: ^0.36.1
   alarm_plugin:
     git:
       url: https://github.com/designDo/alarm_plugin.git
@@ -46,7 +46,7 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.3
+  cupertino_icons: ^1.0.3
 
 dev_dependencies:
   flutter_test:

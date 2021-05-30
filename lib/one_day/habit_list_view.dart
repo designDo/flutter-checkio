@@ -161,7 +161,7 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
     await showFloatingModalBottomSheet(
         barrierColor: Colors.black87,
         context: context,
-        builder: (context, scroller) {
+        builder: (context) {
           return HabitCheckView(
             habitId: widget.habit.id,
             isFromDetail: false,

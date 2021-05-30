@@ -10,7 +10,6 @@ class FlashHelper {
         duration: Duration(milliseconds: 2000),
         builder: (context, controller) {
           return Flash.bar(
-              style: FlashStyle.floating,
               margin: EdgeInsets.only(left: 24, right: 24),
               position: FlashPosition.top,
               brightness: AppTheme.appTheme.isDark()
