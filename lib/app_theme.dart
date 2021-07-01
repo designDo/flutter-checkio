@@ -38,6 +38,10 @@ class AppTheme {
     return getGradientColor(mode).end;
   }
 
+  static Color themeSecondColor(AppThemeColorMode mode) {
+    return getGradientColor(mode).start;
+  }
+
   static List<GradientColor> gradientColors = [
     //Colors.indigo
     GradientColor(AppThemeColorMode.Indigo, Color.fromARGB(255, 101, 89, 184),
