@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timefly/blocs/theme/theme_bloc.dart';
 import 'package:timefly/blocs/theme/theme_event.dart';
 import 'package:timefly/blocs/theme/theme_state.dart';
+import 'package:timefly/widget/snap_page_view.dart';
 
 import '../app_theme.dart';
 
@@ -18,6 +19,10 @@ class ChangeThemePage extends StatelessWidget {
           AppFontMode appFontMode = state.fontMode;
           return ListView(
             children: [
+              SizedBox(
+                height: 30,
+              ),
+              ItCrowdPage(),
               Row(
                 children: AppThemeMode.values
                     .map((mode) => GestureDetector(
