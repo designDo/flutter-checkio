@@ -35,6 +35,12 @@ class HabitsBloc extends Bloc<HabitsEvent, HabitsState> {
         ..add(habitsAdd.habit);
       yield HabitLoadSuccess(habits);
       DatabaseProvider.db.insert(habitsAdd.habit);
+      Habit_ _habit = Habit_(habitsAdd.habit);
+      _habit.save().then((saved) {
+        print(saved.objectId);
+      }).catchError((e) {
+        print(e);
+      });
     }
   }
 

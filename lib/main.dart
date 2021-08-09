@@ -1,3 +1,4 @@
+import 'package:data_plugin/bmob/bmob.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,6 +18,8 @@ void main() async {
   Bloc.observer = SimpleBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
   NotificationPlugin.ensureInitialized();
+  Bmob.init("https://api2.bmob.cn", '28009b3f686439f09b5f81da404177fb',
+      'e9f5e4b15c5b57631d280d0bcd49330d');
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown

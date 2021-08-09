@@ -34,7 +34,7 @@ dependencies:
   sleek_circular_slider: ^2.0.0
   flutter_local_notifications: ^6.0.0
   time: ^2.0.0
-  shared_preferences: ^2.0.6
+  shared_preferences: any
   timeline_tile: ^2.0.0
   flutter_slidable: ^0.6.0
   flash: ^2.0.0
@@ -43,10 +43,11 @@ dependencies:
     git:
       url: https://github.com/designDo/alarm_plugin.git
       ref: 'master'
+  data_plugin: ^0.0.18
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.3
+  cupertino_icons: any
 
 dev_dependencies:
   flutter_test:
