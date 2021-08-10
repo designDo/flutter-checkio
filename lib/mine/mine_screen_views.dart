@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/blocs/habit/habit_bloc.dart';
 import 'package:timefly/blocs/habit/habit_state.dart';
+import 'package:timefly/login/login_page.dart';
 import 'package:timefly/mine/change_theme_screen.dart';
 import 'package:timefly/models/habit.dart';
 
@@ -131,25 +132,32 @@ class HabitsTotalView extends StatelessWidget {
 class UserProView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: 26, right: 26, top: 32),
-      alignment: Alignment.center,
-      height: 90,
-      decoration: BoxDecoration(
-          boxShadow: AppTheme.appTheme.coloredBoxShadow(),
-          gradient: AppTheme.appTheme.containerGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-          ),
-          borderRadius: BorderRadius.all(Radius.circular(12))),
-      child: Text(
-        '解锁专业版\n成为自己的英雄',
-        textAlign: TextAlign.center,
-        style: AppTheme.appTheme.headline1(
-            textColor: Colors.white,
-            fontWeight: FontWeight.normal,
-            fontSize: 16),
+    return GestureDetector(
+      child: Container(
+        margin: EdgeInsets.only(left: 26, right: 26, top: 32),
+        alignment: Alignment.center,
+        height: 90,
+        decoration: BoxDecoration(
+            boxShadow: AppTheme.appTheme.coloredBoxShadow(),
+            gradient: AppTheme.appTheme.containerGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+            ),
+            borderRadius: BorderRadius.all(Radius.circular(12))),
+        child: Text(
+          '解锁专业版\n成为自己的英雄',
+          textAlign: TextAlign.center,
+          style: AppTheme.appTheme.headline1(
+              textColor: Colors.white,
+              fontWeight: FontWeight.normal,
+              fontSize: 16),
+        ),
       ),
+      onTap: () {
+        Navigator.of(context).push(CupertinoPageRoute(builder: (context) {
+          return LoginPage();
+        }));
+      },
     );
   }
 }

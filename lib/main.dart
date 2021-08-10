@@ -13,6 +13,7 @@ import 'package:timefly/notification/notification_plugin.dart';
 import 'package:timefly/utils/date_util.dart';
 
 import 'blocs/bloc_observer.dart';
+import 'models/user.dart';
 
 void main() async {
   Bloc.observer = SimpleBlocObserver();
@@ -20,6 +21,7 @@ void main() async {
   NotificationPlugin.ensureInitialized();
   Bmob.init("https://api2.bmob.cn", '28009b3f686439f09b5f81da404177fb',
       'e9f5e4b15c5b57631d280d0bcd49330d');
+  await SessionUtils.init();
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown

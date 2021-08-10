@@ -1,6 +1,7 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:timefly/models/habit.dart';
+import 'package:timefly/models/user.dart';
 
 class DatabaseProvider {
   DatabaseProvider._();
@@ -52,8 +53,23 @@ class DatabaseProvider {
             "habitId TEXT,"
             "content TEXT"
             ")");
+
+        await database.execute("CREATE TABLE user ("
+            "username TEXT,"
+            "phone TEXT,"
+            "id TEXT"
+            ")");
       },
     );
+  }
+
+  Future<User> getCurrentUser() async {
+    final db = await database;
+    var users = await db.query("user");
+    if (users.isEmpty) {
+      return null;
+    }
+    return User.fromJson(users[0]);
   }
 
   Future<List<Habit>> getAllHabits() async {
