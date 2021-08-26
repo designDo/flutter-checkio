@@ -1,70 +1,266 @@
+import 'dart:async';
+
 import 'package:data_plugin/bmob/bmob_sms.dart';
+import 'package:data_plugin/bmob/response/bmob_error.dart';
 import 'package:data_plugin/bmob/response/bmob_sent.dart';
 import 'package:data_plugin/bmob/table/bmob_user.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:timefly/db/database_provider.dart';
+import 'package:timefly/utils/flash_helper.dart';
+import 'package:timefly/utils/system_util.dart';
+import 'package:timefly/widget/custom_edit_field.dart';
+
+import '../app_theme.dart';
 
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  String name;
-  String phone;
-  String code;
+class _LoginPageState extends State<LoginPage>
+    with SingleTickerProviderStateMixin {
+  AnimationController _animationController;
+
+  String phone = '';
+  String code = '';
+  String sendText = 'Send';
+
+  Timer timer;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+        duration: Duration(milliseconds: 1500), vsync: this);
+    _animationController.forward();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    if (timer != null) {
+      timer.cancel();
+    }
+    super.dispose();
+  }
+
+  void countDown() {
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      int count = 10 - timer.tick;
+      if (count > 0) {
+        setState(() {
+          sendText = '$count';
+        });
+      } else {
+        timer.cancel();
+        setState(() {
+          sendText = 'Send';
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        child: Column(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUtil.getSystemUiOverlayStyle(
+          AppTheme.appTheme.isDark() ? Brightness.light : Brightness.dark),
+      child: Scaffold(
+        backgroundColor: AppTheme.appTheme.cardBackgroundColor(),
+        body: Column(
           children: [
-            TextField(
-              onChanged: (value) {
-                name = value;
-              },
+            SizedBox(
+              height: 64,
             ),
-            TextField(
-              onChanged: (value) {
-                phone = value;
-              },
+            Text(
+              'Time Fly',
+              style: AppTheme.appTheme
+                  .headline1(fontWeight: FontWeight.bold, fontSize: 20),
             ),
-            TextField(
-              onChanged: (value) {
-                code = value;
-              },
+            SizedBox(
+              height: 48,
             ),
-            TextButton(
-                onPressed: () {
-                  BmobSms bmobSms = BmobSms();
-                  bmobSms.template = "";
-                  bmobSms.mobilePhoneNumber = phone;
-                  bmobSms.sendSms().then((BmobSent bmobSent) {
-                    print("发送成功:" + bmobSent.smsId.toString());
-                  }).catchError((e) {
-                    print(e);
+            ScaleTransition(
+              scale: Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+                parent: _animationController,
+                curve: Interval(0, 0.3, curve: Curves.fastOutSlowIn),
+              )),
+              child: CustomEditField(
+                maxLength: 11,
+                autoFucus: false,
+                inputType: TextInputType.phone,
+                initValue: '',
+                hintText: '手机号',
+                hintTextStyle: AppTheme.appTheme
+                    .hint(fontWeight: FontWeight.normal, fontSize: 16),
+                textStyle: AppTheme.appTheme
+                    .headline1(fontWeight: FontWeight.normal, fontSize: 16),
+                containerDecoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    color: AppTheme.appTheme.containerBackgroundColor()),
+                numDecoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    color: AppTheme.appTheme.cardBackgroundColor(),
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    boxShadow: AppTheme.appTheme.containerBoxShadow()),
+                numTextStyle: AppTheme.appTheme
+                    .themeText(fontWeight: FontWeight.bold, fontSize: 15),
+                onValueChanged: (value) {
+                  setState(() {
+                    phone = value;
                   });
                 },
-                child: Text('sendCode')),
-            TextButton(
-                onPressed: () {
+              ),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                ScaleTransition(
+                  scale:
+                      Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+                    parent: _animationController,
+                    curve: Interval(0.3, 0.6, curve: Curves.fastOutSlowIn),
+                  )),
+                  child: Container(
+                    width: 250,
+                    child: CustomEditField(
+                      maxLength: 6,
+                      autoFucus: false,
+                      inputType: TextInputType.phone,
+                      initValue: '',
+                      hintText: '验证码',
+                      hintTextStyle: AppTheme.appTheme
+                          .hint(fontWeight: FontWeight.normal, fontSize: 16),
+                      textStyle: AppTheme.appTheme.headline1(
+                          fontWeight: FontWeight.normal, fontSize: 16),
+                      containerDecoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          color: AppTheme.appTheme.containerBackgroundColor()),
+                      numDecoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          color: AppTheme.appTheme.cardBackgroundColor(),
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          boxShadow: AppTheme.appTheme.containerBoxShadow()),
+                      numTextStyle: AppTheme.appTheme
+                          .themeText(fontWeight: FontWeight.bold, fontSize: 15),
+                      onValueChanged: (value) {
+                        setState(() {
+                          code = value;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                SlideTransition(
+                  position: Tween<Offset>(begin: Offset(2, 0), end: Offset.zero)
+                      .animate(CurvedAnimation(
+                          parent: _animationController,
+                          curve:
+                              Interval(0.6, 0.8, curve: Curves.fastOutSlowIn))),
+                  child: GestureDetector(
+                    onTap: () {
+                      if (!hasPhone()) {
+                        return;
+                      }
+                      if (timer != null && timer.isActive) {
+                        return;
+                      }
+                      BmobSms bmobSms = BmobSms();
+                      bmobSms.template = '';
+                      bmobSms.mobilePhoneNumber = phone;
+                      bmobSms.sendSms().then((BmobSent bmobSent) {
+                        FlashHelper.toast(context, '发送成功');
+                        countDown();
+                      }).catchError((e) {
+                        FlashHelper.toast(context, BmobError.convert(e).error);
+                      });
+                    },
+                    onDoubleTap: () {},
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 50,
+                      width: 70,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                          color: hasPhone()
+                              ? AppTheme.appTheme.grandientColorEnd()
+                              : AppTheme.appTheme
+                                  .grandientColorEnd()
+                                  .withOpacity(0.5)),
+                      child: Text(
+                        sendText,
+                        style: AppTheme.appTheme.headline1(
+                            fontSize: 16,
+                            fontWeight: FontWeight.normal,
+                            textColor: Colors.white),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            SizedBox(
+              height: 32,
+            ),
+            ScaleTransition(
+              scale: Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+                parent: _animationController,
+                curve: Interval(0.8, 1, curve: Curves.fastOutSlowIn),
+              )),
+              child: GestureDetector(
+                onTap: () {
                   BmobUser bmobUserRegister = BmobUser();
-                  bmobUserRegister.username = name;
                   bmobUserRegister.mobilePhoneNumber = phone;
                   bmobUserRegister.loginBySms(code).then((BmobUser bmobUser) {
-                    print("登录注册成功：" +
-                        bmobUser.getObjectId() +
-                        "\n" +
-                        bmobUser.username);
+                    FlashHelper.toast(context, '登录成功');
+
+                    Navigator.of(context).pop();
                   }).catchError((e) {
-                    print(e);
-                    print('error');
+                    FlashHelper.toast(context, BmobError.convert(e).error);
                   });
                 },
-                child: Text('login'))
+                onDoubleTap: () {},
+                child: Container(
+                  alignment: Alignment.center,
+                  height: 55,
+                  width: 220,
+                  decoration: BoxDecoration(
+                      boxShadow: AppTheme.appTheme.coloredBoxShadow(),
+                      gradient: hasPhoneAndCode()
+                          ? AppTheme.appTheme.containerGradient()
+                          : AppTheme.appTheme
+                              .containerGradientWithOpacity(opacity: 0.5),
+                      borderRadius: BorderRadius.all(Radius.circular(35))),
+                  child: Text(
+                    'Login',
+                    style: AppTheme.appTheme.headline1(
+                        textColor: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  bool hasPhone() {
+    return phone.length == 11;
+  }
+
+  bool hasPhoneAndCode() {
+    return hasPhone() && code.length == 6;
   }
 }

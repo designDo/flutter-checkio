@@ -237,6 +237,15 @@ class AppTheme {
         end: end ?? Alignment.topRight);
   }
 
+  ///背景统一渐变色
+  LinearGradient containerGradientWithOpacity(
+      {Alignment begin, Alignment end, double opacity}) {
+    return LinearGradient(colors: [
+      grandientColorStart().withOpacity(opacity ?? 1),
+      grandientColorEnd().withOpacity(opacity ?? 1)
+    ], begin: begin ?? Alignment.bottomLeft, end: end ?? Alignment.topRight);
+  }
+
   ///通一阴影
   List<BoxShadow> containerBoxShadow() {
     return [

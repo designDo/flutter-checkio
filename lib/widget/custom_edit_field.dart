@@ -15,6 +15,7 @@ class CustomEditField extends StatefulWidget {
   final TextStyle textStyle;
   final TextStyle numTextStyle;
   final bool autoFucus;
+  final TextInputType inputType;
 
   final String initValue;
   final ValueChanged<String> onValueChanged;
@@ -32,7 +33,8 @@ class CustomEditField extends StatefulWidget {
       this.numDecoration,
       this.numTextStyle,
       this.minHeight,
-      this.autoFucus})
+      this.autoFucus,
+      this.inputType})
       : super(key: key);
 
   @override
@@ -97,9 +99,11 @@ class _CustomEditFieldState extends State<CustomEditField>
               maxLines: (widget.maxLines == null || widget.maxLines == 1)
                   ? null
                   : widget.maxLines,
-              keyboardType: (widget.maxLines == null || widget.maxLines == 1)
-                  ? TextInputType.name
-                  : TextInputType.multiline,
+              keyboardType: widget.inputType == null
+                  ? (widget.maxLines == null || widget.maxLines == 1)
+                      ? TextInputType.name
+                      : TextInputType.multiline
+                  : widget.inputType,
               cursorColor: AppTheme.appTheme.grandientColorStart(),
               onChanged: (value) async {
                 setState(() {
