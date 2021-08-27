@@ -28,6 +28,14 @@ class SessionUtils {
     currentUser = await DatabaseProvider.db.getCurrentUser();
   }
 
+  static void login(User user) {
+    currentUser = user;
+  }
+
+  static void logout() {
+    currentUser = null;
+  }
+
   static bool isLogin() {
     return currentUser != null;
   }

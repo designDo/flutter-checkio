@@ -72,6 +72,12 @@ class DatabaseProvider {
     return User.fromJson(users[0]);
   }
 
+  Future<bool> saveUser(User user) async {
+    final db = await database;
+    var index = await db.insert("user", user.toJson());
+    return index > 0;
+  }
+
   Future<List<Habit>> getAllHabits() async {
     final db = await database;
     var habits = await db.query('habits');
