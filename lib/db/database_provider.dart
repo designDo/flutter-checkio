@@ -74,7 +74,15 @@ class DatabaseProvider {
 
   Future<bool> saveUser(User user) async {
     final db = await database;
-    var index = await db.insert("user", user.toJson());
+    var index = await db.insert('user', user.toJson());
+    return index > 0;
+  }
+
+  Future<bool> deleteUser() async {
+    final db = await database;
+    var index = await db.delete(
+      'user',
+    );
     return index > 0;
   }
 

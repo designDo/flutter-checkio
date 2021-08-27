@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:data_plugin/bmob/bmob.dart';
 import 'package:data_plugin/bmob/table/bmob_object.dart';
 import 'package:equatable/equatable.dart';
 
@@ -52,6 +51,7 @@ class Habit extends Equatable {
   final String iconPath;
   final int mainColor;
   final String mark;
+  final String userId;
 
   ///提醒时间 每天 10: 20，eg
   ///转化为 json String 存储 ["10:20","11:50"]
@@ -85,26 +85,26 @@ class Habit extends Equatable {
 
   final List<HabitRecord> records;
 
-  Habit({
-    this.id,
-    this.name,
-    this.iconPath,
-    this.mainColor,
-    this.mark,
-    this.remindTimes,
-    this.completeDays,
-    this.completeTime,
-    this.period,
-    this.createTime,
-    this.modifyTime,
-    this.completed,
-    this.doNum,
-    this.records,
-  });
+  Habit(
+      {this.id,
+      this.name,
+      this.iconPath,
+      this.mainColor,
+      this.mark,
+      this.remindTimes,
+      this.completeDays,
+      this.completeTime,
+      this.period,
+      this.createTime,
+      this.modifyTime,
+      this.completed,
+      this.doNum,
+      this.records,
+      this.userId});
 
   @override
   String toString() {
-    return 'Habit{id: $id, name: $name, iconPath: $iconPath, mainColor: '
+    return 'Habit{id: $id , userId: $userId, name: $name, iconPath: $iconPath, mainColor: '
         '$mainColor, mark: $mark, remindTimes: $remindTimes, completeTime:'
         ' $completeTime, completeDays: $completeDays, period: $period, '
         'createTime: $createTime, modifyTime: $modifyTime, completed: $completed,'
@@ -142,7 +142,8 @@ class Habit extends Equatable {
         modifyTime: json["modifyTime"]?.toInt(),
         completed: json["completed"]?.toInt() == 1 ? true : false,
         doNum: json["doNum"]?.toInt(),
-        records: records);
+        records: records,
+        userId: json['userId']);
   }
 
   Map<String, dynamic> toJson() {
@@ -176,6 +177,7 @@ class Habit extends Equatable {
     data["modifyTime"] = modifyTime;
     data["completed"] = completed ? 1 : 0;
     data["doNum"] = doNum;
+    data['userId'] = userId;
     return data;
   }
 
@@ -211,6 +213,7 @@ class Habit extends Equatable {
         this.completed,
         this.doNum,
         this.records,
+        this.userId
       ];
 
   Habit copyWith(
@@ -227,23 +230,24 @@ class Habit extends Equatable {
       int modifyTime,
       bool completed,
       int doNum,
-      List<HabitRecord> records}) {
+      List<HabitRecord> records,
+      String userId}) {
     return Habit(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      iconPath: iconPath ?? this.iconPath,
-      mainColor: mainColor ?? this.mainColor,
-      mark: mark ?? this.mark,
-      remindTimes: remindTimes ?? this.remindTimes,
-      completeDays: completeDays ?? this.completeDays,
-      completeTime: completeTime ?? this.completeTime,
-      period: period ?? this.period,
-      createTime: createTime ?? this.createTime,
-      modifyTime: modifyTime ?? this.modifyTime,
-      completed: completed ?? this.completed,
-      doNum: doNum ?? this.doNum,
-      records: records ?? this.records,
-    );
+        id: id ?? this.id,
+        name: name ?? this.name,
+        iconPath: iconPath ?? this.iconPath,
+        mainColor: mainColor ?? this.mainColor,
+        mark: mark ?? this.mark,
+        remindTimes: remindTimes ?? this.remindTimes,
+        completeDays: completeDays ?? this.completeDays,
+        completeTime: completeTime ?? this.completeTime,
+        period: period ?? this.period,
+        createTime: createTime ?? this.createTime,
+        modifyTime: modifyTime ?? this.modifyTime,
+        completed: completed ?? this.completed,
+        doNum: doNum ?? this.doNum,
+        records: records ?? this.records,
+        userId: userId ?? this.userId);
   }
 }
 

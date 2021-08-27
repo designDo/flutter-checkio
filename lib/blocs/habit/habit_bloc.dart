@@ -1,8 +1,10 @@
 import 'package:bloc/bloc.dart';
+import 'package:data_plugin/bmob/bmob_query.dart';
 import 'package:timefly/blocs/habit/habit_event.dart';
 import 'package:timefly/blocs/habit/habit_state.dart';
 import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/models/habit.dart';
+import 'package:timefly/models/user.dart';
 
 class HabitsBloc extends Bloc<HabitsEvent, HabitsState> {
   ///初始化状态为正在加载
@@ -21,10 +23,36 @@ class HabitsBloc extends Bloc<HabitsEvent, HabitsState> {
 
   Stream<HabitsState> _mapHabitsLoadToState() async* {
     try {
-      List<Habit> habits = await DatabaseProvider.db.getAllHabits();
+      if (!SessionUtils.isLogin()) {
+        yield HabitLoadSuccess([]);
+        return;
+      }
+      BmobQuery<Habit_> habitQuery = BmobQuery();
+      habitQuery.addWhereEqualTo('userId', SessionUtils.getUserId());
+
+      var habitsData = await habitQuery.queryObjects();
+
+      BmobQuery<HabitRecord> recordQuery = BmobQuery();
+      recordQuery.addWhereEqualTo('userId', SessionUtils.getUserId());
+
+      var recordsData = await recordQuery.queryObjects();
+
+      List<HabitRecord> records =
+          recordsData.map((data) => HabitRecord.fromJson(data)).toList();
+      //merge
+      List<Habit> habits = habitsData.map((data) {
+        Habit habit = Habit.fromJson(data);
+        List<HabitRecord> recordList = [];
+        for (var value in records) {
+          if (habit.id == value.habitId) {
+            recordList.add(value);
+          }
+        }
+        return habit.copyWith(records: recordList);
+      }).toList();
       print(habits);
       yield HabitLoadSuccess(habits);
-    } catch (_) {
+    } catch (e) {
       yield HabitsLodeFailure();
     }
   }

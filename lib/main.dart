@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
     return BlocProvider<ThemeBloc>(
       create: (context) => ThemeBloc(),
       child: BlocProvider<HabitsBloc>(
-        create: (context) => HabitsBloc()..add(HabitsLoad()),
+        create: (context) => HabitsBloc(),
         child: BlocBuilder<ThemeBloc, ThemeState>(
           builder: (context, themeState) {
             Future.delayed(

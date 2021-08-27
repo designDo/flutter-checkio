@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timefly/app_theme.dart';
 import 'package:timefly/blocs/habit/habit_bloc.dart';
 import 'package:timefly/blocs/habit/habit_state.dart';
+import 'package:timefly/blocs/user_bloc.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_list_model.dart';
 import 'package:timefly/models/habit_peroid.dart';
@@ -45,80 +46,93 @@ class _OneDayScreenState extends State<OneDayScreen>
     SystemUtil.changeStateBarMode(
         AppTheme.appTheme.isDark() ? Brightness.light : Brightness.dark);
     return Container(
-      child: BlocBuilder<HabitsBloc, HabitsState>(
-        builder: (context, state) {
-          if (state is HabitsLoadInProgress) {
-            return Container();
-          }
-          if (state is HabitLoadSuccess) {
-            List<OnDayHabitListData> listData = getHabits(state.habits);
-            final int count = listData.length;
-            return ListView.builder(
-                itemCount: listData.length,
-                itemBuilder: (context, index) {
-                  OnDayHabitListData data = listData[index];
-                  Widget widget;
-                  switch (data.type) {
-                    case OnDayHabitListData.typeHeader:
-                      widget = TimeAndWordView(
-                          animation: Tween<Offset>(
-                                  begin: Offset(0, 0.5), end: Offset.zero)
-                              .animate(CurvedAnimation(
-                                  parent: screenAnimationController,
-                                  curve: Interval((1 / count) * index, 1,
-                                      curve: Curves.fastOutSlowIn))),
-                          animationController: screenAnimationController);
-                      break;
-                    case OnDayHabitListData.typeTip:
-                      widget = OneDayTipsView(
-                          animation: Tween<Offset>(
-                                  begin: Offset(1, 0), end: Offset.zero)
-                              .animate(CurvedAnimation(
-                                  parent: screenAnimationController,
-                                  curve: Interval((1 / count) * index, 1,
-                                      curve: Curves.fastOutSlowIn))),
-                          animationController: screenAnimationController);
-                      break;
-                    case OnDayHabitListData.typeTitle:
-                      widget = getTitleView(
-                          data.value,
-                          Tween<double>(begin: 0, end: 1).animate(
-                              CurvedAnimation(
-                                  parent: screenAnimationController,
-                                  curve: Interval((1 / count) * index, 1,
-                                      curve: Curves.fastOutSlowIn))),
-                          screenAnimationController);
-                      break;
-                    case OnDayHabitListData.typeHabits:
-                      widget = HabitListView(
-                        mainScreenAnimation: Tween<double>(begin: 0, end: 1)
-                            .animate(CurvedAnimation(
-                                parent: screenAnimationController,
-                                curve: Interval((1 / count) * index, 1,
-                                    curve: Curves.fastOutSlowIn))),
-                        mainScreenAnimationController:
-                            screenAnimationController,
-                        habits: data.value,
-                      );
-                      break;
-                    case OnDayHabitListData.typeRate:
-                      widget = OneDayRateView(
-                        period: data.value,
-                        allHabits: state.habits,
-                        animation:
-                            Tween<Offset>(begin: Offset(1, 0), end: Offset.zero)
-                                .animate(CurvedAnimation(
-                                    parent: screenAnimationController,
-                                    curve: Interval((1 / count) * index, 1,
-                                        curve: Curves.fastOutSlowIn))),
-                      );
-                      break;
-                  }
-                  return widget;
-                });
-          }
-          return Container();
-        },
+      child: BlocProvider<UserBloc>(
+        create: (context) => UserBloc(BlocProvider.of<HabitsBloc>(context))
+          ..add(UserLoadEvent()),
+        child: BlocBuilder<UserBloc, UserState>(
+          builder: (context, state) {
+            if ((state as UserLoadSuccess).user == null) {
+              return Text('aaa');
+            }
+            return BlocBuilder<HabitsBloc, HabitsState>(
+              builder: (context, state) {
+                if (state is HabitsLoadInProgress) {
+                  return Container();
+                }
+                if (state is HabitLoadSuccess) {
+                  List<OnDayHabitListData> listData = getHabits(state.habits);
+                  final int count = listData.length;
+                  return ListView.builder(
+                      itemCount: listData.length,
+                      itemBuilder: (context, index) {
+                        OnDayHabitListData data = listData[index];
+                        Widget widget;
+                        switch (data.type) {
+                          case OnDayHabitListData.typeHeader:
+                            widget = TimeAndWordView(
+                                animation: Tween<Offset>(
+                                        begin: Offset(0, 0.5), end: Offset.zero)
+                                    .animate(CurvedAnimation(
+                                        parent: screenAnimationController,
+                                        curve: Interval((1 / count) * index, 1,
+                                            curve: Curves.fastOutSlowIn))),
+                                animationController: screenAnimationController);
+                            break;
+                          case OnDayHabitListData.typeTip:
+                            widget = OneDayTipsView(
+                                animation: Tween<Offset>(
+                                        begin: Offset(1, 0), end: Offset.zero)
+                                    .animate(CurvedAnimation(
+                                        parent: screenAnimationController,
+                                        curve: Interval((1 / count) * index, 1,
+                                            curve: Curves.fastOutSlowIn))),
+                                animationController: screenAnimationController);
+                            break;
+                          case OnDayHabitListData.typeTitle:
+                            widget = getTitleView(
+                                data.value,
+                                Tween<double>(begin: 0, end: 1).animate(
+                                    CurvedAnimation(
+                                        parent: screenAnimationController,
+                                        curve: Interval((1 / count) * index, 1,
+                                            curve: Curves.fastOutSlowIn))),
+                                screenAnimationController);
+                            break;
+                          case OnDayHabitListData.typeHabits:
+                            widget = HabitListView(
+                              mainScreenAnimation:
+                                  Tween<double>(begin: 0, end: 1).animate(
+                                      CurvedAnimation(
+                                          parent: screenAnimationController,
+                                          curve: Interval(
+                                              (1 / count) * index, 1,
+                                              curve: Curves.fastOutSlowIn))),
+                              mainScreenAnimationController:
+                                  screenAnimationController,
+                              habits: data.value,
+                            );
+                            break;
+                          case OnDayHabitListData.typeRate:
+                            widget = OneDayRateView(
+                              period: data.value,
+                              allHabits: state.habits,
+                              animation: Tween<Offset>(
+                                      begin: Offset(1, 0), end: Offset.zero)
+                                  .animate(CurvedAnimation(
+                                      parent: screenAnimationController,
+                                      curve: Interval((1 / count) * index, 1,
+                                          curve: Curves.fastOutSlowIn))),
+                            );
+                            break;
+                        }
+                        return widget;
+                      });
+                }
+                return Container();
+              },
+            );
+          },
+        ),
       ),
     );
   }
