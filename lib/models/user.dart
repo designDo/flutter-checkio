@@ -1,3 +1,5 @@
+import 'package:timefly/blocs/habit/habit_bloc.dart';
+import 'package:timefly/blocs/habit/habit_event.dart';
 import 'package:timefly/db/database_provider.dart';
 
 class User {
@@ -22,25 +24,44 @@ class User {
 }
 
 class SessionUtils {
-  static User currentUser;
+  SessionUtils._();
 
-  static init() async {
+  factory SessionUtils() => sharedInstance();
+
+  static SessionUtils sharedInstance() {
+    return _instance;
+  }
+
+  static SessionUtils _instance = SessionUtils._();
+
+  User currentUser;
+  HabitsBloc habitsBloc;
+
+  init(HabitsBloc habitsBloc) async {
+    this.habitsBloc = habitsBloc;
     currentUser = await DatabaseProvider.db.getCurrentUser();
   }
 
-  static void login(User user) {
+  void login(User user) async {
+    if (currentUser != null) {
+      await DatabaseProvider.db.deleteUser();
+    }
     currentUser = user;
+    await DatabaseProvider.db.saveUser(user);
+    habitsBloc.add(HabitsLoad());
   }
 
-  static void logout() {
+  void logout() async {
     currentUser = null;
+    await DatabaseProvider.db.deleteUser();
+    habitsBloc.add(HabitsLoad());
   }
 
-  static bool isLogin() {
+  bool isLogin() {
     return currentUser != null;
   }
 
-  static String getUserId() {
+  String getUserId() {
     return currentUser?.id;
   }
 }

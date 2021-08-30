@@ -23,17 +23,19 @@ class HabitsBloc extends Bloc<HabitsEvent, HabitsState> {
 
   Stream<HabitsState> _mapHabitsLoadToState() async* {
     try {
-      if (!SessionUtils.isLogin()) {
+      if (!SessionUtils.sharedInstance().isLogin()) {
         yield HabitLoadSuccess([]);
         return;
       }
       BmobQuery<Habit_> habitQuery = BmobQuery();
-      habitQuery.addWhereEqualTo('userId', SessionUtils.getUserId());
+      habitQuery.addWhereEqualTo(
+          'userId', SessionUtils.sharedInstance().getUserId());
 
       var habitsData = await habitQuery.queryObjects();
 
       BmobQuery<HabitRecord> recordQuery = BmobQuery();
-      recordQuery.addWhereEqualTo('userId', SessionUtils.getUserId());
+      recordQuery.addWhereEqualTo(
+          'userId', SessionUtils.sharedInstance().getUserId());
 
       var recordsData = await recordQuery.queryObjects();
 

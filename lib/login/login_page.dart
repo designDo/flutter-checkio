@@ -6,7 +6,6 @@ import 'package:data_plugin/bmob/response/bmob_sent.dart';
 import 'package:data_plugin/bmob/table/bmob_user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/models/user.dart';
 import 'package:timefly/utils/flash_helper.dart';
 import 'package:timefly/utils/system_util.dart';
@@ -223,9 +222,9 @@ class _LoginPageState extends State<LoginPage>
                   bmobUserRegister.mobilePhoneNumber = phone;
                   bmobUserRegister.loginBySms(code).then((BmobUser bmobUser) {
                     FlashHelper.toast(context, '登录成功');
-                    DatabaseProvider.db.saveUser(User(bmobUser.objectId,
-                        bmobUser.username, bmobUser.mobilePhoneNumber));
-                    SessionUtils.init();
+                    User user = User(bmobUser.objectId, bmobUser.username,
+                        bmobUser.mobilePhoneNumber);
+                    SessionUtils.sharedInstance().login(user);
                     Navigator.of(context).pop();
                   }).catchError((e) {
                     FlashHelper.toast(context, BmobError.convert(e).error);

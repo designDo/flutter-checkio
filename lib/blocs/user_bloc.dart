@@ -61,21 +61,21 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   Stream<UserState> _mapUserLoginToState(UserLoginEvent event) async* {
     await DatabaseProvider.db.saveUser(event.user);
-    SessionUtils.login(event.user);
+    // SessionUtils.login(event.user);
     yield UserLoadSuccess(event.user);
     habitsBloc.add(HabitsLoad());
   }
 
   Stream<UserState> _mapUserLogoutToState(UserLogoutEvent event) async* {
     await DatabaseProvider.db.deleteUser();
-    SessionUtils.logout();
+    // SessionUtils.logout();
     yield UserLoadSuccess(null);
     habitsBloc.add(HabitsLoad());
   }
 
   Stream<UserState> _mapUserLoadState(UserLoadEvent event) async* {
     User user = await DatabaseProvider.db.getCurrentUser();
-    SessionUtils.login(user);
+    // SessionUtils.login(user);
     yield UserLoadSuccess(user);
     habitsBloc.add(HabitsLoad());
   }

@@ -21,7 +21,6 @@ void main() async {
   NotificationPlugin.ensureInitialized();
   Bmob.init("https://api2.bmob.cn", '28009b3f686439f09b5f81da404177fb',
       'e9f5e4b15c5b57631d280d0bcd49330d');
-  await SessionUtils.init();
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
@@ -43,6 +42,8 @@ class MyApp extends StatelessWidget {
                 () {
               BlocProvider.of<HabitsBloc>(context).add(HabitsLoad());
             });
+            SessionUtils.sharedInstance()
+                .init(BlocProvider.of<HabitsBloc>(context));
             return MaterialApp(
               title: 'Time Fly',
               debugShowCheckedModeBanner: false,
