@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:timefly/add_habit/habit_edit_page.dart';
+import 'package:timefly/login/login_page.dart';
+import 'package:timefly/models/user.dart';
 import 'package:timefly/utils/date_util.dart';
 
 import '../app_theme.dart';
@@ -73,6 +75,13 @@ class OneDayTipsView extends StatelessWidget {
           position: animation,
           child: GestureDetector(
             onTap: () async {
+              if (!SessionUtils.sharedInstance().isLogin()) {
+                Navigator.of(context)
+                    .push(CupertinoPageRoute(builder: (context) {
+                  return LoginPage();
+                }));
+                return;
+              }
               await Navigator.of(context)
                   .push(CupertinoPageRoute(builder: (context) {
                 return HabitEditPage(

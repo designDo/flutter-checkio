@@ -37,9 +37,13 @@ class SessionUtils {
   User currentUser;
   HabitsBloc habitsBloc;
 
-  init(HabitsBloc habitsBloc) async {
-    this.habitsBloc = habitsBloc;
+  init() async {
     currentUser = await DatabaseProvider.db.getCurrentUser();
+    print('init user -- ${currentUser.toJson()}');
+  }
+
+  void setBloc(HabitsBloc habitsBloc) {
+    this.habitsBloc = habitsBloc;
   }
 
   void login(User user) async {

@@ -33,28 +33,31 @@ class HabitsBloc extends Bloc<HabitsEvent, HabitsState> {
 
       var habitsData = await habitQuery.queryObjects();
 
-      BmobQuery<HabitRecord> recordQuery = BmobQuery();
-      recordQuery.addWhereEqualTo(
-          'userId', SessionUtils.sharedInstance().getUserId());
+      print(habitsData);
 
-      var recordsData = await recordQuery.queryObjects();
+      //  BmobQuery<HabitRecord> recordQuery = BmobQuery();
+      // recordQuery.addWhereEqualTo(
+      //   'userId', SessionUtils.sharedInstance().getUserId());
 
-      List<HabitRecord> records =
-          recordsData.map((data) => HabitRecord.fromJson(data)).toList();
+      //var recordsData = await recordQuery.queryObjects();
+
+      // List<HabitRecord> records =
+      //     recordsData.map((data) => HabitRecord.fromJson(data)).toList();
       //merge
       List<Habit> habits = habitsData.map((data) {
         Habit habit = Habit.fromJson(data);
         List<HabitRecord> recordList = [];
-        for (var value in records) {
-          if (habit.id == value.habitId) {
-            recordList.add(value);
-          }
-        }
+        // for (var value in records) {
+        //    if (habit.id == value.habitId) {
+        //     recordList.add(value);
+        //  }
+        // }
         return habit.copyWith(records: recordList);
       }).toList();
       print(habits);
       yield HabitLoadSuccess(habits);
     } catch (e) {
+      print(e);
       yield HabitsLodeFailure();
     }
   }
