@@ -15,6 +15,7 @@ import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_color.dart';
 import 'package:timefly/models/habit_icon.dart';
 import 'package:timefly/models/habit_peroid.dart';
+import 'package:timefly/models/user.dart';
 import 'package:timefly/utils/date_util.dart';
 import 'package:timefly/utils/flash_helper.dart';
 import 'package:timefly/utils/list_utils.dart';
@@ -422,7 +423,8 @@ class _HabitEditPageState extends State<HabitEditPage>
                       .toList(),
                   createTime: DateTime.now().millisecondsSinceEpoch,
                   completed: false,
-                  records: []);
+                  records: [],
+                  userId: SessionUtils.sharedInstance().getUserId());
               await createAlarmEvents(remindTimes, habit.name);
               BlocProvider.of<HabitsBloc>(context).add(HabitsAdd(habit));
               FlashHelper.toast(context, '保存成功');

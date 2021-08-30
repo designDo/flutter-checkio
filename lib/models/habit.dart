@@ -8,22 +8,24 @@ import 'package:equatable/equatable.dart';
 ///
 // ignore: must_be_immutable
 class HabitRecord extends Equatable {
+  final String userId;
   final String habitId;
   final int time;
   final String content;
 
-  HabitRecord({this.time, this.content, this.habitId});
+  HabitRecord({this.time, this.content, this.habitId, this.userId});
 
   @override
   String toString() {
-    return 'HabitRecord{time: $time, content: $content, habitId: $habitId}';
+    return 'HabitRecord{time: $time, content: $content, habitId: $habitId, userId: $userId}';
   }
 
   static HabitRecord fromJson(Map<String, dynamic> json) {
     return HabitRecord(
         habitId: json['habitId']?.toString(),
         time: json["time"]?.toInt(),
-        content: json["content"]?.toString());
+        content: json["content"]?.toString(),
+        userId: json['userId']?.toString());
   }
 
   Map<String, dynamic> toJson() {
@@ -31,15 +33,32 @@ class HabitRecord extends Equatable {
     data['habitId'] = habitId;
     data["time"] = time;
     data["content"] = content;
+    data['userId'] = userId;
     return data;
   }
 
   @override
-  // TODO: implement props
-  List<Object> get props => [habitId, time, content];
+  List<Object> get props => [habitId, time, content, userId];
 
-  HabitRecord copyWith({String habitId, int time, String content}) {
-    return HabitRecord(habitId: habitId, time: time, content: content);
+  HabitRecord copyWith(
+      {String habitId, int time, String content, String userId}) {
+    return HabitRecord(
+        habitId: habitId ?? this.habitId,
+        time: time ?? this.time,
+        content: content ?? this.content,
+        userId: userId ?? this.userId);
+  }
+}
+
+// ignore: camel_case_types
+class HabitRecord_ extends BmobObject {
+  final HabitRecord habitRecord;
+
+  HabitRecord_(this.habitRecord);
+
+  @override
+  Map getParams() {
+    return habitRecord.toJson();
   }
 }
 

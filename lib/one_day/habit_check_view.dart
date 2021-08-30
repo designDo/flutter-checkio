@@ -7,6 +7,7 @@ import 'package:timefly/app_theme.dart';
 import 'package:timefly/blocs/habit/habit_bloc.dart';
 import 'package:timefly/blocs/record_bloc.dart';
 import 'package:timefly/models/habit.dart';
+import 'package:timefly/models/user.dart';
 import 'package:timefly/utils/date_util.dart';
 import 'package:timefly/utils/habit_util.dart';
 import 'package:timefly/utils/pair.dart';
@@ -108,7 +109,10 @@ class _HabitCheckViewState extends State<HabitCheckView> {
                   }
 
                   HabitRecord record = HabitRecord(
-                      habitId: widget.habitId, time: checkTime, content: '');
+                      habitId: widget.habitId,
+                      time: checkTime,
+                      content: '',
+                      userId: SessionUtils.sharedInstance().getUserId());
 
                   BlocProvider.of<RecordBloc>(context).add(RecordAdd(record));
                   listKey.currentState.insertItem(0,

@@ -107,9 +107,10 @@ class RecordBloc extends Bloc<RecordEvent, RecordState> {
   Stream<RecordState> _mapRecordAddToState(RecordAdd event) async* {
     if (state is RecordLoadSuccess) {
       final List<HabitRecord> records =
-          List.from((state as RecordLoadSuccess).records)..insert(0,event.record);
-      yield RecordLoadSuccess(records);
-      DatabaseProvider.db.insertHabitRecord(event.record);
+          List.from((state as RecordLoadSuccess).records)
+            ..insert(0, event.record);
+      // DatabaseProvider.db.insertHabitRecord(event.record);
+
       if (habitsBloc.state is HabitLoadSuccess) {
         Habit currentHabit = (habitsBloc.state as HabitLoadSuccess)
             .habits
@@ -117,6 +118,13 @@ class RecordBloc extends Bloc<RecordEvent, RecordState> {
         habitsBloc.add(HabitUpdate(currentHabit.copyWith(
             records: List.from(currentHabit.records)..add(event.record))));
       }
+      yield RecordLoadSuccess(records);
+      HabitRecord_ _habitRecord = HabitRecord_(event.record);
+      _habitRecord.save().then((save) {
+        print('save record ${save.objectId}');
+      }, onError: (e) {
+        print('save record error');
+      });
     }
   }
 
@@ -134,14 +142,15 @@ class RecordBloc extends Bloc<RecordEvent, RecordState> {
         Habit currentHabit = (habitsBloc.state as HabitLoadSuccess)
             .habits
             .firstWhere((habit) => habit.id == event.record.habitId);
-        List<HabitRecord> currentHabitRecords =   List<HabitRecord>.from(currentHabit.records);
-        for(int i =0; i< currentHabitRecords.length; i ++) {
-          if(currentHabitRecords[i].time == event.record.time) {
+        List<HabitRecord> currentHabitRecords =
+            List<HabitRecord>.from(currentHabit.records);
+        for (int i = 0; i < currentHabitRecords.length; i++) {
+          if (currentHabitRecords[i].time == event.record.time) {
             currentHabitRecords[i] = event.record;
           }
         }
-        habitsBloc.add(HabitUpdate(currentHabit.copyWith(
-            records: currentHabitRecords)));
+        habitsBloc.add(
+            HabitUpdate(currentHabit.copyWith(records: currentHabitRecords)));
       }
     }
   }

@@ -35,23 +35,23 @@ class HabitsBloc extends Bloc<HabitsEvent, HabitsState> {
 
       print(habitsData);
 
-      //  BmobQuery<HabitRecord> recordQuery = BmobQuery();
-      // recordQuery.addWhereEqualTo(
-      //   'userId', SessionUtils.sharedInstance().getUserId());
+      BmobQuery<HabitRecord_> recordQuery = BmobQuery();
+      recordQuery.addWhereEqualTo(
+          'userId', SessionUtils.sharedInstance().getUserId());
 
-      //var recordsData = await recordQuery.queryObjects();
+      var recordsData = await recordQuery.queryObjects();
 
-      // List<HabitRecord> records =
-      //     recordsData.map((data) => HabitRecord.fromJson(data)).toList();
+      List<HabitRecord> records =
+          recordsData.map((data) => HabitRecord.fromJson(data)).toList();
       //merge
       List<Habit> habits = habitsData.map((data) {
         Habit habit = Habit.fromJson(data);
         List<HabitRecord> recordList = [];
-        // for (var value in records) {
-        //    if (habit.id == value.habitId) {
-        //     recordList.add(value);
-        //  }
-        // }
+        for (var value in records) {
+          if (habit.id == value.habitId) {
+            recordList.add(value);
+          }
+        }
         return habit.copyWith(records: recordList);
       }).toList();
       print(habits);
@@ -67,7 +67,6 @@ class HabitsBloc extends Bloc<HabitsEvent, HabitsState> {
       final List<Habit> habits = List.from((state as HabitLoadSuccess).habits)
         ..add(habitsAdd.habit);
       yield HabitLoadSuccess(habits);
-      DatabaseProvider.db.insert(habitsAdd.habit);
       Habit_ _habit = Habit_(habitsAdd.habit);
       _habit.save().then((saved) {
         print(saved.objectId);
@@ -85,7 +84,7 @@ class HabitsBloc extends Bloc<HabitsEvent, HabitsState> {
               habit.id == habitUpdate.habit.id ? habitUpdate.habit : habit)
           .toList();
       yield HabitLoadSuccess(habits);
-      DatabaseProvider.db.update(habitUpdate.habit);
+      // DatabaseProvider.db.update(habitUpdate.habit);
     }
   }
 }
