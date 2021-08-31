@@ -96,8 +96,29 @@ class RecordBloc extends Bloc<RecordEvent, RecordState> {
 
   Stream<RecordState> _mapRecordLoadToState(RecordLoad event) async* {
     try {
-      List<HabitRecord> records = await DatabaseProvider.db
-          .getHabitRecords(event.habitId, start: event.start, end: event.end);
+      List<HabitRecord> records;
+      if (habitsBloc.state is HabitLoadSuccess) {
+        Habit habit = (habitsBloc.state as HabitLoadSuccess)
+            .habits
+            .firstWhere((habit) => habit.id == event.habitId);
+        records = habit.records;
+
+        if (records != null && records.length > 0) {
+          if (event.start != null && event.end != null) {
+            records = records
+                .where((element) =>
+                    element.time > event.start.millisecondsSinceEpoch &&
+                    element.time < event.end.millisecondsSinceEpoch)
+                .toList();
+            records.sort((a, b) => b.time - a.time);
+          } else {
+            records.sort((a, b) => b.time - a.time);
+          }
+        }
+        yield RecordLoadSuccess(records);
+        return;
+      }
+      records = [];
       yield RecordLoadSuccess(records);
     } catch (_) {
       yield RecordLoadFailure();
