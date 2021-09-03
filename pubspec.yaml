@@ -38,7 +38,7 @@ dependencies:
   timeline_tile: ^2.0.0
   flutter_slidable: ^0.6.0
   flash: ^2.0.0
-  fl_chart: ^0.36.1
+  fl_chart: ^0.40.0
   alarm_plugin:
     git:
       url: https://github.com/designDo/alarm_plugin.git

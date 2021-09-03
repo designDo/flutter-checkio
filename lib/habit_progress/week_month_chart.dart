@@ -146,7 +146,8 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                   height: 6,
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: HexColor.darken(AppTheme.appTheme.grandientColorEnd(),darken)),
+                      color: HexColor.darken(
+                          AppTheme.appTheme.grandientColorEnd(), darken)),
                 ),
                 SizedBox(
                   width: 5,
@@ -154,7 +155,8 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                 Text(
                   currentChart == 0 ? '上一周' : '上一月',
                   style: AppTheme.appTheme.headline1(
-                    textColor: HexColor.darken(AppTheme.appTheme.grandientColorEnd(),darken),
+                    textColor: HexColor.darken(
+                        AppTheme.appTheme.grandientColorEnd(), darken),
                     fontWeight: FontWeight.bold,
                     fontSize: 12,
                   ),
@@ -329,7 +331,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                     fontWeight: FontWeight.bold,
                   ));
             }),
-        touchCallback: (barTouchResponse) {
+        touchCallback: (event, barTouchResponse) {
           setState(() {
             if (barTouchResponse.spot != null) {
               touchedIndex = barTouchResponse.spot.touchedBarGroupIndex;
@@ -343,7 +345,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
         show: true,
         bottomTitles: SideTitles(
           showTitles: true,
-          getTextStyles: (value) => AppTheme.appTheme.headline1(
+          getTextStyles: (context, value) => AppTheme.appTheme.headline1(
               textColor: Colors.white,
               fontWeight: FontWeight.bold,
               fontSize: 14),
@@ -397,7 +399,7 @@ class _WeekMonthChartState extends State<WeekMonthChart>
               ? (previousY > 0 ? previousY + 1 : 1)
               : (previousY > 0 ? previousY : 1),
           colors: [
-            HexColor.darken(AppTheme.appTheme.grandientColorEnd(),darken)
+            HexColor.darken(AppTheme.appTheme.grandientColorEnd(), darken)
           ],
           width: width,
           backDrawRodData: BackgroundBarChartRodData(
@@ -489,7 +491,8 @@ class _WeekMonthChartState extends State<WeekMonthChart>
             bottomTitles: SideTitles(
                 showTitles: true,
                 reservedSize: 22,
-                getTextStyles: (value) => AppTheme.appTheme.numHeadline1(
+                getTextStyles: (context, value) =>
+                    AppTheme.appTheme.numHeadline1(
                       textColor: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
