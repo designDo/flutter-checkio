@@ -267,7 +267,7 @@ class _HabitCheckViewState extends State<HabitCheckView> {
 
   void removeItem(BuildContext context, HabitRecord record) async {
     BlocProvider.of<RecordBloc>(context)
-        .add(RecordDelete(widget.habitId, record.time));
+        .add(RecordDelete(widget.habitId, record));
 
     int index = habitRecords.indexOf(record);
     listKey.currentState.removeItem(

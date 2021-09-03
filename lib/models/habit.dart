@@ -8,16 +8,18 @@ import 'package:equatable/equatable.dart';
 ///
 // ignore: must_be_immutable
 class HabitRecord extends Equatable {
+  final String objectId;
   final String userId;
   final String habitId;
   final int time;
   final String content;
 
-  HabitRecord({this.time, this.content, this.habitId, this.userId});
+  HabitRecord(
+      {this.time, this.content, this.habitId, this.userId, this.objectId});
 
   @override
   String toString() {
-    return 'HabitRecord{time: $time, content: $content, habitId: $habitId, userId: $userId}';
+    return 'HabitRecord{time: $time, content: $content, habitId: $habitId, userId: $userId, objectId: $objectId}';
   }
 
   static HabitRecord fromJson(Map<String, dynamic> json) {
@@ -25,7 +27,8 @@ class HabitRecord extends Equatable {
         habitId: json['habitId']?.toString(),
         time: json["time"]?.toInt(),
         content: json["content"]?.toString(),
-        userId: json['userId']?.toString());
+        userId: json['userId']?.toString(),
+        objectId: json['objectId']?.toString());
   }
 
   Map<String, dynamic> toJson() {
@@ -34,19 +37,25 @@ class HabitRecord extends Equatable {
     data["time"] = time;
     data["content"] = content;
     data['userId'] = userId;
+    data['objectId'] = objectId;
     return data;
   }
 
   @override
-  List<Object> get props => [habitId, time, content, userId];
+  List<Object> get props => [habitId, time, content, userId, objectId];
 
   HabitRecord copyWith(
-      {String habitId, int time, String content, String userId}) {
+      {String habitId,
+      int time,
+      String content,
+      String userId,
+      String objectId}) {
     return HabitRecord(
         habitId: habitId ?? this.habitId,
         time: time ?? this.time,
         content: content ?? this.content,
-        userId: userId ?? this.userId);
+        userId: userId ?? this.userId,
+        objectId: objectId ?? this.objectId);
   }
 }
 
@@ -65,6 +74,7 @@ class HabitRecord_ extends BmobObject {
 // ignore: must_be_immutable
 class Habit extends Equatable {
   ///唯一id uuid v4
+  final String objectId;
   final String id;
   final String name;
   final String iconPath;
@@ -105,7 +115,8 @@ class Habit extends Equatable {
   final List<HabitRecord> records;
 
   Habit(
-      {this.id,
+      {this.objectId,
+      this.id,
       this.name,
       this.iconPath,
       this.mainColor,
@@ -123,7 +134,7 @@ class Habit extends Equatable {
 
   @override
   String toString() {
-    return 'Habit{id: $id , userId: $userId, name: $name, iconPath: $iconPath, mainColor: '
+    return 'Habit{ objectId: $objectId, id: $id , userId: $userId, name: $name, iconPath: $iconPath, mainColor: '
         '$mainColor, mark: $mark, remindTimes: $remindTimes, completeTime:'
         ' $completeTime, completeDays: $completeDays, period: $period, '
         'createTime: $createTime, modifyTime: $modifyTime, completed: $completed,'
@@ -148,6 +159,7 @@ class Habit extends Equatable {
     }
 
     return Habit(
+        objectId: json['objectId']?.toString(),
         id: json["id"]?.toString(),
         name: json["name"]?.toString(),
         iconPath: json["iconPath"]?.toString(),
@@ -167,6 +179,7 @@ class Habit extends Equatable {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
+    data['objectId'] = objectId;
     data["id"] = id;
     data["name"] = name;
     data["iconPath"] = iconPath;
@@ -218,6 +231,7 @@ class Habit extends Equatable {
 
   @override
   List<Object> get props => [
+        this.objectId,
         this.id,
         this.name,
         this.iconPath,
@@ -236,7 +250,8 @@ class Habit extends Equatable {
       ];
 
   Habit copyWith(
-      {String id,
+      {String objectId,
+      String id,
       String name,
       String iconPath,
       int mainColor,
@@ -252,6 +267,7 @@ class Habit extends Equatable {
       List<HabitRecord> records,
       String userId}) {
     return Habit(
+        objectId: objectId ?? this.objectId,
         id: id ?? this.id,
         name: name ?? this.name,
         iconPath: iconPath ?? this.iconPath,

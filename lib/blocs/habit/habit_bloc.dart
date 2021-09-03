@@ -1,8 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:data_plugin/bmob/bmob_query.dart';
+import 'package:data_plugin/bmob/response/bmob_error.dart';
+import 'package:data_plugin/bmob/response/bmob_saved.dart';
+import 'package:data_plugin/bmob/response/bmob_updated.dart';
 import 'package:timefly/blocs/habit/habit_event.dart';
 import 'package:timefly/blocs/habit/habit_state.dart';
-import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/user.dart';
 
@@ -30,19 +32,16 @@ class HabitsBloc extends Bloc<HabitsEvent, HabitsState> {
       BmobQuery<Habit_> habitQuery = BmobQuery();
       habitQuery.addWhereEqualTo(
           'userId', SessionUtils.sharedInstance().getUserId());
-
       var habitsData = await habitQuery.queryObjects();
-
-      print(habitsData);
 
       BmobQuery<HabitRecord_> recordQuery = BmobQuery();
       recordQuery.addWhereEqualTo(
           'userId', SessionUtils.sharedInstance().getUserId());
-
       var recordsData = await recordQuery.queryObjects();
 
       List<HabitRecord> records =
           recordsData.map((data) => HabitRecord.fromJson(data)).toList();
+
       //merge
       List<Habit> habits = habitsData.map((data) {
         Habit habit = Habit.fromJson(data);
@@ -64,27 +63,35 @@ class HabitsBloc extends Bloc<HabitsEvent, HabitsState> {
 
   Stream<HabitsState> _mapHabitsAddToState(HabitsAdd habitsAdd) async* {
     if (state is HabitLoadSuccess) {
-      final List<Habit> habits = List.from((state as HabitLoadSuccess).habits)
-        ..add(habitsAdd.habit);
-      yield HabitLoadSuccess(habits);
       Habit_ _habit = Habit_(habitsAdd.habit);
-      _habit.save().then((saved) {
-        print(saved.objectId);
-      }).catchError((e) {
-        print(e);
-      });
+      try {
+        BmobSaved saved = await _habit.save();
+        print('habit save success : ${saved.objectId}');
+        Habit addedHabit = habitsAdd.habit.copyWith(objectId: saved.objectId);
+        final List<Habit> habits = List.from((state as HabitLoadSuccess).habits)
+          ..add(addedHabit);
+        yield HabitLoadSuccess(habits);
+      } catch (e) {
+        print('habit save error : ${BmobError.convert(e)}');
+      }
     }
   }
 
   Stream<HabitsState> _mapHabitUpdateToState(HabitUpdate habitUpdate) async* {
     if (state is HabitLoadSuccess) {
-      final List<Habit> habits = (state as HabitLoadSuccess)
-          .habits
-          .map((habit) =>
-              habit.id == habitUpdate.habit.id ? habitUpdate.habit : habit)
-          .toList();
-      yield HabitLoadSuccess(habits);
-      // DatabaseProvider.db.update(habitUpdate.habit);
+      Habit_ _habit = Habit_(habitUpdate.habit);
+      try {
+        BmobUpdated updated = await _habit.update();
+        print("habit update success ${updated.updatedAt}");
+        final List<Habit> habits = (state as HabitLoadSuccess)
+            .habits
+            .map((habit) =>
+                habit.id == habitUpdate.habit.id ? habitUpdate.habit : habit)
+            .toList();
+        yield HabitLoadSuccess(habits);
+      } catch (e) {
+        print('habit update error : ${BmobError.convert(e)}');
+      }
     }
   }
 }
