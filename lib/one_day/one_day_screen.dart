@@ -72,13 +72,15 @@ class _OneDayScreenState extends State<OneDayScreen>
                       break;
                     case OnDayHabitListData.typeTip:
                       widget = OneDayTipsView(
-                          animation: Tween<Offset>(
-                                  begin: Offset(1, 0), end: Offset.zero)
-                              .animate(CurvedAnimation(
-                                  parent: screenAnimationController,
-                                  curve: Interval((1 / count) * index, 1,
-                                      curve: Curves.fastOutSlowIn))),
-                          animationController: screenAnimationController);
+                        animation:
+                            Tween<Offset>(begin: Offset(1, 0), end: Offset.zero)
+                                .animate(CurvedAnimation(
+                                    parent: screenAnimationController,
+                                    curve: Interval((1 / count) * index, 1,
+                                        curve: Curves.fastOutSlowIn))),
+                        animationController: screenAnimationController,
+                        habitLength: state.habits.length,
+                      );
                       break;
                     case OnDayHabitListData.typeTitle:
                       widget = getTitleView(

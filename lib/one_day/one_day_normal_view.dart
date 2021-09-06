@@ -62,8 +62,10 @@ class TimeAndWordView extends StatelessWidget {
 class OneDayTipsView extends StatelessWidget {
   final AnimationController animationController;
   final Animation<Offset> animation;
+  final int habitLength;
 
-  const OneDayTipsView({Key key, this.animationController, this.animation})
+  const OneDayTipsView(
+      {Key key, this.animationController, this.animation, this.habitLength})
       : super(key: key);
 
   @override
@@ -105,7 +107,7 @@ class OneDayTipsView extends StatelessWidget {
                         topLeft: Radius.circular(20),
                         bottomLeft: Radius.circular(20))),
                 child: Text(
-                  '点击添加一个习惯吧...',
+                  '${habitLength == 0 ? '点击添加一个习惯吧...' : '今天没有要完成的习惯\n点击新建一个吧'}',
                   style: AppTheme.appTheme.headline1(
                       textColor: Colors.white,
                       fontWeight: FontWeight.normal,
