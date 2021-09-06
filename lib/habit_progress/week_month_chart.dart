@@ -342,25 +342,25 @@ class _WeekMonthChartState extends State<WeekMonthChart>
         },
       ),
       titlesData: FlTitlesData(
-        show: true,
-        bottomTitles: SideTitles(
-          showTitles: true,
-          getTextStyles: (context, value) => AppTheme.appTheme.headline1(
-              textColor: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 14),
-          margin: 16,
-          getTitles: (double value) {
-            return CompleteDay.getSimpleDay(value.toInt() + 1);
-          },
-        ),
-        leftTitles: SideTitles(
-          showTitles: false,
-        ),
-      ),
+          show: true,
+          bottomTitles: SideTitles(
+            showTitles: true,
+            getTextStyles: (context, value) => AppTheme.appTheme.headline1(
+                textColor: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 14),
+            margin: 16,
+            getTitles: (double value) {
+              return CompleteDay.getSimpleDay(value.toInt() + 1);
+            },
+          ),
+          leftTitles: SideTitles(showTitles: false),
+          topTitles: SideTitles(showTitles: false),
+          rightTitles: SideTitles(showTitles: false)),
       borderData: FlBorderData(
         show: false,
       ),
+      gridData: FlGridData(show: false),
       barGroups: showingGroups(currentWeekNums, previousWeekNums, maxY),
     );
   }
@@ -486,42 +486,45 @@ class _WeekMonthChartState extends State<WeekMonthChart>
                       .toList();
                 })),
         titlesData: FlTitlesData(
-            show: true,
-            leftTitles: SideTitles(showTitles: false),
-            bottomTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 22,
-                getTextStyles: (context, value) =>
-                    AppTheme.appTheme.numHeadline1(
-                      textColor: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                margin: 20,
-                getTitles: (value) {
-                  switch (value.toInt()) {
-                    case 1:
-                      return '1';
-                    case 5:
-                      return '5';
-                    case 10:
-                      return '10';
-                    case 15:
-                      return '15';
-                    case 20:
-                      return '20';
-                    case 25:
-                      return '25';
-                    case 30:
-                      return '30';
-                    default:
-                      return '';
-                  }
-                })),
+          show: true,
+          leftTitles: SideTitles(showTitles: false),
+          bottomTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 22,
+              getTextStyles: (context, value) => AppTheme.appTheme.numHeadline1(
+                    textColor: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+              margin: 20,
+              getTitles: (value) {
+                print(value);
+                switch (value.toInt()) {
+                  case 1:
+                    return '1';
+                  case 5:
+                    return '5';
+                  case 10:
+                    return '10';
+                  case 15:
+                    return '15';
+                  case 20:
+                    return '20';
+                  case 25:
+                    return '25';
+                  case 30:
+                    return '30';
+                  default:
+                    return '';
+                }
+              }),
+          rightTitles: SideTitles(showTitles: false),
+          topTitles: SideTitles(showTitles: false),
+        ),
         borderData: FlBorderData(show: false),
         lineBarsData: monthLines(currentMonthNums, previousMonthNums),
         maxX: 31,
-        minX: 1,
+        minX: 0,
         minY: 1,
         maxY: maxY >= 5 ? maxY * 1.3 : 5);
   }
