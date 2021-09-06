@@ -18,8 +18,9 @@ class RecordState extends Equatable {
 
 class RecordLoadSuccess extends RecordState {
   final List<HabitRecord> records;
+  final bool isAdd;
 
-  RecordLoadSuccess(this.records);
+  RecordLoadSuccess(this.records, {this.isAdd = false});
 
   @override
   List<Object> get props => [records];
@@ -147,7 +148,7 @@ class RecordBloc extends Bloc<RecordEvent, RecordState> {
           habitsBloc.add(HabitUpdate(currentHabit.copyWith(
               records: List.from(currentHabit.records)..add(addedRecord))));
         }
-        yield RecordLoadSuccess(records);
+        yield RecordLoadSuccess(records, isAdd: true);
       } catch (e) {
         print('save record error : ${BmobError.convert(e)}');
       }

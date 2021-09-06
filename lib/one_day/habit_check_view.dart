@@ -52,6 +52,10 @@ class _HabitCheckViewState extends State<HabitCheckView> {
           if (state is RecordLoadSuccess) {
             habitRecords = HabitUtil.filterHabitRecordsWithTime(state.records,
                 start: widget.start, end: widget.end);
+            if (state.isAdd) {
+              listKey.currentState
+                  .insertItem(0, duration: const Duration(milliseconds: 500));
+            }
             return Scaffold(
               backgroundColor: AppTheme.appTheme.containerBackgroundColor(),
               body: Stack(
@@ -115,8 +119,6 @@ class _HabitCheckViewState extends State<HabitCheckView> {
                       userId: SessionUtils.sharedInstance().getUserId());
 
                   BlocProvider.of<RecordBloc>(context).add(RecordAdd(record));
-                  listKey.currentState.insertItem(0,
-                      duration: const Duration(milliseconds: 500));
                   scrollController.animateTo(0,
                       duration: Duration(milliseconds: 500),
                       curve: Curves.fastOutSlowIn);
