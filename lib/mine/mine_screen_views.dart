@@ -6,7 +6,6 @@ import 'package:timefly/app_theme.dart';
 import 'package:timefly/blocs/habit/habit_bloc.dart';
 import 'package:timefly/blocs/habit/habit_state.dart';
 import 'package:timefly/login/login_page.dart';
-import 'package:timefly/mine/change_theme_screen.dart';
 import 'package:timefly/models/habit.dart';
 
 class UserInfoView extends StatelessWidget {
@@ -191,12 +190,8 @@ class EnterView extends StatelessWidget {
               Expanded(
                   child: AspectRatio(
                 aspectRatio: 0.8,
-                child: _item('assets/images/icon_theme.svg', '主题\n更多主题色', () {
-                  Navigator.of(context)
-                      .push(CupertinoPageRoute(builder: (context) {
-                    return ChangeThemePage();
-                  }));
-                }),
+                child: _item(
+                    'assets/images/icon_contect.svg', '联系我\n建议和疑问', () {}),
               ))
             ],
           ),
@@ -209,7 +204,7 @@ class EnterView extends StatelessWidget {
                   child: AspectRatio(
                 aspectRatio: 0.8,
                 child: _item(
-                    'assets/images/icon_contect.svg', '联系我\n建议和疑问', () {}),
+                    'assets/images/icon_today.svg', '这一天\n我在这一天...', () {}),
               )),
               SizedBox(
                 width: 16,
@@ -217,8 +212,7 @@ class EnterView extends StatelessWidget {
               Expanded(
                   child: AspectRatio(
                 aspectRatio: 0.8,
-                child: _item(
-                    'assets/images/icon_today.svg', '这一天\n我在这一天...', () {}),
+                child: SizedBox(),
               ))
             ],
           )
