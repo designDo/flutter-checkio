@@ -1,4 +1,3 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:timefly/detail/detail_calender_view.dart';
@@ -7,7 +6,6 @@ import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_peroid.dart';
 import 'package:timefly/utils/date_util.dart';
 import 'package:timefly/utils/habit_util.dart';
-import 'package:timefly/utils/hex_color.dart';
 import 'package:timefly/utils/pair.dart';
 import 'package:timefly/widget/circle_progress_bar.dart';
 
@@ -794,7 +792,7 @@ class HabitCheckInfoView extends StatelessWidget {
   }
 }
 
-class HabitStreakInfoView extends StatefulWidget {
+class HabitStreakInfoView extends StatelessWidget {
   final Habit habit;
   final AnimationController animationController;
 
@@ -802,18 +800,9 @@ class HabitStreakInfoView extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
-    return HabitStreakInfoViewState();
-  }
-}
-
-class HabitStreakInfoViewState extends State<HabitStreakInfoView> {
-  int touchedIndex;
-
-  @override
   Widget build(BuildContext context) {
     Map<String, List<HabitRecord>> records =
-        HabitUtil.combinationRecords(widget.habit.records);
+        HabitUtil.combinationRecords(habit.records);
     Map<String, int> streaks = HabitUtil.getHabitStreaks(records);
     int maxCount = 0;
     if (streaks.length > 0) {
@@ -822,11 +811,11 @@ class HabitStreakInfoViewState extends State<HabitStreakInfoView> {
     return SlideTransition(
         position: Tween<Offset>(begin: Offset(0, 0.3), end: Offset.zero)
             .animate(CurvedAnimation(
-                parent: widget.animationController,
+                parent: animationController,
                 curve: Interval(0.7, 1, curve: Curves.ease))),
         child: FadeTransition(
           opacity: Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
-              parent: widget.animationController,
+              parent: animationController,
               curve: Interval(0.7, 1, curve: Curves.ease))),
           child: Container(
             margin: EdgeInsets.only(top: 16, right: 16, left: 16),
@@ -856,12 +845,18 @@ class HabitStreakInfoViewState extends State<HabitStreakInfoView> {
                     )
                   ],
                 ),
+                Text(
+                  '历史连续',
+                  style: AppTheme.appTheme
+                      .headline1(fontWeight: FontWeight.normal, fontSize: 14),
+                ),
                 streaks.length == 0
                     ? SizedBox()
-                    : Container(
-                        margin: EdgeInsets.only(top: 16, bottom: 16),
-                        height: 200,
-                        child: BarChart(barData(streaks, maxCount.toDouble())),
+                    : Column(
+                        children: streaks.keys
+                            .take(5)
+                            .map((e) => _checkInfo(e, streaks[e], maxCount))
+                            .toList(),
                       ),
               ],
             ),
@@ -869,91 +864,66 @@ class HabitStreakInfoViewState extends State<HabitStreakInfoView> {
         ));
   }
 
-  BarChartData barData(Map<String, int> streaks, double maxY) {
-    List<String> keys = streaks.keys.toList();
-    return BarChartData(
-      maxY: maxY * 1.5,
-      barTouchData: BarTouchData(
-        touchTooltipData: BarTouchTooltipData(
-            fitInsideHorizontally: true,
-            fitInsideVertically: true,
-            tooltipRoundedRadius: 16,
-            tooltipPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            tooltipBgColor: Color(widget.habit.mainColor).withOpacity(0.66),
-            getTooltipItem: (group, groupIndex, rod, rodIndex) {
-              return BarTooltipItem(
-                  '${getTime(keys[groupIndex])}\n${rod.y.toInt()}',
-                  AppTheme.appTheme.numHeadline1(
-                    textColor: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ));
-            }),
-        touchCallback: (event, barTouchResponse) {
-          setState(() {
-            if (barTouchResponse?.spot != null) {
-              touchedIndex = barTouchResponse.spot.touchedBarGroupIndex;
-            } else {
-              touchedIndex = -1;
-            }
-          });
-        },
-      ),
-      titlesData: FlTitlesData(
-          show: true,
-          leftTitles: SideTitles(
-              showTitles: true,
-              getTextStyles: (context, value) {
-                return AppTheme.appTheme.numHeadline1(
-                  textColor: AppTheme.appTheme.normalColor(),
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                );
-              }),
-          topTitles: SideTitles(showTitles: false),
-          bottomTitles: SideTitles(showTitles: false),
-          rightTitles: SideTitles(showTitles: false)),
-      borderData: FlBorderData(show: false),
-      gridData: FlGridData(show: false),
-      barGroups: showingGroups(streaks, maxY),
-    );
-  }
-
-  List<BarChartGroupData> showingGroups(Map<String, int> streaks, double maxY) {
-    List<int> valuse = streaks.values.toList();
-    return List.generate(valuse.length, (i) {
-      return makeGroupData(i, valuse[i].toDouble(),
-          isTouched: i == touchedIndex);
-    });
-  }
-
-  BarChartGroupData makeGroupData(
-    int x,
-    double currentY, {
-    bool isTouched = false,
-    double width = 12,
-    List<int> showTooltips = const [],
-  }) {
-    return BarChartGroupData(
-      barsSpace: 6,
-      x: x,
-      barRods: [
-        BarChartRodData(
-          y: currentY,
-          colors: [Color(widget.habit.mainColor)],
-          width: width,
-          backDrawRodData: BackgroundBarChartRodData(
-            show: false,
+  Widget _checkInfo(String time, int count, int maxCount) {
+    List<String> str = time.split(',');
+    return Row(
+      children: [
+        Container(
+          width: 140,
+          child: Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    color: AppTheme.appTheme.containerBackgroundColor(),
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    flex: count,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Color(habit.mainColor).withOpacity(0.6),
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      height: 10,
+                    ),
+                  ),
+                  Expanded(
+                    flex: maxCount - count,
+                    child: SizedBox(),
+                  )
+                ],
+              )
+            ],
           ),
+        ),
+        Expanded(
+          child: SizedBox(),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              '$count',
+              style: AppTheme.appTheme
+                  .numHeadline1(fontWeight: FontWeight.bold, fontSize: 22),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              '${str[0].replaceAll('-', '.')} - ${str[1].substring(str[1].indexOf('-') + 1).replaceAll('-', '.')}',
+              maxLines: 2,
+              style: AppTheme.appTheme
+                  .numHeadline1(fontSize: 16, fontWeight: FontWeight.w300),
+            )
+          ],
         )
       ],
-      showingTooltipIndicators: showTooltips,
     );
-  }
-
-  String getTime(String time) {
-    List<String> str = time.split(',');
-    return ' ${str[0].replaceAll('-', '.')} - ${str[1].substring(str[1].indexOf('-') + 1).replaceAll('-', '.')}';
   }
 }
 
