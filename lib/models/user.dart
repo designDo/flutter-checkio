@@ -21,6 +21,10 @@ class User {
     data["phone"] = phone;
     return data;
   }
+
+  User copyWith({String id, String username, String phone}) {
+    return User(id ?? this.id, username ?? this.username, phone ?? this.phone);
+  }
 }
 
 class SessionUtils {
@@ -59,6 +63,11 @@ class SessionUtils {
     currentUser = null;
     await DatabaseProvider.db.deleteUser();
     habitsBloc.add(HabitsLoad());
+  }
+
+  void updateName(String name) async {
+    currentUser = currentUser.copyWith(username: name);
+    await DatabaseProvider.db.updateUser(currentUser);
   }
 
   bool isLogin() {

@@ -86,6 +86,13 @@ class DatabaseProvider {
     return index > 0;
   }
 
+  Future<bool> updateUser(User user) async {
+    final db = await database;
+    int change = await db
+        .update('user', user.toJson(), where: 'id = ?', whereArgs: [user.id]);
+    return change > 0;
+  }
+
   Future<List<Habit>> getAllHabits() async {
     final db = await database;
     var habits = await db.query('habits');

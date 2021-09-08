@@ -19,6 +19,7 @@ class CustomEditField extends StatefulWidget {
 
   final String initValue;
   final ValueChanged<String> onValueChanged;
+  final VoidCallback onCompleted;
 
   const CustomEditField(
       {Key key,
@@ -34,7 +35,8 @@ class CustomEditField extends StatefulWidget {
       this.numTextStyle,
       this.minHeight,
       this.autoFucus,
-      this.inputType})
+      this.inputType,
+      this.onCompleted})
       : super(key: key);
 
   @override
@@ -118,6 +120,7 @@ class _CustomEditFieldState extends State<CustomEditField>
                   numAnimationController.reverse(from: 0.3);
                 }
               },
+              onEditingComplete: widget.onCompleted ?? () {},
             ),
           ),
           ScaleTransition(
