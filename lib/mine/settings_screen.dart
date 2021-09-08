@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timefly/blocs/theme/theme_bloc.dart';
+import 'package:timefly/blocs/theme/theme_event.dart';
 import 'package:timefly/blocs/theme/theme_state.dart';
 import 'package:timefly/models/user.dart';
 import 'package:timefly/utils/system_util.dart';
 import 'package:timefly/widget/custom_edit_field.dart';
 
 import '../app_theme.dart';
+import 'change_theme_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -23,6 +26,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       builder: (context, state) {
         SystemUtil.changeStateBarMode(
             AppTheme.appTheme.isDark() ? Brightness.light : Brightness.dark);
+
+        AppThemeMode appThemeMode = state.themeMode;
+        AppThemeColorMode appThemeColorMode = state.themeColorMode;
+        AppFontMode appFontMode = state.fontMode;
+
         return Scaffold(
           body: Container(
             color: AppTheme.appTheme.containerBackgroundColor(),
@@ -44,6 +52,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ),
                   ChangeUserInfoView(),
+                  DarkModeView(
+                    appThemeMode: appThemeMode,
+                    appThemeColorMode: appThemeColorMode,
+                    appFontMode: appFontMode,
+                  ),
+                  SizedBox(
+                    height: 32,
+                  ),
+                  ThemeColorView(
+                    currentColorMode: appThemeColorMode,
+                    onTap: (colorMode) async {
+                      BlocProvider.of<ThemeBloc>(context).add(ThemeChangeEvent(
+                          appThemeMode, colorMode, appFontMode));
+                      SharedPreferences shared =
+                          await SharedPreferences.getInstance();
+                      shared.setString(COLOR_MODE, colorMode.toString());
+                    },
+                  ),
                   SizedBox(
                     height: 100,
                   )
@@ -170,6 +196,92 @@ class _ChangeUserInfoViewState extends State<ChangeUserInfoView> {
                   textColor: AppTheme.appTheme.normalColor().withOpacity(0.5)),
             ),
           )
+        ],
+      ),
+    );
+  }
+}
+
+class DarkModeView extends StatefulWidget {
+  final AppThemeMode appThemeMode;
+  final AppThemeColorMode appThemeColorMode;
+
+  final AppFontMode appFontMode;
+
+  const DarkModeView(
+      {Key key, this.appThemeMode, this.appThemeColorMode, this.appFontMode})
+      : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _DarkModeViewState();
+  }
+}
+
+///切换暗黑模式
+class _DarkModeViewState extends State<DarkModeView> {
+  bool checked = false;
+
+  @override
+  void initState() {
+    checked = widget.appThemeMode == AppThemeMode.Dark;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: 32, left: 22, right: 22),
+      padding: EdgeInsets.all(32),
+      decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          color: AppTheme.appTheme.cardBackgroundColor(),
+          boxShadow: AppTheme.appTheme.containerBoxShadow()),
+      child: Row(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${checked ? '开' : '关'}',
+                style: AppTheme.appTheme
+                    .headline1(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 6,
+              ),
+              Text(
+                '黑夜模式',
+                style: AppTheme.appTheme.headline1(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    textColor:
+                        AppTheme.appTheme.normalColor().withOpacity(0.5)),
+              )
+            ],
+          ),
+          Expanded(child: SizedBox()),
+          Checkbox(
+              value: checked,
+              activeColor: AppTheme.appTheme.grandientColorStart(),
+              onChanged: (value) async {
+                SharedPreferences shared =
+                    await SharedPreferences.getInstance();
+                setState(() {
+                  checked = value;
+                  BlocProvider.of<ThemeBloc>(context).add(ThemeChangeEvent(
+                      checked ? AppThemeMode.Dark : AppThemeMode.Light,
+                      widget.appThemeColorMode,
+                      widget.appFontMode));
+
+                  shared.setString(
+                      THEME_MODE,
+                      checked
+                          ? AppThemeMode.Dark.toString()
+                          : AppThemeMode.Light.toString());
+                });
+              })
         ],
       ),
     );

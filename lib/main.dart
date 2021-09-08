@@ -7,6 +7,7 @@ import 'package:timefly/app_theme.dart';
 import 'package:timefly/blocs/habit/habit_bloc.dart';
 import 'package:timefly/blocs/habit/habit_event.dart';
 import 'package:timefly/blocs/theme/theme_bloc.dart';
+import 'package:timefly/blocs/theme/theme_event.dart';
 import 'package:timefly/blocs/theme/theme_state.dart';
 import 'package:timefly/home_screen.dart';
 import 'package:timefly/notification/notification_plugin.dart';
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ThemeBloc>(
-      create: (context) => ThemeBloc(),
+      create: (context) => ThemeBloc()..add(ThemeLoadEvnet()),
       child: BlocProvider<HabitsBloc>(
         create: (context) => HabitsBloc()..add(HabitsLoad()),
         child: BlocBuilder<ThemeBloc, ThemeState>(

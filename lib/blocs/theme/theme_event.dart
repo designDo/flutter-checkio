@@ -15,3 +15,8 @@ class ThemeChangeEvent extends ThemeEvent {
   final AppThemeColorMode themeColorMode;
   final AppFontMode fontMode;
 }
+
+class ThemeLoadEvnet extends ThemeEvent {
+  @override
+  List<Object> get props => [];
+}

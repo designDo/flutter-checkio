@@ -1,9 +1,30 @@
 import 'package:flutter/material.dart';
 
+const String THEME_MODE = 'theme';
+const String COLOR_MODE = 'color';
+
 ///  theme mode
 enum AppThemeMode {
   Light,
   Dark,
+}
+
+AppThemeMode getInitThemeMode(String mode) {
+  AppThemeMode appThemeMode = AppThemeMode.values
+      .firstWhere((element) => element.toString() == mode, orElse: null);
+  if (appThemeMode == null) {
+    appThemeMode = AppThemeMode.Light;
+  }
+  return appThemeMode;
+}
+
+AppThemeColorMode getInitColorMode(String mode) {
+  AppThemeColorMode colorMode = AppThemeColorMode.values
+      .firstWhere((element) => element.toString() == mode, orElse: null);
+  if (colorMode == null) {
+    colorMode = AppThemeColorMode.Blue;
+  }
+  return colorMode;
 }
 
 ///字体模式
