@@ -24,7 +24,11 @@ class _MineScreenState extends State<MineScreen> {
         return Stack(
           children: [
             ListView(physics: ClampingScrollPhysics(), children: [
-              UserInfoView(),
+              UserInfoView(
+                callback: () {
+                  setState(() {});
+                },
+              ),
               HabitsTotalView(),
               UserProView(),
               EnterView(),
@@ -33,11 +37,12 @@ class _MineScreenState extends State<MineScreen> {
               )
             ]),
             GestureDetector(
-              onTap: () {
-                Navigator.of(context)
+              onTap: () async {
+                await Navigator.of(context)
                     .push(CupertinoPageRoute(builder: (context) {
                   return SettingsScreen();
                 }));
+                setState(() {});
               },
               child: Container(
                 alignment: Alignment.centerRight,

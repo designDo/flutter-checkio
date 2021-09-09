@@ -8,6 +8,7 @@ import 'package:timefly/blocs/theme/theme_bloc.dart';
 import 'package:timefly/blocs/theme/theme_event.dart';
 import 'package:timefly/blocs/theme/theme_state.dart';
 import 'package:timefly/models/user.dart';
+import 'package:timefly/utils/flash_helper.dart';
 import 'package:timefly/utils/system_util.dart';
 import 'package:timefly/widget/custom_edit_field.dart';
 
@@ -69,6 +70,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           await SharedPreferences.getInstance();
                       shared.setString(COLOR_MODE, colorMode.toString());
                     },
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      SessionUtils.sharedInstance().logout();
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.only(
+                          left: 32, right: 32, top: 48, bottom: 32),
+                      height: 55,
+                      width: 220,
+                      decoration: BoxDecoration(
+                          boxShadow: AppTheme.appTheme.coloredBoxShadow(),
+                          gradient: AppTheme.appTheme.containerGradient(),
+                          borderRadius: BorderRadius.all(Radius.circular(35))),
+                      child: Text(
+                        '退出',
+                        style: AppTheme.appTheme.headline1(
+                            textColor: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: 100,
@@ -165,6 +190,10 @@ class _ChangeUserInfoViewState extends State<ChangeUserInfoView> {
             },
             onCompleted: () async {
               FocusScope.of(context).requestFocus(FocusNode());
+              if (userName.isEmpty) {
+                FlashHelper.toast(context, '请输入名字');
+                return;
+              }
               User user = SessionUtils.sharedInstance().currentUser;
               BmobUser bmobUser = BmobUser();
               bmobUser.objectId = user.id;

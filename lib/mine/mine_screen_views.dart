@@ -6,11 +6,18 @@ import 'package:timefly/app_theme.dart';
 import 'package:timefly/blocs/habit/habit_bloc.dart';
 import 'package:timefly/blocs/habit/habit_state.dart';
 import 'package:timefly/login/login_page.dart';
+import 'package:timefly/mine/settings_screen.dart';
 import 'package:timefly/models/habit.dart';
+import 'package:timefly/models/user.dart';
 
 class UserInfoView extends StatelessWidget {
+  final VoidCallback callback;
+
+  const UserInfoView({Key key, this.callback}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    User user = SessionUtils.sharedInstance().currentUser;
     return Container(
       margin: EdgeInsets.only(
           left: 16, top: MediaQuery.of(context).padding.top + 16),
@@ -29,10 +36,28 @@ class UserInfoView extends StatelessWidget {
           SizedBox(
             width: 16,
           ),
-          Text(
-            '亚索',
-            style: AppTheme.appTheme
-                .headline1(fontWeight: FontWeight.bold, fontSize: 22),
+          GestureDetector(
+            onTap: () async {
+              if (user == null) {
+                await Navigator.of(context)
+                    .push(CupertinoPageRoute(builder: (context) {
+                  return LoginPage();
+                }));
+                return;
+              }
+              if (user.username == null || user.username.isEmpty) {
+                await Navigator.of(context)
+                    .push(CupertinoPageRoute(builder: (context) {
+                  return SettingsScreen();
+                }));
+                callback();
+              }
+            },
+            child: Text(
+              '${(user == null || user.username == null || user.username.isEmpty) ? '编辑名字' : user.username}',
+              style: AppTheme.appTheme
+                  .headline1(fontWeight: FontWeight.bold, fontSize: 22),
+            ),
           )
         ],
       ),

@@ -176,7 +176,9 @@ class AppTheme {
     return TextStyle(
         fontWeight: fontWeight,
         fontSize: fontSize,
-        color: isDark() ? Colors.white : Colors.black.withOpacity(0.5),
+        color: isDark()
+            ? Colors.white.withOpacity(0.5)
+            : Colors.black.withOpacity(0.5),
         fontFamily: fontFamliy);
   }
 
