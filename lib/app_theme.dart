@@ -10,20 +10,17 @@ enum AppThemeMode {
 }
 
 AppThemeMode getInitThemeMode(String mode) {
-  AppThemeMode appThemeMode = AppThemeMode.values
-      .firstWhere((element) => element.toString() == mode, orElse: null);
-  if (appThemeMode == null) {
-    appThemeMode = AppThemeMode.Light;
-  }
+  print(mode);
+  AppThemeMode appThemeMode = AppThemeMode.values.firstWhere(
+      (element) => element.toString() == mode,
+      orElse: () => AppThemeMode.Light);
   return appThemeMode;
 }
 
 AppThemeColorMode getInitColorMode(String mode) {
-  AppThemeColorMode colorMode = AppThemeColorMode.values
-      .firstWhere((element) => element.toString() == mode, orElse: null);
-  if (colorMode == null) {
-    colorMode = AppThemeColorMode.Blue;
-  }
+  AppThemeColorMode colorMode = AppThemeColorMode.values.firstWhere(
+      (element) => element.toString() == mode,
+      orElse: () => AppThemeColorMode.Blue);
   return colorMode;
 }
 

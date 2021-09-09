@@ -120,7 +120,9 @@ class _CustomEditFieldState extends State<CustomEditField>
                   numAnimationController.reverse(from: 0.3);
                 }
               },
-              onEditingComplete: widget.onCompleted ?? () {},
+              onEditingComplete: widget.onCompleted ?? () {
+                FocusScope.of(context).requestFocus(FocusNode());
+              },
             ),
           ),
           ScaleTransition(
