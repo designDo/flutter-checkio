@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:timefly/add_habit/habit_edit_page.dart';
 import 'package:timefly/login/login_page.dart';
 import 'package:timefly/models/user.dart';
+import 'package:timefly/one_day/lol_words.dart';
 import 'package:timefly/utils/date_util.dart';
 
 import '../app_theme.dart';
@@ -17,6 +18,7 @@ class TimeAndWordView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    LoLWords words = LoLWordsFactory.randomWord();
     return AnimatedBuilder(
       animation: animationController,
       builder: (context, child) {
@@ -40,12 +42,12 @@ class TimeAndWordView extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '且随疾风前行，身后亦须留心。',
+                  words.word,
                   style: AppTheme.appTheme
                       .headline1(fontSize: 16, fontWeight: FontWeight.normal),
                 ),
                 Text(
-                  'Follow the wind, but watch your back.',
+                  words.wordEnglish,
                   style: AppTheme.appTheme
                       .numHeadline1(fontSize: 16, fontWeight: FontWeight.normal)
                       .copyWith(fontFamily: 'Montserrat'),
