@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
             SessionUtils.sharedInstance()
                 .setBloc(BlocProvider.of<HabitsBloc>(context));
             return MaterialApp(
-              title: 'Time Fly',
+              title: 'Checkio',
               debugShowCheckedModeBanner: false,
               theme: AppTheme.appTheme
                   .themeData()

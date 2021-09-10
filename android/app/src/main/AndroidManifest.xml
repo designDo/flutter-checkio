@@ -12,8 +12,8 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="timefly"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Checkio"
+        android:icon="@mipmap/temp">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
