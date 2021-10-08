@@ -109,10 +109,10 @@ class _HabitCheckViewState extends State<HabitCheckView> {
                   }
 
                   HabitRecord record = HabitRecord(
-                      habitId: widget.habitId,
-                      time: checkTime,
-                      content: '',
-                      userId: SessionUtils.sharedInstance().getUserId());
+                    habitId: widget.habitId,
+                    time: checkTime,
+                    content: '',
+                  );
 
                   BlocProvider.of<RecordBloc>(context).add(RecordAdd(record));
                   listKey.currentState.insertItem(0,

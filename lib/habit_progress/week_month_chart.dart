@@ -333,8 +333,8 @@ class _WeekMonthChartState extends State<WeekMonthChart>
             }),
         touchCallback: (event, barTouchResponse) {
           setState(() {
-            if (barTouchResponse.spot != null) {
-              touchedIndex = barTouchResponse.spot.touchedBarGroupIndex;
+            if (barTouchResponse?.spot != null) {
+              touchedIndex = barTouchResponse.spot?.touchedBarGroupIndex;
             } else {
               touchedIndex = -1;
             }

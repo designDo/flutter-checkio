@@ -423,8 +423,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                       .toList(),
                   createTime: DateTime.now().millisecondsSinceEpoch,
                   completed: false,
-                  records: [],
-                  userId: SessionUtils.sharedInstance().getUserId());
+                  records: []);
               await createAlarmEvents(remindTimes, habit.name);
               BlocProvider.of<HabitsBloc>(context).add(HabitsAdd(habit));
               FlashHelper.toast(context, '保存成功');

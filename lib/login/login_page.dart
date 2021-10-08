@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:timefly/models/user.dart';
 import 'package:timefly/utils/flash_helper.dart';
 import 'package:timefly/utils/system_util.dart';
+import 'package:timefly/utils/uuid.dart';
 import 'package:timefly/widget/custom_edit_field.dart';
 
 import '../app_theme.dart';
@@ -166,7 +167,9 @@ class _LoginPageState extends State<LoginPage>
                       if (timer != null && timer.isActive) {
                         return;
                       }
-
+                      Future.delayed(Duration(seconds: 2), () {
+                        FlashHelper.toast(context, "Send success");
+                      });
                     },
                     onDoubleTap: () {},
                     child: Container(
@@ -205,7 +208,10 @@ class _LoginPageState extends State<LoginPage>
               )),
               child: GestureDetector(
                 onTap: () {
-
+                  FlashHelper.toast(context, '登录成功');
+                  User user = User(Uuid().generateV4(), '', phone);
+                  SessionUtils.sharedInstance().login(user);
+                  Navigator.of(context).pop();
                 },
                 onDoubleTap: () {},
                 child: Container(

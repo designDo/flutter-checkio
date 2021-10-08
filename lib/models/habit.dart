@@ -6,27 +6,22 @@ import 'package:equatable/equatable.dart';
 ///
 // ignore: must_be_immutable
 class HabitRecord extends Equatable {
-  final String objectId;
-  final String userId;
   final String habitId;
   final int time;
   final String content;
 
-  HabitRecord(
-      {this.time, this.content, this.habitId, this.userId, this.objectId});
+  HabitRecord({this.time, this.content, this.habitId});
 
   @override
   String toString() {
-    return 'HabitRecord{time: $time, content: $content, habitId: $habitId, userId: $userId, objectId: $objectId}';
+    return 'HabitRecord{time: $time, content: $content, habitId: $habitId}';
   }
 
   static HabitRecord fromJson(Map<String, dynamic> json) {
     return HabitRecord(
         habitId: json['habitId']?.toString(),
         time: json["time"]?.toInt(),
-        content: json["content"]?.toString(),
-        userId: json['userId']?.toString(),
-        objectId: json['objectId']?.toString());
+        content: json["content"]?.toString());
   }
 
   Map<String, dynamic> toJson() {
@@ -34,13 +29,11 @@ class HabitRecord extends Equatable {
     data['habitId'] = habitId;
     data["time"] = time;
     data["content"] = content;
-    data['userId'] = userId;
-    data['objectId'] = objectId;
     return data;
   }
 
   @override
-  List<Object> get props => [habitId, time, content, userId, objectId];
+  List<Object> get props => [habitId, time, content];
 
   HabitRecord copyWith(
       {String habitId,
@@ -51,22 +44,18 @@ class HabitRecord extends Equatable {
     return HabitRecord(
         habitId: habitId ?? this.habitId,
         time: time ?? this.time,
-        content: content ?? this.content,
-        userId: userId ?? this.userId,
-        objectId: objectId ?? this.objectId);
+        content: content ?? this.content);
   }
 }
 
 // ignore: must_be_immutable
 class Habit extends Equatable {
   ///唯一id uuid v4
-  final String objectId;
   final String id;
   final String name;
   final String iconPath;
   final int mainColor;
   final String mark;
-  final String userId;
 
   ///提醒时间 每天 10: 20，eg
   ///转化为 json String 存储 ["10:20","11:50"]
@@ -101,8 +90,7 @@ class Habit extends Equatable {
   final List<HabitRecord> records;
 
   Habit(
-      {this.objectId,
-      this.id,
+      {this.id,
       this.name,
       this.iconPath,
       this.mainColor,
@@ -115,12 +103,11 @@ class Habit extends Equatable {
       this.modifyTime,
       this.completed,
       this.doNum,
-      this.records,
-      this.userId});
+      this.records});
 
   @override
   String toString() {
-    return 'Habit{ objectId: $objectId, id: $id , userId: $userId, name: $name, iconPath: $iconPath, mainColor: '
+    return 'Habit{id: $id , name: $name, iconPath: $iconPath, mainColor: '
         '$mainColor, mark: $mark, remindTimes: $remindTimes, completeTime:'
         ' $completeTime, completeDays: $completeDays, period: $period, '
         'createTime: $createTime, modifyTime: $modifyTime, completed: $completed,'
@@ -145,7 +132,6 @@ class Habit extends Equatable {
     }
 
     return Habit(
-        objectId: json['objectId']?.toString(),
         id: json["id"]?.toString(),
         name: json["name"]?.toString(),
         iconPath: json["iconPath"]?.toString(),
@@ -159,13 +145,11 @@ class Habit extends Equatable {
         modifyTime: json["modifyTime"]?.toInt(),
         completed: json["completed"]?.toInt() == 1 ? true : false,
         doNum: json["doNum"]?.toInt(),
-        records: records,
-        userId: json['userId']);
+        records: records);
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['objectId'] = objectId;
     data["id"] = id;
     data["name"] = name;
     data["iconPath"] = iconPath;
@@ -195,7 +179,6 @@ class Habit extends Equatable {
     data["modifyTime"] = modifyTime;
     data["completed"] = completed ? 1 : 0;
     data["doNum"] = doNum;
-    data['userId'] = userId;
     return data;
   }
 
@@ -217,7 +200,6 @@ class Habit extends Equatable {
 
   @override
   List<Object> get props => [
-        this.objectId,
         this.id,
         this.name,
         this.iconPath,
@@ -232,7 +214,6 @@ class Habit extends Equatable {
         this.completed,
         this.doNum,
         this.records,
-        this.userId
       ];
 
   Habit copyWith(
@@ -253,7 +234,6 @@ class Habit extends Equatable {
       List<HabitRecord> records,
       String userId}) {
     return Habit(
-        objectId: objectId ?? this.objectId,
         id: id ?? this.id,
         name: name ?? this.name,
         iconPath: iconPath ?? this.iconPath,
@@ -267,7 +247,6 @@ class Habit extends Equatable {
         modifyTime: modifyTime ?? this.modifyTime,
         completed: completed ?? this.completed,
         doNum: doNum ?? this.doNum,
-        records: records ?? this.records,
-        userId: userId ?? this.userId);
+        records: records ?? this.records);
   }
 }
