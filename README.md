@@ -1,20 +1,31 @@
-# timefly
+# timefly -- Checkio
 
-How time flies.
+How time flies. 时光荏苒。
 
-## Getting Started
+## 就是想做一个真正喜欢的APP而非demo！！！
+  这是一个花了半年业余时间做的一款习惯打卡APP，吸取了市面上很多产品经验。
+  - 随意定制跟踪周期
+  - 完成度的报表提示
+  - 流畅炫酷的动画体验
+  
+  ### 主要内容
+  - 首页展示今天需要完成的习惯
+  - 所有习惯页面展示所有习惯，点击可以展示当月的完成情况
+  - 进度页面，有周和月的周期选择，了解在时间范围内完成度情况
+  - 我的页面，主要是设置，进行主题修改等
 
-This project is a starting point for a Flutter application.
+  ### 技术栈
+   - 请查看yaml文件三方依赖
 
-A few resources to get you started if this is your first Flutter project:
+  ### 感谢
+  - 吸取了很多开源动画例子，这就是Flutter带给我的美妙的旅程，感谢那些无私奉献的大佬（笔芯）
+  - [reflectly](https://reflectly.app/)
+  - [flutter_vignettes](https://github.com/gskinnerTeam/flutter_vignettes)
+  - [Best-Flutter-UI-Templates](https://github.com/mitesh77/Best-Flutter-UI-Templates)
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
 
+# 一些截图 
 ## Home
 https://user-images.githubusercontent.com/33898039/136545254-3be9630f-9fff-4331-b54d-dec6269c0bda.mp4
 
