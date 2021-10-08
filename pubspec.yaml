@@ -43,7 +43,6 @@ dependencies:
     git:
       url: https://github.com/designDo/alarm_plugin.git
       ref: 'master'
-  data_plugin: ^0.0.18
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

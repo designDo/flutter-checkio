@@ -1,4 +1,3 @@
-import 'package:data_plugin/bmob/table/bmob_user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -194,14 +193,7 @@ class _ChangeUserInfoViewState extends State<ChangeUserInfoView> {
                 FlashHelper.toast(context, '请输入名字');
                 return;
               }
-              User user = SessionUtils.sharedInstance().currentUser;
-              BmobUser bmobUser = BmobUser();
-              bmobUser.objectId = user.id;
-              bmobUser.mobilePhoneNumber = user.phone;
-              bmobUser.mobilePhoneNumberVerified = true;
-              bmobUser.username = userName;
               try {
-                await bmobUser.update();
                 SessionUtils.sharedInstance().updateName(userName);
               } catch (e) {
                 print(e);

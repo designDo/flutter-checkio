@@ -1,9 +1,4 @@
 import 'dart:async';
-
-import 'package:data_plugin/bmob/bmob_sms.dart';
-import 'package:data_plugin/bmob/response/bmob_error.dart';
-import 'package:data_plugin/bmob/response/bmob_sent.dart';
-import 'package:data_plugin/bmob/table/bmob_user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:timefly/models/user.dart';
@@ -171,15 +166,7 @@ class _LoginPageState extends State<LoginPage>
                       if (timer != null && timer.isActive) {
                         return;
                       }
-                      BmobSms bmobSms = BmobSms();
-                      bmobSms.template = '';
-                      bmobSms.mobilePhoneNumber = phone;
-                      bmobSms.sendSms().then((BmobSent bmobSent) {
-                        FlashHelper.toast(context, '发送成功');
-                        countDown();
-                      }).catchError((e) {
-                        FlashHelper.toast(context, BmobError.convert(e).error);
-                      });
+
                     },
                     onDoubleTap: () {},
                     child: Container(
@@ -218,17 +205,7 @@ class _LoginPageState extends State<LoginPage>
               )),
               child: GestureDetector(
                 onTap: () {
-                  BmobUser bmobUserRegister = BmobUser();
-                  bmobUserRegister.mobilePhoneNumber = phone;
-                  bmobUserRegister.loginBySms(code).then((BmobUser bmobUser) {
-                    FlashHelper.toast(context, '登录成功');
-                    User user = User(bmobUser.objectId, bmobUser.username,
-                        bmobUser.mobilePhoneNumber);
-                    SessionUtils.sharedInstance().login(user);
-                    Navigator.of(context).pop();
-                  }).catchError((e) {
-                    FlashHelper.toast(context, BmobError.convert(e).error);
-                  });
+
                 },
                 onDoubleTap: () {},
                 child: Container(

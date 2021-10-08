@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:data_plugin/bmob/table/bmob_object.dart';
 import 'package:equatable/equatable.dart';
 
 ///
@@ -56,18 +54,6 @@ class HabitRecord extends Equatable {
         content: content ?? this.content,
         userId: userId ?? this.userId,
         objectId: objectId ?? this.objectId);
-  }
-}
-
-// ignore: camel_case_types
-class HabitRecord_ extends BmobObject {
-  final HabitRecord habitRecord;
-
-  HabitRecord_(this.habitRecord);
-
-  @override
-  Map getParams() {
-    return habitRecord.toJson();
   }
 }
 
@@ -283,17 +269,5 @@ class Habit extends Equatable {
         doNum: doNum ?? this.doNum,
         records: records ?? this.records,
         userId: userId ?? this.userId);
-  }
-}
-
-// ignore: camel_case_types
-class Habit_ extends BmobObject {
-  final Habit habit;
-
-  Habit_(this.habit);
-
-  @override
-  Map getParams() {
-    return habit.toJson();
   }
 }
