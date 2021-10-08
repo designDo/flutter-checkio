@@ -26,8 +26,8 @@ class UserInfoView extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(16)),
-            child: Image.network(
-              'https://c-ssl.duitang.com/uploads/item/201903/06/20190306091021_kzhxr.jpg',
+            child: Image.asset(
+              'assets/images/user_icon.jpg',
               width: 100,
               height: 100,
               fit: BoxFit.cover,

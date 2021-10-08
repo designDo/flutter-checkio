@@ -43,8 +43,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     alignment: Alignment.topRight,
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(16)),
-                      child: Image.network(
-                        'https://c-ssl.duitang.com/uploads/item/201903/06/20190306091021_kzhxr.jpg',
+                      child: Image.asset(
+                        'assets/images/user_icon.jpg',
                         width: 130,
                         height: 130,
                         fit: BoxFit.cover,
