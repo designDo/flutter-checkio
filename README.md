@@ -14,6 +14,12 @@ How time flies. 时光荏苒。
   - 进度页面，有周和月的周期选择，了解在时间范围内完成度情况
   - 我的页面，主要是设置，进行主题修改等
 
+  ### 下载Release包体验极致动画效果
+    
+   ![QRCode_258](https://user-images.githubusercontent.com/33898039/139042694-ebff2f29-6133-4098-be98-1d831cb758ed.png)
+
+
+
   ### 技术栈
    - 请查看yaml文件三方依赖
 
