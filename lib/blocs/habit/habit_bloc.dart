@@ -7,52 +7,45 @@ import 'package:timefly/models/user.dart';
 
 class HabitsBloc extends Bloc<HabitsEvent, HabitsState> {
   ///初始化状态为正在加载
-  HabitsBloc() : super(HabitsLoadInProgress());
-
-  @override
-  Stream<HabitsState> mapEventToState(HabitsEvent event) async* {
-    if (event is HabitsLoad) {
-      yield* _mapHabitsLoadToState();
-    } else if (event is HabitsAdd) {
-      yield* _mapHabitsAddToState(event);
-    } else if (event is HabitUpdate) {
-      yield* _mapHabitUpdateToState(event);
-    }
+  HabitsBloc() : super(HabitsLoadInProgress()) {
+    on<HabitsLoad>(_mapHabitsLoadToState);
+    on<HabitsAdd>(_mapHabitsAddToState);
+    on<HabitUpdate>(_mapHabitUpdateToState);
   }
 
-  Stream<HabitsState> _mapHabitsLoadToState() async* {
+  void _mapHabitsLoadToState(
+      HabitsLoad event, Emitter<HabitsState> emit) async {
     try {
       if (!SessionUtils.sharedInstance().isLogin()) {
-        yield HabitLoadSuccess([]);
+        emit(HabitLoadSuccess([]));
         return;
       }
       List<Habit> habits = await DatabaseProvider.db.getAllHabits();
       print(habits);
-      yield HabitLoadSuccess(habits);
+      emit(HabitLoadSuccess(habits));
     } catch (e) {
       print(e);
-      yield HabitsLodeFailure();
+      emit(HabitsLodeFailure());
     }
   }
 
-  Stream<HabitsState> _mapHabitsAddToState(HabitsAdd habitsAdd) async* {
+  void _mapHabitsAddToState(HabitsAdd event, Emitter<HabitsState> emit) {
     if (state is HabitLoadSuccess) {
       final List<Habit> habits = List.from((state as HabitLoadSuccess).habits)
-        ..add(habitsAdd.habit);
-      yield HabitLoadSuccess(habits);
-      DatabaseProvider.db.insert(habitsAdd.habit);
+        ..add(event.habit);
+      emit(HabitLoadSuccess(habits));
+      DatabaseProvider.db.insert(event.habit);
     }
   }
 
-  Stream<HabitsState> _mapHabitUpdateToState(HabitUpdate habitUpdate) async* {
+  void _mapHabitUpdateToState(HabitUpdate event, Emitter<HabitsState> emit) {
     if (state is HabitLoadSuccess) {
       final List<Habit> habits = (state as HabitLoadSuccess)
           .habits
-          .map((habit) =>
-              habit.id == habitUpdate.habit.id ? habitUpdate.habit : habit)
+          .map((habit) => habit.id == event.habit.id ? event.habit : habit)
           .toList();
-      yield HabitLoadSuccess(habits);
-      DatabaseProvider.db.update(habitUpdate.habit);
+      emit(HabitLoadSuccess(habits));
+      DatabaseProvider.db.update(event.habit);
     }
   }
 }
