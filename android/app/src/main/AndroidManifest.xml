@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
 
     <application
-        android:name="io.flutter.app.FlutterApplication"
+        android:name="${applicationName}"
         android:label="Checkio"
         android:icon="@mipmap/temp">
         <activity
